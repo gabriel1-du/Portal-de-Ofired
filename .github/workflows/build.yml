@@ -22,7 +22,7 @@ jobs:
         cache: maven
 
     - name: Compilar y Ejecutar Tests
-      run: mvn -B package --file  Apis\usuarioApi\pom.xml
+      run: mvn -B package 
 
     - name: Análisis de Seguridad (Dependency Check)
       # Ppaso que busca si las librerías (pom.xml) tienen fallos conocidos
