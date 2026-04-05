@@ -7,7 +7,9 @@ import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL1DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL2DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.eliminarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTO;
-import com.example.usuarioApi.DTO.clasesUsuarioDTO.usuarioMapTo;
+import com.example.usuarioApi.DTO.clasesUsuarioDTO.usuarioMapTo.UsuarioMapActualizar;
+import com.example.usuarioApi.DTO.clasesUsuarioDTO.usuarioMapTo.UsuarioMapCreate;
+import com.example.usuarioApi.DTO.clasesUsuarioDTO.usuarioMapTo.UsuarioMapLeer;
 import com.example.usuarioApi.Model.*; // Importar todos los modelos para las relaciones
 import com.example.usuarioApi.Repository.*; // Importar todos los repositorios necesarios
 import org.springframework.stereotype.Service;
@@ -25,10 +27,16 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
    
-    //instacnia de mapper
+    //instancia de mappers
     @Autowired
-    private usuarioMapTo mapper; 
+    private UsuarioMapLeer readMapper; 
 
+    @Autowired
+    private UsuarioMapCreate createMapper;
+
+    @Autowired
+    private UsuarioMapActualizar updateMapper;
+    
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -36,7 +44,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     public leerUsuarioDTO crearUsuario(crearUsuarioDTO usuarioDTO) {
     
         // 1. Mapear el DTO de creación a la entidad Usuario, aplicando la lógica de valores por defecto.
-        Usuario usuario = mapper.mapCrearUsuarioDTOToUsuario(usuarioDTO);
+        Usuario usuario = createMapper.mapCrearUsuarioDTOToUsuario(usuarioDTO);
 
         // 2. Hashear la contraseña obtenida del DTO usando el PasswordEncoder.
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
@@ -47,13 +55,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         // 3. Mapear la entidad recién guardada a un DTO de lectura para la respuesta.
         // Esto asegura que el cliente reciba el estado final del objeto, incluyendo el ID.
-        return mapper.mapUsuarioToLeerUsuarioDTO(nuevoUsuario);
+        return readMapper.mapUsuarioToLeerUsuarioDTO(nuevoUsuario);
     }
 
     @Override
     public leerUsuarioDTO crearUsuarioLVL1(crearUsuarioLVL1DTO usuarioDTO) {
         // 1. Mapear el DTO de creación específico para nivel 1 a la entidad Usuario, aplicando reglas de negocio particulares.
-        Usuario usuario = mapper.mapCrearUsuarioLVL1DTOtoUsuario(usuarioDTO);
+        Usuario usuario = createMapper.mapCrearUsuarioLVL1DTOtoUsuario(usuarioDTO);
 
         // 2. Hashear la contraseña obtenida del DTO usando el PasswordEncoder.
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
@@ -62,13 +70,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario nuevoUsuario = usuarioRepository.save(usuario);
 
         // 4. Mapear la entidad recién guardada a un DTO de lectura para la respuesta.
-        return mapper.mapUsuarioToLeerUsuarioDTO(nuevoUsuario);
+        return readMapper.mapUsuarioToLeerUsuarioDTO(nuevoUsuario);
     }
 
      @Override
     public leerUsuarioDTO crearUsuarioLVL2(crearUsuarioLVL2DTO usuarioDTO) {
         // 1. Mapear el DTO de creación específico para nivel 1 a la entidad Usuario, aplicando reglas de negocio particulares.
-        Usuario usuario = mapper.mapCrearUsuarioLVL2DTOtoUsuario(usuarioDTO);
+        Usuario usuario = createMapper.mapCrearUsuarioLVL2DTOtoUsuario(usuarioDTO);
 
         // 2. Hashear la contraseña obtenida del DTO usando el PasswordEncoder.
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
@@ -77,7 +85,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario nuevoUsuario = usuarioRepository.save(usuario);
 
         // 4. Mapear la entidad recién guardada a un DTO de lectura para la respuesta.
-        return mapper.mapUsuarioToLeerUsuarioDTO(nuevoUsuario);
+        return readMapper.mapUsuarioToLeerUsuarioDTO(nuevoUsuario);
     }
 
 
@@ -87,7 +95,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id)); 
 
-        return mapper.mapUsuarioToLeerUsuarioDTO(usuario);
+        return readMapper.mapUsuarioToLeerUsuarioDTO(usuario);
     }
 
     @Override
@@ -99,13 +107,13 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
 
         // 2. Usar el mapper para aplicar los cambios del DTO a la entidad existente.
-        mapper.mapActualizarDTOToUsuario(usuarioDTO, usuarioExistente);
+        updateMapper.mapActualizarDTOToUsuario(usuarioDTO, usuarioExistente);
 
         // 3. Guardar la entidad que fue modificada.
         Usuario usuarioGuardado = usuarioRepository.save(usuarioExistente);
 
         // 4. Mapear la entidad ya guardada (con posibles cambios de la BD) al DTO de respuesta final.
-        return mapper.mapUsuarioToLeerUsuarioDTO(usuarioGuardado);
+        return readMapper.mapUsuarioToLeerUsuarioDTO(usuarioGuardado);
     }
 
     @Override
@@ -147,14 +155,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         // 2. Usar el mapper para aplicar los cambios del DTO de admin a la entidad existente.
         // El objeto 'usuarioExistente' se modifica por referencia dentro de este método.
-        mapper.mapActualizarDTOToUsuarioAdmin(usuarioDTO, usuarioExistente);
+        updateMapper.mapActualizarDTOToUsuarioAdmin(usuarioDTO, usuarioExistente);
 
         // 3. Guardar la entidad que fue modificada.
         Usuario usuarioGuardado = usuarioRepository.save(usuarioExistente);
 
         // 4. Mapear la entidad ya guardada al DTO de respuesta final.
         // Es una buena práctica mapear la entidad que resulta de la operación de guardado.
-        return mapper.mapUsuarioToLeerUsuarioDTO(usuarioGuardado);
+        return readMapper.mapUsuarioToLeerUsuarioDTO(usuarioGuardado);
     }
 
    
