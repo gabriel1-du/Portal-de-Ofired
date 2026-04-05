@@ -78,9 +78,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public void eliminarUsuario(Integer id, eliminarUserDTO deleteDTO) {
-        // TODO: Implementar la lógica para eliminar un usuario.
-        throw new UnsupportedOperationException("El método 'eliminarUsuario' aún no ha sido implementado.");
+
+        Usuario usuarioExitente = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+        usuarioRepository.delete(usuarioExitente);
+
     }
+        
 
     @Override
     public leerUsuarioDTO actualizarUsuarioAdmin(Integer id, actualizarUsuarioDTOAdmin usuarioDTO) {

@@ -5,6 +5,9 @@ import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTO;
 
 import com.example.usuarioApi.Service.UsuarioService;
+
+import jakarta.persistence.Id;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +38,12 @@ public class UsuarioController {
     public ResponseEntity<leerUsuarioDTO> actualizarUsuario(@PathVariable Integer id, @RequestBody actualizarUserDTO usuarioDTO) {
         leerUsuarioDTO usuarioActualizado = usuarioService.actualizarUsuario(id, usuarioDTO);
         return ResponseEntity.ok(usuarioActualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarUsuario(@PathVariable Integer id) {
+        usuarioService.eliminarUsuario(id, null); // Eliminar el usuario sin necesidad de un DTO adicional
+        return ResponseEntity.noContent().build();
     }
    
 

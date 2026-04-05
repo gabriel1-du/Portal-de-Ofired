@@ -1,0 +1,39 @@
+===========================================================
+LISTA DE DEPENDENCIAS - API SPRING BOOT (PROYECTO GASFITER)
+===========================================================
+
+Este proyecto utiliza Maven como gestor de dependencias. A continuación, 
+se detallan los módulos necesarios para replicar el entorno:
+
+1. NÚCLEO WEB Y PERSISTENCIA:
+-----------------------------
+* Spring Boot Starter Web: Permite crear servicios RESTful y usa Tomcat por defecto.
+* Spring Boot Starter Data JPA: Para la persistencia de datos y mapeo objeto-relacional (ORM) con Hibernate.
+* MySQL Connector J: Driver oficial para conectar la aplicación con la base de datos MySQL.
+
+2. SEGURIDAD Y PROTECCIÓN:
+--------------------------
+* Spring Boot Starter Security: Proporciona autenticación y control de acceso. 
+  Indispensable para el manejo de roles y encriptación de claves.
+* Dotenv Java (v3.0.0): Librería para gestionar variables de entorno desde un archivo .env, 
+  evitando subir credenciales sensibles al repositorio.
+
+3. DOCUMENTACIÓN Y HERRAMIENTAS:
+--------------------------------
+* SpringDoc OpenAPI UI (v2.5.0): Genera automáticamente la documentación de la API (Swagger). 
+  Accesible en: http://localhost:8080/swagger-ui.html
+* Project Lombok: Librería para reducir el código repetitivo (Boilerplate). 
+  Genera automáticamente Getters, Setters, Constructores y Logs mediante anotaciones.
+* Spring Boot DevTools: Herramientas de desarrollo que permiten el reinicio automático 
+  de la aplicación al detectar cambios en el código.
+
+4. PRUEBAS Y TESTING:
+---------------------
+* Spring Boot Starter Test: Librería base para pruebas unitarias e integración (JUnit, Mockito).
+* Spring Security Test: Soporte específico para probar rutas y comportamientos protegidos por seguridad.
+
+NOTA PARA EL DESARROLLADOR:
+---------------------------
+Las versiones de los 'starters' de Spring Boot son gestionadas por el 'parent' 
+del proyecto (v3.2.5). No es necesario declarar versiones individuales para ellos.
+===========================================================
