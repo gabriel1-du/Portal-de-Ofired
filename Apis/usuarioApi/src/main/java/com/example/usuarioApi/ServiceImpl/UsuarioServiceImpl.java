@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import com.example.usuarioApi.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 
@@ -164,6 +166,14 @@ public class UsuarioServiceImpl implements UsuarioService {
         // 4. Mapear la entidad ya guardada al DTO de respuesta final.
         // Es una buena práctica mapear la entidad que resulta de la operación de guardado.
         return readMapper.mapUsuarioToLeerUsuarioDTO(usuarioGuardado);
+    }
+
+    @Override // Método para leer todos los usuarios y mapearlos a DTOs de lectura
+    public List<leerUsuarioDTO> leertTodosLosUsuariosDto() {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return usuarios.stream()
+                .map(readMapper::mapUsuarioToLeerUsuarioDTO)
+                .collect(Collectors.toList());
     }
 
 

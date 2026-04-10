@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuariosApi")
@@ -31,13 +32,13 @@ public class UsuarioController {
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
-    @PostMapping("crearUsuarioLVL1")
+    @PostMapping("/crearUsuarioLVL1")
     public ResponseEntity<leerUsuarioDTO> crearUsuarioLVL1(@RequestBody crearUsuarioLVL1DTO usuarioDTO) {
         leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioLVL1(usuarioDTO);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
-    @PostMapping("crearUsuarioLVL2")
+    @PostMapping("/crearUsuarioLVL2")
     public ResponseEntity<leerUsuarioDTO> crearUsuarioLVL2(@RequestBody crearUsuarioLVL2DTO usuarioDTO) {
         leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioLVL2(usuarioDTO);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
@@ -53,6 +54,12 @@ public class UsuarioController {
     public ResponseEntity<leerUsuarioDTO> actualizarUsuario(@PathVariable Integer id, @RequestBody actualizarUserDTO usuarioDTO) {
         leerUsuarioDTO usuarioActualizado = usuarioService.actualizarUsuario(id, usuarioDTO);
         return ResponseEntity.ok(usuarioActualizado);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<leerUsuarioDTO>> leerTodosLosUsuariosDto() {
+        List<leerUsuarioDTO> usuarios = usuarioService.leertTodosLosUsuariosDto();
+        return ResponseEntity.ok(usuarios);
     }
 
     @DeleteMapping("/{id}")

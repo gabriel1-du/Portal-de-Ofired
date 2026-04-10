@@ -8,6 +8,8 @@ import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUsuarioDTOAdmin;
 
+import java.util.List;
+
 public interface UsuarioService {
 
     leerUsuarioDTO crearUsuario(crearUsuarioDTO usuarioDTO);
@@ -15,6 +17,8 @@ public interface UsuarioService {
     leerUsuarioDTO leerUsuario(Integer id); // Método para leer un usuario por su ID (Get)
 
     leerUsuarioDTO actualizarUsuario(Integer id, actualizarUserDTO usuarioDTO);
+
+    List<leerUsuarioDTO> leertTodosLosUsuariosDto (); // Método para leer todos los usuarios (Get All)
 
     void eliminarUsuario(Integer id);
 
@@ -28,4 +32,6 @@ public interface UsuarioService {
 
     //Metodos para iniciar sesión
     leerUsuarioDTO iniciarSesion(String correoElec, String password); 
+
+
 }

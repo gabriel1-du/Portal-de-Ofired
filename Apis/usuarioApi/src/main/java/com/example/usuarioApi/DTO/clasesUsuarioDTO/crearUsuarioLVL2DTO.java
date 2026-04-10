@@ -36,5 +36,5 @@ public class crearUsuarioLVL2DTO {
     private Integer idOficio;
 
 
- 
+
 }

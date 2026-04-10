@@ -22,7 +22,7 @@ public class authController {
     @PostMapping("/login")
     public ResponseEntity<leerUsuarioDTO> login(@RequestBody authRequest authRequest) {
         try {
-            leerUsuarioDTO usuario = usuarioService.iniciarSesion(authRequest.getEmail(), authRequest.getContrasena());
+            leerUsuarioDTO usuario = usuarioService.iniciarSesion(authRequest.getEmail(), authRequest.getPassword());
             return ResponseEntity.ok(usuario);
         } catch (RuntimeException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Credenciales no validas");

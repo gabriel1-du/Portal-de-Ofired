@@ -1,0 +1,29 @@
+.mi-pagina-contenedor {
+  padding: 40px;
+  text-align: left;
+}
+
+.mi-pagina-contenedor h1 {
+  /* Puedes usar las variables globales de tu index.css */
+  color: var(--text-h);
+  font-size: 32px;
+}
+
+.mi-pagina-contenedor p {
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.mi-pagina-contenedor button {
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.mi-pagina-contenedor button:hover {
+  opacity: 0.9;
+}

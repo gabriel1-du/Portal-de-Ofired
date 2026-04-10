@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class authRequest {
 
     private String email;
-    private String contrasena;
+    private String password;
 
 }

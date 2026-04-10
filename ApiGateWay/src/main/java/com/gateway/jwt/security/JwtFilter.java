@@ -28,7 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         // Imprimimos la ruta interceptada para depuración, como solicitaste.
-        System.out.println("➡️ Filtro JWT interceptando - PATH: " + request.getRequestURI() + "  METHOD: " + request.getMethod());
+        System.out.println(" Filtro JWT interceptando - PATH: " + request.getRequestURI() + "  METHOD: " + request.getMethod());
 
         // Si la petición es para el endpoint de login, la dejamos pasar sin procesar el token.
         // en otras palabras cada vez que se inicie sesion devuelve el token sin necesidad de validarlo, ya que no existe en ese momento
