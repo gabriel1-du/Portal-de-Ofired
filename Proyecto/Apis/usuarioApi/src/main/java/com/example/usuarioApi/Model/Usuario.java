@@ -54,7 +54,7 @@ public class Usuario {
     @Column(name = "numero_telef", length = 20)
     private String numeroTelef;
 
-    @Column(name = "fecha_creacion", insertable = false, updatable = false)
+    @Column(name = "fecha_creacion")
     private Timestamp fechaCreacion;
 
     @Column(name = "foto", length = 255)

@@ -1,5 +1,7 @@
 package com.example.usuarioApi.DTO.clasesUsuarioDTO.usuarioMapTo;
 
+import java.sql.Timestamp;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +57,7 @@ public class UsuarioMapCreate {
         usuario.setRutDv(defaultIfBlank(dto.getRutDv(), "N"));
         usuario.setNumeroTelef(defaultIfBlank(dto.getNumeroTelef(), "N"));
         usuario.setValoracion(dto.getValoracion() != null ? java.math.BigDecimal.valueOf(dto.getValoracion()) : java.math.BigDecimal.ZERO); // Valor por defecto de 0.0 si no se proporciona
+        usuario.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 
         // Mapeo de relaciones (IDs a Entidades).
         // Si el ID es null, la relación no se establece.
@@ -107,6 +110,7 @@ public class UsuarioMapCreate {
         usuario.setTipoUsuario(tipoUsuarioRepository.findById(1) // Asumiendo que el ID 1 corresponde a "Usuario Nivel 1"
                 .orElseThrow(() -> new RuntimeException("Tipo de Usuario no encontrado con id: 1")));
         usuario.setHabilitadorAdministrador(null);
+        usuario.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
         // Valor por defecto de 0.0 si no se proporciona
         usuario.setValoracion( java.math.BigDecimal.ZERO); 
         
@@ -149,6 +153,7 @@ public class UsuarioMapCreate {
         usuario.setTipoUsuario(tipoUsuarioRepository.findById(1) // Asumiendo que el ID 1 corresponde a "Usuario Nivel 1"
                 .orElseThrow(() -> new RuntimeException("Tipo de Usuario no encontrado con id: 1")));
         usuario.setHabilitadorAdministrador(false);
+        usuario.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
         // Valor por defecto de 0.0 si no se proporciona
         usuario.setValoracion(dto.getValoracion() != null ? java.math.BigDecimal.valueOf(dto.getValoracion()) : java.math.BigDecimal.ZERO); 
         
