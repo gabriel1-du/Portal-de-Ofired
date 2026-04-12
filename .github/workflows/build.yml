@@ -1,4 +1,4 @@
-name: Java CI with Maven & Security Scan
+name: CI/CD Portal Ofires - Full Stack Scan
 
 on:
   push:
@@ -7,41 +7,81 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout del código
-      uses: actions/checkout@v4
-
-    - name: Configurar JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-
-    - name: Compilar y Empaquetar (sin tests)
-      run: mvn -B package -DskipTests
-      working-directory: Apis/usuarioApi
-
-    - name: Análisis de Seguridad (Dependency Check - usuarioApi)
-      # Paso que busca si las librerías (pom.xml) tienen fallos conocidos
-      run: mvn org.owasp:dependency-check-maven:check
-      working-directory: Apis/usuarioApi
-      continue-on-error: true # Para que no bloquee todo si encuentra algo menor al inicio
-
-  code-quality:
+  # --- JOB PARA LAS APIS JAVA (Maven) ---
+  backend-analysis:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Super-Linter
-      # Este es el "robot" que revisa que tu código esté limpio 
-      uses: github/super-linter@v5
-      env:
-        VALIDATE_ALL_CODEBASE: false
-        DEFAULT_BRANCH: main
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VALIDATE_JAVA: true
+      - uses: actions/checkout@v4
+
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      # Análisis API Usuario
+      - name: Build Usuario API
+        run: mvn -B package -DskipTests
+        working-directory: Apis/usuarioApi
+
+      - name: Security Scan (Usuario API)
+        run: mvn org.owasp:dependency-check-maven:check
+        working-directory: Apis/usuarioApi
+        continue-on-error: true
+
+      # Análisis API Gateway
+      - name: Build ApiGateWay
+        run: mvn -B package -DskipTests
+        working-directory: Apis/ApiGateWay
+
+      - name: Security Scan (Gateway)
+        run: mvn org.owasp:dependency-check-maven:check
+        working-directory: Apis/ApiGateWay
+        continue-on-error: true
+
+  # --- JOB PARA EL FRONTEND (React + Vite) ---
+  frontend-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: PaginaFrontEnd/PortalOficiosRed/package-lock.json
+
+      - name: Instalar dependencias y Build
+        run: |
+          npm install
+          npm run build
+        working-directory: PaginaFrontEnd/PortalOficiosRed
+
+  # --- JOB DE SEGURIDAD Y CALIDAD (Secretos y Lint) ---
+  security-and-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Necesario para que el linter vea todo el historial
+
+      - name: Secret Scanning (TruffleHog)
+        # Este paso busca si dejaste llaves, tokens o contraseñas por error
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+      - name: Super-Linter
+        uses: github/super-linter@v5
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_JAVA: true
+          VALIDATE_JAVASCRIPT_REACT: true
+          VALIDATE_CSS: true
