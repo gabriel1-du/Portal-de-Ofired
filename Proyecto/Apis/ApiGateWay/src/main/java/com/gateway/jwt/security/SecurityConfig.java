@@ -18,6 +18,7 @@ import static com.gateway.jwt.security.PublicRoutes.*; //importa las rutas publi
 import static com.gateway.redireccionApis.ApiUsuarios.Region.RegionPublicRoutes.REGION_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.Comuna.ComunaPublicRoutes.COMUNA_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.SexoUsuario.SexoUsuarioPublicRoutes.SEXO_USUARIO_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.Oficio.OficioPublicRoutes.OFICIO_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.Usuario.UsuarioPublicRoutes.USUARIO_PUBLIC_GET;
 
 import java.util.Arrays;
@@ -53,6 +54,9 @@ public class SecurityConfig {
 
                 // URL públicas API SexoUsuario
                 .requestMatchers(HttpMethod.GET, SEXO_USUARIO_PUBLIC_GET).permitAll()
+
+                // URL públicas API Oficio
+                .requestMatchers(HttpMethod.GET, OFICIO_PUBLIC_GET).permitAll()
 
                 // Otras URL Token obligatorio
                 .anyRequest().authenticated()
