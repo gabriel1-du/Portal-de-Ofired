@@ -18,6 +18,8 @@ import com.example.usuarioApi.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.stream.Collectors;
 
 
@@ -190,7 +192,63 @@ public class UsuarioServiceImpl implements UsuarioService {
         return readMapper.mapUsuarioToLeerUsuarioDTO(usuario);
     }
 
-   
+
+    //Metodos de busqueda personalizados
+    @Override
+    public List<leerUsuarioDTO> buscarPorComuna(Integer idComuna) {
+        List<Usuario> usuarios = usuarioRepository.findByComunaIdComuna(idComuna);
+        return usuarios.stream()
+                .map(readMapper::mapUsuarioToLeerUsuarioDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<leerUsuarioDTO> buscarPorRegion(Integer idRegion) {
+        List<Usuario> usuarios = usuarioRepository.findByRegionIdRegion(idRegion);
+        return usuarios.stream()
+                .map(readMapper::mapUsuarioToLeerUsuarioDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<leerUsuarioDTO> buscarPorNombre(String nombre) {
+        List<Usuario> usuarios = usuarioRepository.findByNombre(nombre);
+        return usuarios.stream()
+                .map(readMapper::mapUsuarioToLeerUsuarioDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<leerUsuarioDTO> buscarPorValoracion(BigDecimal valoracion) {
+        List<Usuario> usuarios = usuarioRepository.findByValoracion(valoracion);
+        return usuarios.stream()
+                .map(readMapper::mapUsuarioToLeerUsuarioDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<leerUsuarioDTO> buscarPorFechaDeCreacion(Timestamp fecha) {
+        List<Usuario> usuarios = usuarioRepository.findByFechaCreacion(fecha);
+        return usuarios.stream()
+                .map(readMapper::mapUsuarioToLeerUsuarioDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<leerUsuarioDTO> buscarPorFechaCreacionDespuesDe(Timestamp fecha) {
+        List<Usuario> usuarios = usuarioRepository.findByFechaCreacionGreaterThan(fecha);
+        return usuarios.stream()
+                .map(readMapper::mapUsuarioToLeerUsuarioDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<leerUsuarioDTO> buscarPorFechaCreacionAntesDe(Timestamp fecha) {
+        List<Usuario> usuarios = usuarioRepository.findByFechaCreacionLessThan(fecha);
+        return usuarios.stream()
+                .map(readMapper::mapUsuarioToLeerUsuarioDTO)
+                .collect(Collectors.toList());
+    }
 
    
 }

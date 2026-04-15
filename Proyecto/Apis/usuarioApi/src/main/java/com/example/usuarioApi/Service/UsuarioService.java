@@ -8,7 +8,9 @@ import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUsuarioDTOAdmin;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.sql.Timestamp;
 
 public interface UsuarioService {
 
@@ -32,6 +34,16 @@ public interface UsuarioService {
 
     //Metodos para iniciar sesión
     leerUsuarioDTO iniciarSesion(String correoElec, String password); 
+
+    //Metodos de busqueda
+    List<leerUsuarioDTO> buscarPorComuna(Integer idComuna);
+    List<leerUsuarioDTO> buscarPorRegion(Integer idRegion);
+    List<leerUsuarioDTO> buscarPorNombre(String nombre);
+    List<leerUsuarioDTO> buscarPorValoracion(BigDecimal valoracion);
+    List<leerUsuarioDTO> buscarPorFechaDeCreacion(Timestamp fecha);
+    
+    List<leerUsuarioDTO> buscarPorFechaCreacionDespuesDe(Timestamp fecha);
+    List<leerUsuarioDTO> buscarPorFechaCreacionAntesDe(Timestamp fecha);
 
 
 }

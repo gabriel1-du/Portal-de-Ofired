@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @RestController
 @RequestMapping("/api/usuariosApi")
@@ -75,11 +77,58 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/actualziacionAdmin/{id}")
+    @PutMapping("/updateAdmin/{id}")
     public ResponseEntity<leerUsuarioDTO> actualizarUsuarioAdmin(@PathVariable Integer id, @RequestBody actualizarUsuarioDTOAdmin usuarioDTO) {
         leerUsuarioDTO usuarioActualizado = usuarioService.actualizarUsuarioAdmin(id, usuarioDTO);
         return ResponseEntity.ok(usuarioActualizado);
     }
    
+    // --- Endpoints de Búsqueda ---
+
+    @GetMapping("/buscar/por-comuna/{idComuna}")
+    public ResponseEntity<List<leerUsuarioDTO>> buscarPorComuna(@PathVariable Integer idComuna) {
+        List<leerUsuarioDTO> usuarios = usuarioService.buscarPorComuna(idComuna);
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/buscar/por-region/{idRegion}")
+    public ResponseEntity<List<leerUsuarioDTO>> buscarPorRegion(@PathVariable Integer idRegion) {
+        List<leerUsuarioDTO> usuarios = usuarioService.buscarPorRegion(idRegion);
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/buscar/por-nombre/{nombre}")
+    public ResponseEntity<List<leerUsuarioDTO>> buscarPorNombre(@PathVariable String nombre) {
+        List<leerUsuarioDTO> usuarios = usuarioService.buscarPorNombre(nombre);
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/buscar/por-valoracion/{valoracion}")
+    public ResponseEntity<List<leerUsuarioDTO>> buscarPorValoracion(@PathVariable BigDecimal valoracion) {
+        List<leerUsuarioDTO> usuarios = usuarioService.buscarPorValoracion(valoracion);
+        return ResponseEntity.ok(usuarios);
+    }
+
+    // Ejemplo de petición en Postman (GET):
+    // GET http://localhost:8080/api/usuariosApi/buscar/por-fecha-creacion?fecha=2024-01-20 10:30:00
+    @GetMapping("/buscar/por-fecha-creacion")
+    public ResponseEntity<List<leerUsuarioDTO>> buscarPorFechaDeCreacion(@RequestParam("fecha") Timestamp fecha) {
+        List<leerUsuarioDTO> usuarios = usuarioService.buscarPorFechaDeCreacion(fecha);
+        return ResponseEntity.ok(usuarios);
+    }
+
+    // Ejemplo de petición: GET http://localhost:8080/api/usuariosApi/buscar/por-fecha-creacion/despues?fecha=2024-01-20 10:30:00
+    @GetMapping("/buscar/por-fecha-creacion/despues")
+    public ResponseEntity<List<leerUsuarioDTO>> buscarPorFechaDespuesDe(@RequestParam("fecha") Timestamp fecha) {
+        List<leerUsuarioDTO> usuarios = usuarioService.buscarPorFechaCreacionDespuesDe(fecha);
+        return ResponseEntity.ok(usuarios);
+    }
+
+    // Ejemplo de petición: GET http://localhost:8080/api/usuariosApi/buscar/por-fecha-creacion/antes?fecha=2024-01-20 10:30:00
+    @GetMapping("/buscar/por-fecha-creacion/antes")
+    public ResponseEntity<List<leerUsuarioDTO>> buscarPorFechaAntesDe(@RequestParam("fecha") Timestamp fecha) {
+        List<leerUsuarioDTO> usuarios = usuarioService.buscarPorFechaCreacionAntesDe(fecha);
+        return ResponseEntity.ok(usuarios);
+    }
 
 }

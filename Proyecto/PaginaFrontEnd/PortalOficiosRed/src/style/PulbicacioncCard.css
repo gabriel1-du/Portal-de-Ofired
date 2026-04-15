@@ -1,0 +1,85 @@
+.publicacion-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  overflow: hidden; /* Asegura que los bordes redondeados se apliquen a los hijos */
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.3s ease-in-out;
+  max-width: 700px; /* Ancho máximo para la tarjeta */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.publicacion-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.publicacion-card-header {
+  background-color: #f3961c; /* Un color naranja que combine con el navbar */
+  color: white;
+  padding: 15px 20px;
+}
+
+.publicacion-card-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.publicacion-card-body {
+  padding: 20px;
+  flex-grow: 1; /* Hace que el cuerpo ocupe el espacio disponible */
+}
+
+.publicacion-card-body .ubicacion {
+  font-size: 0.95rem;
+  color: #555;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.publicacion-card-body .ubicacion-detalle {
+  font-size: 0.9rem;
+  color: #777;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.publicacion-card-body .descripcion {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+}
+
+.publicacion-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+}
+
+.publicacion-card-footer span {
+  font-weight: 500;
+  color: #e74c3c; /* Un rojo para el corazón */
+}
+
+.btn-contactar {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-contactar:hover {
+  background-color: #0b5ed7;
+}
