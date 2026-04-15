@@ -21,7 +21,7 @@ import static com.gateway.redireccionApis.ApiUsuarios.SexoUsuario.SexoUsuarioPub
 import static com.gateway.redireccionApis.ApiUsuarios.Oficio.OficioPublicRoutes.OFICIO_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.Usuario.UsuarioPublicRoutes.USUARIO_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.TiposUsuarios.TiposUsuarioPublicRoutes.TIPOS_USUARIO_PUBLIC_GET;
-
+import static com.gateway.redireccionApis.publicacionesApis.publicacionPublicRoutes.PUBLICACION_PUBLIC_GET;
 import java.util.Arrays;
 
 
@@ -61,6 +61,9 @@ public class SecurityConfig {
 
                 // URL públicas API TiposUsuario
                 .requestMatchers(HttpMethod.GET, TIPOS_USUARIO_PUBLIC_GET).permitAll()
+
+                // URL públicas API Publicaciones
+                .requestMatchers(HttpMethod.GET, PUBLICACION_PUBLIC_GET).permitAll()
 
                 // Otras URL Token obligatorio
                 .anyRequest().authenticated()

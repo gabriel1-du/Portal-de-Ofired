@@ -1,29 +1,128 @@
-.mi-pagina-contenedor {
-  padding: 40px;
+/* --- Estructura del Navbar --- */
+.navbar-busqueda {
+  display: flex;
+  flex-direction: row;        /* Obliga a que sea horizontal */
+  align-items: center;        /* Centra verticalmente */
+  justify-content: flex-start;/* Alinea de izquierda a derecha */
+  gap: 20px;                  /* Espacio entre el botón Filtro y la Barra */
+  background-color: #f3961c;
+  padding: 15px 30px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+  border-bottom: 1px solid #eaeaea;
+}
+
+/* --- Lado Izquierdo: Botón y Menú --- */
+.contenedor-dropdown {
+  position: relative; /* CRÍTICO: Hace que el menú flotante se ancle a este div */
+  flex-shrink: 0;     /* Evita que el botón se aplaste */
+}
+
+.btn-filtro {
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-filtro:hover {
+  background-color: #f1f3f5;
+  cursor: pointer;
+}
+
+/* EL MENÚ FLOTANTE */
+.filtro-recuadro-flotante {
+  position: absolute;       /* Lo saca del flujo normal para no empujar nada */
+  top: 120%;                /* Lo ubica justo debajo del botón */
+  left: 0;
+  width: 300px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #eaeaea;
+  z-index: 1000;            /* Asegura que tape el contenido de abajo, no que lo empuje */
+}
+
+/* --- Barra de Búsqueda --- */
+.contenedor-busqueda {
+  display: flex;
+  align-items: center;
+  background-color: #f1f3f5;
+  border-radius: 30px;
+  padding: 5px 15px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  
+  flex-grow: 1;             /* Hace que la barra ocupe el resto del espacio disponible */
+  max-width: 800px;         /* Limita el ancho máximo para que no se vea desproporcionada */
+}
+
+.contenedor-busqueda:focus-within {
+  background-color: #ffffff;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.input-busqueda {
+  border: none;
+  background: transparent;
+  padding: 8px 10px;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+  color: #495057;
+}
+
+.btn-lupa {
+  background: none;
+  border: none;
+  color: #6c757d;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* --- Estilos internos del formulario de filtros --- */
+.titulo-filtro {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-weight: bold;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 10px;
+}
+
+.grupo-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
   text-align: left;
 }
 
-.mi-pagina-contenedor h1 {
-  /* Puedes usar las variables globales de tu index.css */
-  color: var(--text-h);
-  font-size: 32px;
+.grupo-input label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #333;
 }
 
-.mi-pagina-contenedor p {
-  color: var(--text);
-  margin-bottom: 20px;
+.input-estilo {
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
-.mi-pagina-contenedor button {
-  background-color: var(--accent);
+.btn-aplicar-filtros {
+  width: 100%;
+  background-color: #0d6efd;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 16px;
-}
-
-.mi-pagina-contenedor button:hover {
-  opacity: 0.9;
+  margin-top: 10px;
 }

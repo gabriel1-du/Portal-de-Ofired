@@ -1,4 +1,4 @@
-package com.gateway.redireccionApis.ApiUsuarios.Oficio;
+package com.gateway.redireccionApis.publicacionesApis;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,50 +16,53 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gateway.jwt.service.JwtService;
+
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Value;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/proxy/oficiosApi")
+@RequestMapping("/api/proxy/publicacionesApi")
 @RequiredArgsConstructor
-public class OficioProxyController {
+public class publicacionProxyController {
 
     private final RestTemplate restTemplate;
     private final JwtService jwtService;
 
-    @Value("${services.oficio.base-url}")
-    private String oficioBaseUrl;
+    @Value("${services.publicaciones.base-url}")
+    private String publicacionBaseUrl;
 
-    @Value("${services.oficio.base-path}")
-    private String oficioBasePath;
+    @Value("${services.publicaciones.base-path}")
+    private String publicacionBasePath;
 
     @RequestMapping(value = {"", "/**"}, method = {RequestMethod.GET})
-    public ResponseEntity<?> proxyOficioPublic(HttpServletRequest request,
-                                                 @RequestHeader HttpHeaders headers) {
+    public ResponseEntity<?> proxyPublicacionPublic(HttpServletRequest request,
+                                                     @RequestHeader HttpHeaders headers) {
         return handleProxy(request, null, headers);
     }
 
     @RequestMapping(value = {"", "/**"}, method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
-    public ResponseEntity<?> proxyOficioSecure(HttpServletRequest request,
-                                                 @RequestBody(required = false) String body,
-                                                 @RequestHeader HttpHeaders headers) {
+    public ResponseEntity<?> proxyPublicacionSecure(HttpServletRequest request,
+                                                     @RequestBody(required = false) String body,
+                                                     @RequestHeader HttpHeaders headers) {
         return handleProxy(request, body, headers);
     }
 
     private ResponseEntity<?> handleProxy(HttpServletRequest request, String body, HttpHeaders headers) {
-        String originalPath = request.getRequestURI().replace("/api/proxy/oficiosApi", "");
+        String originalPath = request.getRequestURI().replace("/api/proxy/publicacionesApi", "");
 
-        String targetUrl = org.springframework.web.util.UriComponentsBuilder
-                .fromHttpUrl(oficioBaseUrl)
-                .path(oficioBasePath)
-                .path(originalPath)
-                .build(true)
-                .toUriString();
+        URI targetUri = org.springframework.web.util.UriComponentsBuilder
+        .fromHttpUrl(publicacionBaseUrl)
+        .path(publicacionBasePath)
+        .path(originalPath)
+        .build(true) // El "true" le dice al builder: "Esta ruta ya está codificada, no la toques"
+        .toUri();
 
         HttpMethod method = HttpMethod.valueOf(request.getMethod());
-        System.out.println("OFICIO targetUrl: " + targetUrl + "  METHOD: " + method);
+        System.out.println("PUBLICACION targetUrl: " + targetUri.toString() + "  METHOD: " + method);
 
         if (method == HttpMethod.POST || method == HttpMethod.DELETE || method == HttpMethod.PUT) {
             String authHeader = headers.getFirst(HttpHeaders.AUTHORIZATION);
@@ -76,10 +79,10 @@ public class OficioProxyController {
                 return r;
             });
 
-            if (!"admin".equalsIgnoreCase(rol)) {
+            if (rol == null) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body("{\"error\": \"Operación restringida a admin\"}");
+                        .body("{\"error\": \"Token inválido o sin rol\"}");
             }
         }
 
@@ -91,6 +94,7 @@ public class OficioProxyController {
         });
 
         // Solo establecer Content-Type para métodos que pueden tener un cuerpo (POST, PUT, etc.).
+        // Las peticiones GET no deben tener esta cabecera, ya que causa el error 400 en el servicio de destino.
         if (method != HttpMethod.GET) {
             cleanHeaders.setContentType(MediaType.APPLICATION_JSON);
         }
@@ -98,10 +102,11 @@ public class OficioProxyController {
         HttpEntity<String> entity = new HttpEntity<>(body, cleanHeaders);
 
         try {
-            ResponseEntity<String> response = restTemplate.exchange(targetUrl, method, entity, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(targetUri, method, entity, String.class);
             return ResponseEntity.status(response.getStatusCode())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(response.getBody());
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response.getBody());
+            
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode())
                     .contentType(MediaType.APPLICATION_JSON)
