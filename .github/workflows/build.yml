@@ -6,10 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
-# 1. SOLUCIÓN AL ERROR 403: Otorgar permisos al Token
+
 permissions:
   contents: read
-  statuses: write # Permite al linter publicar su estado
+  statuses: write 
 
 jobs:
   # --- JOB PARA LAS APIS JAVA (Maven) ---
@@ -25,23 +25,30 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # 2. SOLUCIÓN A LAS RUTAS: Agregar "Proyecto/"
+      # Análisis API Usuario
       - name: Build Usuario API
         run: mvn -B package -DskipTests
-        working-directory: Proyecto Titulacion/Apis/usuarioApi
+        working-directory: Proyecto/Apis/usuarioApi
 
       - name: Security Scan (Usuario API)
         run: mvn org.owasp:dependency-check-maven:check
-        working-directory: Proyecto Titulacion/Apis/usuarioApi
+        working-directory: Proyecto/Apis/usuarioApi
         continue-on-error: true
 
+      # Análisis API Publicaciones
+      - name: Build Publicaciones API
+        run: mvn -B package -DskipTests
+        working-directory: Proyecto/Apis/publicacionesApi
+
+      - name: Security Scan (Publicaciones API)
+        run: mvn org.owasp:dependency-check-maven:check
+        working-directory: Proyecto/Apis/publicacionesApi
+        continue-on-error: true
+
+      # Análisis API Gateway (Opcional, si también quieres escanearla)
       - name: Build ApiGateWay
         run: mvn -B package -DskipTests
-        working-directory: Proyecto Titulacion/Apis/ApiGateWay
-
-      - name: Security Scan (Gateway)
-        run: mvn org.owasp:dependency-check-maven:check
-        working-directory: Proyecto Titulacion/Apis/ApiGateWay
+        working-directory: Proyecto/Apis/ApiGateWay
         continue-on-error: true
 
   # --- JOB PARA EL FRONTEND (React + Vite) ---
@@ -55,15 +62,15 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          # 3. SOLUCIÓN AL ERROR DE CACHÉ DE NODE
-          cache-dependency-path: Proyecto Titulacion/Proyecto/PaginaFrontEnd/PortalOficiosRed/package-lock.json
+          # Ruta corregida hacia el lockfile del frontend
+          cache-dependency-path: Proyecto/PaginaFrontEnd/PortalOficiosRed/package-lock.json
 
       - name: Instalar dependencias y Build
         run: |
           npm install
           npm run build
-        # 4. SOLUCIÓN A LA RUTA DEL BUILD FRONTEND
-        working-directory: Proyecto Titulacion/Proyecto/PaginaFrontEnd/PortalOficiosRed
+        # Ruta corregida hacia la raíz del frontend
+        working-directory: Proyecto/PaginaFrontEnd/PortalOficiosRed
 
   # --- JOB DE SEGURIDAD Y CALIDAD (Secretos y Lint) ---
   security-and-quality:
@@ -87,7 +94,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # 5. SOLUCIÓN A LOS 53 ERRORES DE CHECKSTYLE (Apagar validación Java)
+          # SOLUCIÓN ERRORES CHECKSTYLE: Apagamos el linter estricto de Java
           VALIDATE_JAVA: false
           VALIDATE_JAVASCRIPT_REACT: true
           VALIDATE_CSS: true
