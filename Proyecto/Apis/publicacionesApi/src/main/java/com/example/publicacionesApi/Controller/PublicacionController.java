@@ -79,12 +79,29 @@ public class PublicacionController {
         return ResponseEntity.ok(publicacionService.listarPornombrePublicacion(nombrePublicacion));
     }
 
-    // Ejemplo de uso: GET /api/publicacionesApi/buscar?idRegion=1&fechaPublicacion=2025-01-01T10:00:00
+    // Ejemplo de uso (con hora): GET /api/publicacionesApi/buscar?fechaPublicacion=2025-01-01T10:00:00
+    // Ejemplo de uso (solo fecha): GET /api/publicacionesApi/buscar?fechaPublicacion=2025-01-01
     @GetMapping("/buscar")
     public ResponseEntity<List<leerPublicacionesDTO>> buscarPublicaciones(
             @RequestParam(required = false) Integer idRegion,
             @RequestParam(required = false) Integer idComuna,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaPublicacion) {
-        return ResponseEntity.ok(publicacionService.buscarPublicaciones(idRegion, idComuna, fechaPublicacion));
+            @RequestParam(required = false) String fechaPublicacion) {
+
+        LocalDateTime fechaParaServicio = null;
+
+        if (fechaPublicacion != null && !fechaPublicacion.trim().isEmpty()) {
+            String fechaAProcesar;
+            // Verificamos si el cliente ya incluyó la hora en el parámetro (buscando la 'T')
+            if (fechaPublicacion.contains("T")) {
+                // Si ya tiene la hora, usamos el string tal cual
+                fechaAProcesar = fechaPublicacion;
+            } else {
+                // Si solo viene la fecha, le agregamos la hora de inicio del día (00:00:00)
+                fechaAProcesar = fechaPublicacion + "T00:00:00";
+            }
+            fechaParaServicio = LocalDateTime.parse(fechaAProcesar);
+        }
+
+        return ResponseEntity.ok(publicacionService.buscarPublicaciones(idRegion, idComuna, fechaParaServicio));
     }
 }

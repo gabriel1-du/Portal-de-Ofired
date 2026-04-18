@@ -4,6 +4,7 @@ import { getPublicacionesByNombre } from '../servicios/publicacionesService';
 import PublicacionCard from '../assets/PublicacionesCard.jsx'; // 1. Importamos el nuevo componente
 import { getAllRegions } from '../servicios/regionService';
 import { buscarUsuariosConFiltros } from '../servicios/busquedaUsuarios.js';
+import { buscarPublicacionesConFiltros } from '../servicios/busquedaPublicaciones.js';
 import { getAllComunas } from '../servicios/comunasService';
 
 function PaginaHome() {
@@ -49,28 +50,36 @@ function PaginaHome() {
   const handleAplicarFiltros = async () => {
     console.log("Aplicando filtros...");
 
-    // Si el tipo de contenido no es 'usuario', no hacemos nada, como solicitaste.
-    if (tipoContenido !== 'usuario') {
-      console.log("Filtro no aplicado: El tipo de contenido seleccionado no es 'Usuario / Cliente'.");
-      return;
-    }
-
     // Construimos el objeto de filtros solo con los valores que existen.
     const filtros = {};
     if (regionSeleccionada) filtros.idRegion = regionSeleccionada;
     if (comunaSeleccionada) filtros.idComuna = comunaSeleccionada;
     if (fechaDesde) filtros.fecha = fechaDesde;
 
-    console.log("Filtros a enviar a la API:", filtros);
+    console.log("Filtros a enviar a la API:", filtros, "para tipo:", tipoContenido);
 
-    try {
-      // Llamamos a la función del servicio con los filtros.
-      const resultados = await buscarUsuariosConFiltros(filtros);
-      console.log("--- RESULTADO DE LA BÚSQUEDA FILTRADA DE USUARIOS ---");
-      console.log(resultados);
-      console.log("----------------------------------------------------");
-    } catch (error) {
-      console.error("Error al aplicar filtros de usuarios:", error);
+    if (tipoContenido === 'usuario') {
+      try {
+        // Llamamos a la función del servicio con los filtros para usuarios.
+        const resultados = await buscarUsuariosConFiltros(filtros);
+        console.log("--- RESULTADO DE LA BÚSQUEDA FILTRADA DE USUARIOS ---");
+        console.log(resultados);
+        console.log("----------------------------------------------------");
+      } catch (error) {
+        console.error("Error al aplicar filtros de usuarios:", error);
+      }
+    } else if (tipoContenido === 'oficio') {
+      try {
+        // Llamamos a la función del servicio con los filtros para publicaciones.
+        const resultados = await buscarPublicacionesConFiltros(filtros);
+        console.log("--- RESULTADO DE LA BÚSQUEDA FILTRADA DE PUBLICACIONES ---");
+        console.log(resultados);
+        console.log("---------------------------------------------------------");
+      } catch (error) {
+        console.error("Error al aplicar filtros de publicaciones:", error);
+      }
+    } else {
+      console.log("Filtro no aplicado: Por favor, selecciona un tipo de contenido.");
     }
   };
 

@@ -1,4 +1,4 @@
-const API_URL_PUBLICACIONES = import.meta.env.VITE_TIPOS_USUARIOS_API_URL; // URL base para la API de publicaciones
+const API_URL_PUBLICACIONES = import.meta.env.VITE_PUBLICACIONES_API_URL; // URL base para la API de publicaciones
 
 // Función para obtener todas las publicaciones
 export const getAllPublicaciones = async () => {
@@ -190,4 +190,8 @@ export const darLikePublicacion = async (id) => {
     console.error(`Error al intentar dar like a la publicación con ID ${id}:`, error);
     throw error;
   }
+
+  
 };
+
+
