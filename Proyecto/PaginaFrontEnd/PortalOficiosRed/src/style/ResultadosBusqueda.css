@@ -30,7 +30,9 @@
 .resultados-contenedor {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra las tarjetas horizontalmente */
+  align-items: center; 
+  /* Agregamos esto para asegurar que el contenedor sea lo suficientemente ancho */
+  width: 100%;
 }
 
 .error-mensaje {
