@@ -1,31 +1,24 @@
 import React from 'react';
-import '../style/UsuarioCard.css'; // Importamos los estilos para la tarjeta
+import '../style/UsuarioCard.css';
 
-/**
- * Componente para mostrar la tarjeta de un usuario.
- * @param {object} props - Propiedades del componente.
- * @param {object} props.usuario - Objeto con los datos del usuario.
- */
 const UsuarioCard = ({ usuario }) => {
-  // Desestructuramos los datos que vamos a usar
-  const {
-    primerNombre,
-    primerApellido,
-    foto,
-    nombreOficio
-  } = usuario;
-
-  const nombreCompleto = `${primerNombre} ${primerApellido}`;
+  const { primerNombre, primerApellido, foto, nombreOficio } = usuario;
 
   return (
-    <div className="usuario-card">
-      <img src={foto || 'https://via.placeholder.com/100'} alt={`Foto de ${nombreCompleto}`} className="usuario-card-foto" />
-      <div className="usuario-card-info">
-        <h4>{nombreCompleto}</h4>
-        <p>{nombreOficio || 'Cliente'}</p>
+    <div className="card-fixed-wrapper">
+      <div className="usuario-card">
+        <div className="avatar-frame">
+          <img 
+            src={foto || 'https://via.placeholder.com/150'} 
+            alt={primerNombre}
+            onError={(e) => { e.target.src = 'https://via.placeholder.com/150'; }} // Si la imagen falla, muestra un placeholder
+          />
+        </div>
+        <div className="usuario-card-body">
+          <h4 className="text-truncate">{`${primerNombre} ${primerApellido}`}</h4>
+          <p className="text-truncate">{nombreOficio || 'Cliente'}</p>
+        </div>
       </div>
     </div>
   );
 };
-
-export default UsuarioCard;
