@@ -19,6 +19,7 @@ public class PerfilUsuarioDTO {
     private String numeroTelef;
     private String foto;
     private String fotografiaBanner;
+    private String descripcion;
     private Integer idRegionUsu;
     private Integer idComunaUsu;
     private Integer idOficio;

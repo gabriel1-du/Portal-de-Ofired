@@ -61,6 +61,9 @@ public class PerfilUsuario {
     @Column(name = "fotografia_banner", length = 255)
     private String fotografiaBanner;
 
+    @Column(name = "descripcion", length = 255)
+    private String descripcion;
+
     @ManyToOne
     @JoinColumn(name = "id_region")
     private Region region;

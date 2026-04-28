@@ -8,7 +8,7 @@ import FormularioCrearUsuarioCliente from './pantallas/Formularios/FormularioCre
 import IniciarSesion from './pantallas/Formularios/IniciarSesion'; // Importa el nuevo formulario de inicio de sesión
 import FormularioCrearUsuarioOficio from './pantallas/Formularios/FormularioCrearUsuarioOficio';
 import ResultadosBusqueda from './pantallas/ResultadosBusqueda'; // Importamos la nueva página de resultados
-
+import PerfilPantalla from './pantallas/PerfilPantalla'; // Importamos la pantalla de perfil
 function App() {
   return (
     <Router>
@@ -20,6 +20,7 @@ function App() {
           <Route path="/crear-cuentOfi" element={<FormularioCrearUsuarioOficio />} /> {/* Ruta para crear cuenta de oficio */}
           <Route path="/iniciar-sesion" element={<IniciarSesion />} /> {/* Nueva ruta para iniciar sesión */}
           <Route path="/resultados" element={<ResultadosBusqueda />} /> {/* Ruta para la página de resultados */}
+          <Route path="/perfil" element={<PerfilPantalla />} /> {/* Ruta para la pantalla de perfil */}
         </Routes>
       </div>
     </Router>

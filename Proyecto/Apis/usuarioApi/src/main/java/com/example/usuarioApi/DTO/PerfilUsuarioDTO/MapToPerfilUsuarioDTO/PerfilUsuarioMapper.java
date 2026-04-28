@@ -34,8 +34,11 @@ public class PerfilUsuarioMapper {
         dto.setPrimerApellido(entidad.getPApellido());
         dto.setSegundoApellido(entidad.getSApellido());
         dto.setNumeroTelef(entidad.getNumeroTelefono());
-        dto.setFoto(entidad.getFotoPerfil());
+        dto.setFoto(entidad.getUsuario() != null ? entidad.getUsuario().getFoto() : entidad.getFotoPerfil());
         dto.setFotografiaBanner(entidad.getFotografiaBanner());
+        
+        // --- NUEVO: Mapeo de la descripción ---
+        dto.setDescripcion(entidad.getDescripcion());
         
         dto.setIdRegionUsu(entidad.getRegion() != null ? entidad.getRegion().getIdRegion() : null);
         dto.setIdComunaUsu(entidad.getComuna() != null ? entidad.getComuna().getIdComuna() : null);
@@ -59,15 +62,21 @@ public class PerfilUsuarioMapper {
         // 2. Datos exclusivos del Perfil (Vienen del JSON/DTO)
         entidad.setNombreApodo(dto.getNombreApodo());
         entidad.setFotografiaBanner(dto.getFotografiaBanner());
+        
+        // --- NUEVO: Lógica de la descripción por defecto ---
+        if (dto.getDescripcion() == null || dto.getDescripcion().trim().isEmpty()) {
+            entidad.setDescripcion("Sin descripción aún...");
+        } else {
+            entidad.setDescripcion(dto.getDescripcion());
+        }
 
         // 3. Auto-completado: Copiamos los datos básicos desde Usuario a PerfilUsuario
-        // Nota cómo extraemos de Usuario y seteamos usando los nombres de PerfilUsuario
         entidad.setPNombre(usuario.getPNombre());
         entidad.setSNombre(usuario.getSNombre());
         entidad.setPApellido(usuario.getPApellido());
         entidad.setSApellido(usuario.getSApellido());
-        entidad.setNumeroTelefono(usuario.getNumeroTelef()); // En Usuario es numeroTelef, en Perfil es numeroTelefono
-        entidad.setFotoPerfil(usuario.getFoto()); // En Usuario es foto, en Perfil es fotoPerfil
+        entidad.setNumeroTelefono(usuario.getNumeroTelef()); 
+        entidad.setFotoPerfil(usuario.getFoto()); 
 
         // 4. Auto-completado: Copiamos las Relaciones
         entidad.setRegion(usuario.getRegion());
@@ -82,7 +91,6 @@ public class PerfilUsuarioMapper {
     }
 
     // --- MAP TO ENTITY ACTUALIZAR (SOLO DATOS DE PERFIL) ---
-    // Quitamos los parámetros extra (Region, Comuna, Oficio, Sexo) porque ya no se actualizan por aquí
     public void mapToEntityActualizar(PerfilUsuarioActualizarDTO dto, PerfilUsuario entidad) {
         
         if (dto.getNombreApodo() != null) {
@@ -93,11 +101,14 @@ public class PerfilUsuarioMapper {
             entidad.setFotografiaBanner(dto.getFotografiaBanner());
         }
         
-        // Todo lo demás (nombres, teléfonos, foto de perfil, etc.) 
-        // se ignora aquí porque se debe actualizar mediante la API de Usuario.
+        // --- NUEVO: Actualización de la descripción ---
+        if (dto.getDescripcion() != null) {
+            // Aquí puedes decidir si permites que la actualicen a un texto vacío
+            // o si solo aplicas el cambio. Lo estándar es aplicar lo que mande el JSON.
+            entidad.setDescripcion(dto.getDescripcion());
+        }
     }
     
-
 
     // --- MAP TO LEER FRONT DTO (OPTIMIZADO PARA REACT) ---
     public PerfilUsuarioLeerFrontDTO mapToLeerFrontDTO(PerfilUsuario entidad) {
@@ -119,11 +130,13 @@ public class PerfilUsuarioMapper {
         dto.setPrimerApellido(entidad.getPApellido());
         dto.setSegundoApellido(entidad.getSApellido());
         dto.setNumeroTelef(entidad.getNumeroTelefono());
-        dto.setFoto(entidad.getFotoPerfil());
+        dto.setFoto(entidad.getUsuario() != null ? entidad.getUsuario().getFoto() : entidad.getFotoPerfil());
         dto.setFotografiaBanner(entidad.getFotografiaBanner());
         
+        // --- NUEVO: Enviamos la descripción al Front ---
+        dto.setDescripcion(entidad.getDescripcion());
+        
         // INTER-CONSULTAS EN EL BACKEND: 
-        // Sacamos el nombre de los modelos incrustados en lugar de sus IDs
         dto.setNombreRegion(
             entidad.getRegion() != null ? entidad.getRegion().getNombreRegion() : "Sin región"
         );

@@ -7,5 +7,6 @@ public class PerfilUsuarioActualizarDTO {
     
     private String nombreApodo;
     private String fotografiaBanner;
+    private String descripcion;
 
 }

@@ -11,5 +11,6 @@ public class PerfilUsuarioCrearDTO {
     // Y los datos que son 100% exclusivos del perfil
     private String nombreApodo;
     private String fotografiaBanner;
+    private String descripcion;
 
 }

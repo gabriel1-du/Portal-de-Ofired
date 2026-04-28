@@ -21,6 +21,7 @@ public class PerfilUsuarioLeerFrontDTO {
     private String numeroTelef;
     private String foto;
     private String fotografiaBanner;
+    private String descripcion;
     
     // AQUÍ ESTÁ LA MAGIA: Enviamos textos, no IDs
     private String nombreRegion;

@@ -22,3 +22,5 @@ const UsuarioCard = ({ usuario }) => {
     </div>
   );
 };
+
+export default UsuarioCard;

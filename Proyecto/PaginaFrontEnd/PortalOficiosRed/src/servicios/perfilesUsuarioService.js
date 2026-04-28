@@ -47,3 +47,37 @@ export const getPerfilByUsuarioId = async (idUsuario) => {
     throw error;
   }
 };
+
+
+/**
+ * Obtiene los datos optimizados del perfil (incluyendo nombres de región, comuna, etc.)
+ * utilizando el ID de la cuenta del usuario.
+ * @param {number} idUsuario - El ID de la cuenta del usuario autenticado.
+ * @returns {object|null} - Los datos del perfil, o null si no existe.
+ */
+export const getPerfilFrontByUsuarioId = async (idUsuario) => {
+  try {
+    const url = `${API_URL_PERFILES}/front/usuario/${idUsuario}`;
+    console.log("Llamando a la API de Perfiles (GET Front by Usuario ID):", url);
+    
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      // Si el backend devuelve un 404, significa que el usuario no ha creado su perfil
+      if (response.status === 404) {
+         console.warn(`Aviso: El usuario con ID ${idUsuario} no tiene un perfil configurado.`);
+         return null; 
+      }
+      
+      console.error(`Error de red (GET Perfil Front):`, response.status, response.statusText);
+      throw new Error(`Error al obtener el perfil del usuario con ID ${idUsuario}.`);
+    }
+    
+    const data = await response.json();
+    return data;
+    
+  } catch (error) {
+    console.error(`Error en getPerfilFrontByUsuarioId para el ID ${idUsuario}:`, error);
+    throw error;
+  }
+};

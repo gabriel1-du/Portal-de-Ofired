@@ -80,7 +80,7 @@ MODIFY valoracion DECIMAL(3,2) NOT NULL DEFAULT 0.00;
 
 CREATE TABLE PERFIL_USUARIO (
     id_perfil_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL UNIQUE, -- Vínculo 1 a 1 estricto
+    id_usuario INT NOT NULL UNIQUE, 
     nombre_apodo VARCHAR(100),
     p_nombre VARCHAR(50),
     s_nombre VARCHAR(50),
@@ -89,6 +89,7 @@ CREATE TABLE PERFIL_USUARIO (
     numero_telefono VARCHAR(20),
     foto_perfil VARCHAR(255) NULL,
     fotografia_banner VARCHAR(255) NULL,
+    descripcion VARCHAR(500) NULL, -- Límite estricto de 500 caracteres implementado
     id_region INT,
     id_comuna INT,
     id_oficio INT,
@@ -100,7 +101,6 @@ CREATE TABLE PERFIL_USUARIO (
     CONSTRAINT fk_perfil_oficio FOREIGN KEY (id_oficio) REFERENCES OFICIO(id_oficio),
     CONSTRAINT fk_perfil_sexo FOREIGN KEY (sexo_usu_per) REFERENCES SEXO_USUARIO(id_sexo)
 );
-
 -- =========================================================================
 -- FASE 4: MARKETPLACE (PUBLICACIONES Y RESEÑAS)
 -- =========================================================================
