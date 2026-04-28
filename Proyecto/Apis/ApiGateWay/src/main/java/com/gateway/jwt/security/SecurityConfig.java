@@ -22,6 +22,7 @@ import static com.gateway.redireccionApis.ApiUsuarios.Oficio.OficioPublicRoutes.
 import static com.gateway.redireccionApis.ApiUsuarios.Usuario.UsuarioPublicRoutes.USUARIO_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.TiposUsuarios.TiposUsuarioPublicRoutes.TIPOS_USUARIO_PUBLIC_GET;
 import static com.gateway.redireccionApis.publicacionesApis.publicacionPublicRoutes.PUBLICACION_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.PerfilesUsuarios.PerfilesPublicRoutes.PERFILES_PUBLIC_GET;
 import java.util.Arrays;
 
 
@@ -35,8 +36,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // <-- ESTO FALTA
-            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
 
                 // URL públicas JWT
@@ -64,6 +64,10 @@ public class SecurityConfig {
 
                 // URL públicas API Publicaciones
                 .requestMatchers(HttpMethod.GET, PUBLICACION_PUBLIC_GET).permitAll()
+
+                  // URL públicas API Publicaciones
+                .requestMatchers(HttpMethod.GET, PERFILES_PUBLIC_GET ).permitAll()
+
 
                 // Otras URL Token obligatorio
                 .anyRequest().authenticated()
