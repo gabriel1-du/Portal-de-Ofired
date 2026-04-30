@@ -97,6 +97,21 @@ public class publicacionProxyController {
             }
         });
 
+        // Si hay un token, extrae el ID de usuario y lo añade a una cabecera para el microservicio.
+        final String authHeaderForUserId = headers.getFirst(HttpHeaders.AUTHORIZATION);
+        if (authHeaderForUserId != null && authHeaderForUserId.startsWith("Bearer ")) {
+            try {
+                String token = authHeaderForUserId.substring(7);
+                Integer userId = jwtService.extractClaim(token, claims -> claims.get("userId", Integer.class));
+                if (userId != null) {
+                    cleanHeaders.add("X-User-ID", userId.toString());
+                    System.out.println("-> Propagando cabecera X-User-ID: " + userId + " al servicio de publicaciones.");
+                }
+            } catch (Exception e) {
+                System.out.println("Advertencia: No se pudo extraer 'userId' del token para propagación. " + e.getMessage());
+            }
+        }
+
         // Solo establecer Content-Type para métodos que pueden tener un cuerpo (POST, PUT, etc.).
         // Las peticiones GET no deben tener esta cabecera, ya que causa el error 400 en el servicio de destino.
         if (method != HttpMethod.GET) {

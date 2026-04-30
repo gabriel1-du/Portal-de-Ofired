@@ -114,6 +114,11 @@ public class UsuarioServiceImpl implements UsuarioService {
         // 2. Usar el mapper para aplicar los cambios del DTO a la entidad existente.
         updateMapper.mapActualizarDTOToUsuario(usuarioDTO, usuarioExistente);
 
+        // Si se proporcionó una nueva contraseña en el DTO, hashearla y actualizarla de forma segura.
+        if (usuarioDTO.getPassword() != null && !usuarioDTO.getPassword().trim().isEmpty()) {
+            usuarioExistente.setPassword(passwordEncoder.encode(usuarioDTO.getPassword()));
+        }
+
         // 3. Guardar la entidad que fue modificada.
         Usuario usuarioGuardado = usuarioRepository.save(usuarioExistente);
 

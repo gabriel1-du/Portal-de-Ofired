@@ -66,9 +66,7 @@ jobs:
           cache-dependency-path: Proyecto/PaginaFrontEnd/PortalOficiosRed/package-lock.json
 
       - name: Instalar dependencias y Build
-        run: |
-          npm install
-          npm run build
+        run: npm ci
         # Ruta corregida hacia la raíz del frontend
         working-directory: Proyecto/PaginaFrontEnd/PortalOficiosRed
 
