@@ -43,9 +43,59 @@
   margin-bottom: 20px;
 }
 
+.barra-lateral-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  /* Para cortar nombres largos */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .btn-cerrar-sidebar {
   background: none;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+/* --- Nuevos estilos para la navegación --- */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 12px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-logout {
+  width: 100%;
+  padding: 12px 15px;
+  margin-top: 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #fbeae5; /* Rojo muy suave */
+  color: #d32f2f; /* Rojo oscuro */
+  font-weight: bold;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-logout:hover {
+  background-color: #f8d7d2;
 }
