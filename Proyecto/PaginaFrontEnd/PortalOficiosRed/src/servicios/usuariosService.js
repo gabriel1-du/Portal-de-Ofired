@@ -62,6 +62,35 @@ export const crearUsuarioCliente = async (datosUsuario) => {
   }
 };
 
+// Función para actualizar un usuario existente
+export const updateUsuario = async (idUsuario, usuarioData, token) => {
+  try {
+    const url = `${API_URL_USUARIOS}/${idUsuario}`;
+    console.log("Llamando a la API de Usuarios (PUT):", url);
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(usuarioData),
+    });
+
+    if (response.ok) {
+      console.log("Usuario actualizado exitosamente.");
+      const responseBody = await response.text();
+      return responseBody ? JSON.parse(responseBody) : { success: true };
+    } else {
+      const errorText = await response.text();
+      console.error("Error al actualizar el usuario. Respuesta del servidor:", errorText);
+      throw new Error(`Error al actualizar el usuario: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Algo falló en la petición para actualizar el usuario:", error);
+    throw error;
+  }
+};
+
 
 //
 export const crearUsuarioOficio= async (datosUsuario) => {

@@ -10,6 +10,7 @@ import FormularioCrearUsuarioOficio from './pantallas/Formularios/FormularioCrea
 import FormularioCreacionDePerfilUsuario from './pantallas/Formularios/FormularioCreacionDePerfilUsuario';
 import ResultadosBusqueda from './pantallas/ResultadosBusqueda'; // Importamos la nueva página de resultados
 import PerfilPantalla from './pantallas/PerfilPantalla'; // Importamos la pantalla de perfil
+import ModificarPerfilUsuario from './pantallas/Formularios/ModificarPerfilUsuario';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/iniciar-sesion" element={<IniciarSesion />} /> {/* Nueva ruta para iniciar sesión */}
           <Route path="/resultados" element={<ResultadosBusqueda />} /> {/* Ruta para la página de resultados */}
           <Route path="/perfil/:idDelPerfil" element={<PerfilPantalla />} /> {/* Ruta para la pantalla de perfil */}
+          <Route path="/perfil/modificar" element={<ModificarPerfilUsuario />} />
         </Routes>
       </div>
     </Router>

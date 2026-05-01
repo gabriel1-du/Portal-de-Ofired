@@ -45,6 +45,36 @@ export const createPerfilUsuario = async (perfilData) => {
   }
 };
 
+// Función para actualizar un perfil de usuario existente
+export const updatePerfilUsuario = async (idPerfil, perfilData, token) => {
+  try {
+    const url = `${API_URL_PERFILES}/${idPerfil}`;
+    console.log("Llamando a la API de Perfiles (PUT):", url);
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Añadimos el token de autorización
+      },
+      body: JSON.stringify(perfilData),
+    });
+
+    if (response.ok) {
+      console.log("Perfil de usuario actualizado exitosamente.");
+      // Si el backend no devuelve contenido en un 200 OK, devolvemos un objeto de éxito.
+      const responseBody = await response.text();
+      return responseBody ? JSON.parse(responseBody) : { success: true };
+    } else {
+      const errorText = await response.text();
+      console.error("Error al actualizar el perfil de usuario. Respuesta del servidor:", errorText);
+      throw new Error(`Error al actualizar el perfil: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Algo falló en la petición para actualizar el perfil de usuario:", error);
+    throw error;
+  }
+};
+
 // Función para obtener un perfil por el ID del Usuario (Cuenta base)
 export const getPerfilByUsuarioId = async (idUsuario) => {
   try {

@@ -67,8 +67,7 @@ public class SecurityConfig {
 
                   // URL públicas API Perfiles
                 .requestMatchers(HttpMethod.GET, PERFILES_PUBLIC_GET ).permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/proxy/perfilesApi/**").permitAll()
-
+                
 
                 // Otras URL Token obligatorio
                 .anyRequest().authenticated()

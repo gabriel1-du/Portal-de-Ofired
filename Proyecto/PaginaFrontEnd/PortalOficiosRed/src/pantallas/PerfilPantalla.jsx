@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom'; // 1. Importamos useParams para leer la URL
+import { useParams, useNavigate } from 'react-router-dom'; // 1. Importamos useParams y useNavigate
 import { AuthContext } from '../context/AuthContext'; // Importamos el contexto de autenticación
 import { getPerfilFrontByUsuarioId } from '../servicios/perfilesUsuarioService'; // Asegúrate de que la ruta sea correcta
 import '../style/PerfilPantalla.css';
 
 const PerfilPantalla = () => {
   const { idDelPerfil } = useParams(); // 2. Obtenemos el ID del perfil a visualizar desde la URL
+  const navigate = useNavigate();
   const { usuario: usuarioLogueado } = useContext(AuthContext); // 3. Obtenemos el usuario que ha iniciado sesión
 
   const [perfil, setPerfil] = useState(null);
@@ -101,12 +102,15 @@ const PerfilPantalla = () => {
         </div>
 
         <div className="perfil-acciones">
-          <button className="btn-maqueta btn-reportar">
-             Reportar 🚨
-          </button>
-          {/* 7. Mostramos el botón "Configurar" solo si es el perfil del usuario logueado */}
+          {/* 7. Mostramos el botón "Reportar" solo si NO es el perfil del usuario logueado */}
+          {!esMiPerfil && (
+            <button className="btn-maqueta btn-reportar">
+               Reportar 🚨
+            </button>
+          )}
+          {/* 8. Mostramos el botón "Configurar" solo si SÍ es el perfil del usuario logueado */}
           {esMiPerfil && (
-            <button className="btn-maqueta btn-configurar">
+            <button className="btn-maqueta btn-configurar" onClick={() => navigate('/perfil/modificar')}>
                Configurar ⚙️
             </button>
           )}

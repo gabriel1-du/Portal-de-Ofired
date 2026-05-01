@@ -80,17 +80,19 @@ public class UsuarioProxyController {
                         .body("{\"error\": \"Token no presente o inválido\"}");
             }
 
-            String token = authHeader.replace("Bearer ", "");
-            String rol = jwtService.extractClaim(token, claims -> {
-                String r = claims.get("rol", String.class);
-                if (r == null) r = claims.get("role", String.class);
-                return r;
-            });
-
-            if (!"admin".equalsIgnoreCase(rol)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body("{\"error\": \"Operación restringida a admin\"}");
+            // Para DELETE, solo los administradores pueden realizar la operación.
+            if (method == HttpMethod.DELETE) {
+                String token = authHeader.replace("Bearer ", "");
+                String rol = jwtService.extractClaim(token, claims -> {
+                    String r = claims.get("rol", String.class);
+                    if (r == null) r = claims.get("role", String.class);
+                    return r;
+                });
+                if (!"admin".equalsIgnoreCase(rol)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body("{\"error\": \"Operación restringida a admin\"}");
+                }
             }
         }
 

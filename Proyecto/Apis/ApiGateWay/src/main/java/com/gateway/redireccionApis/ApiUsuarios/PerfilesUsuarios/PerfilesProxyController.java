@@ -64,25 +64,29 @@ public class PerfilesProxyController {
         HttpMethod method = HttpMethod.valueOf(request.getMethod());
         System.out.println("PERFILES targetUrl: " + targetUrl + "  METHOD: " + method);
 
-        if (method == HttpMethod.DELETE || method == HttpMethod.PUT) {
+        // Para los métodos que no son GET, se requiere autenticación y verificación de rol.
+        if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.DELETE) {
             String authHeader = headers.getFirst(HttpHeaders.AUTHORIZATION);
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .contentType(MediaType.APPLICATION_JSON)
                         .body("{\"error\": \"Token no presente o inválido\"}");
             }
-
+    
             String token = authHeader.replace("Bearer ", "");
             String rol = jwtService.extractClaim(token, claims -> {
                 String r = claims.get("rol", String.class);
                 if (r == null) r = claims.get("role", String.class);
                 return r;
             });
-
-            if (!"admin".equalsIgnoreCase(rol)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body("{\"error\": \"Operación restringida a admin\"}");
+    
+            // DELETE requiere rol "admin"
+            if (method == HttpMethod.DELETE) {
+                if (!"admin".equalsIgnoreCase(rol)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body("{\"error\": \"Operación restringida a administradores.\"}");
+                }
             }
         }
 
