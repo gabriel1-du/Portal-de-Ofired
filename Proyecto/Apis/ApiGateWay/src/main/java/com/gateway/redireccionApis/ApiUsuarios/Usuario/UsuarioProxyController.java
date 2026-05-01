@@ -35,23 +35,10 @@ public class UsuarioProxyController {
     @Value("${services.usuarios.base-path}")
     private String usuariosBasePath;
 
-    @RequestMapping(value = {"", "/**"}, method = RequestMethod.GET)
-    public ResponseEntity<?> proxyUsuariosGetPublic(HttpServletRequest request,
-                                                    @RequestHeader HttpHeaders headers) {
-        return handleProxy(request, null, headers);
-    }
-
-    @RequestMapping(value = {"", "/**"}, method = RequestMethod.POST)
-    public ResponseEntity<?> proxyUsuariosPostPublic(HttpServletRequest request,
-                                                     @RequestBody(required = false) String body,
-                                                     @RequestHeader HttpHeaders headers) {
-        return handleProxy(request, body, headers);
-    }
-
-    @RequestMapping(value = {"", "/**"}, method = {RequestMethod.PUT, RequestMethod.DELETE})
-    public ResponseEntity<?> proxyUsuariosSecure(HttpServletRequest request,
-                                                 @RequestBody(required = false) String body,
-                                                 @RequestHeader HttpHeaders headers) {
+    @RequestMapping(value = {"", "/**"}, method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+    public ResponseEntity<?> proxyUsuarios(HttpServletRequest request,
+                                           @RequestBody(required = false) String body,
+                                           @RequestHeader HttpHeaders headers) {
         return handleProxy(request, body, headers);
     }
 
@@ -72,14 +59,14 @@ public class UsuarioProxyController {
         HttpMethod method = HttpMethod.valueOf(request.getMethod());
         System.out.println("USUARIOS targetUrl: " + targetUrl + "  METHOD: " + method);
 
-        if (method == HttpMethod.DELETE || method == HttpMethod.PUT) {
+        if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.DELETE) {
             String authHeader = headers.getFirst(HttpHeaders.AUTHORIZATION);
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .contentType(MediaType.APPLICATION_JSON)
                         .body("{\"error\": \"Token no presente o inválido\"}");
             }
-
+            
             // Para DELETE, solo los administradores pueden realizar la operación.
             if (method == HttpMethod.DELETE) {
                 String token = authHeader.replace("Bearer ", "");

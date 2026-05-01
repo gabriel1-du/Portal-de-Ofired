@@ -45,7 +45,6 @@ public class SecurityConfig {
 
                 // URL públicas API Gestion
                 .requestMatchers(HttpMethod.GET, USUARIO_PUBLIC_GET).permitAll()   // lista pública api GESTION GET
-                .requestMatchers(HttpMethod.POST, "/api/proxy/usuariosApi/**").permitAll()
 
                 // URL públicas API Regiones
                 .requestMatchers(HttpMethod.GET, REGION_PUBLIC_GET).permitAll()

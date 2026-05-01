@@ -107,7 +107,6 @@ const CambiarCorreoPantalla = () => {
               type="submit"
               className="btn-cambiar-principal"
               disabled={cargando}
-              onClick={handleCambiar}
             >
               {cargando ? 'Cambiando...' : 'Cambiar'}
             </button>

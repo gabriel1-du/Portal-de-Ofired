@@ -13,6 +13,7 @@ import PerfilPantalla from './pantallas/PerfilPantalla'; // Importamos la pantal
 import ModificarPerfilUsuario from './pantallas/Formularios/ModificarPerfilUsuario';
 import ConfiguracionesPantalla from './pantallas/ConfiguracionesPantalla';
 import CambiarCorreoPantalla from './pantallas/FormulariosConfig/CambiarCorreoPantalla';
+import CambiarTelefonoPantalla from './pantallas/FormulariosConfig/CambiarTelefonoPantalla';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/perfil/modificar" element={<ModificarPerfilUsuario />} />
           <Route path="/configuracion" element={<ConfiguracionesPantalla />} />
           <Route path="/configuracion/cambiar-correo" element={<CambiarCorreoPantalla />} />
+          <Route path="/configuracion/cambiar-telefono" element={<CambiarTelefonoPantalla />} />
         </Routes>
       </div>
     </Router>

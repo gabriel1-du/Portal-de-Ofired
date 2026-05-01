@@ -61,15 +61,22 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Si tenemos un usuario y no está ya autenticado en el contexto de seguridad
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // Aquí es donde ocurre tu error si el usuario del token no existe en la BD del Gateway
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-
-            // Si el token es válido, establecemos la autenticación en el contexto
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-            System.out.println("✅ Usuario '" + username + "' autenticado por token.");
+            try {
+                
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                // Si el token es válido, establecemos la autenticación en el contexto de seguridad para que Spring Security lo reconozca como un usuario autenticado.
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+                System.out.println("✅ Usuario '" + username + "' autenticado por token.");
+            } catch (Exception e) {
+                // Si el usuario del token no se encuentra o el token es inválido,
+                // simplemente lo registramos y continuamos. Si la ruta es pública,
+                // Spring Security la permitirá. Si es protegida, la denegará
+                // porque no se estableció ninguna autenticación.
+                System.out.println("⚠️ No se pudo autenticar al usuario del token: " + e.getMessage());
+            }
         }
 
         filterChain.doFilter(request, response);

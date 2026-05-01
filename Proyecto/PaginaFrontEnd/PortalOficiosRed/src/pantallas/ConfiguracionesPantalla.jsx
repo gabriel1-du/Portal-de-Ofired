@@ -72,7 +72,7 @@ const ConfiguracionesPantalla = () => {
                 </button>
 
                 {/* Botón: Cambiar Teléfono */}
-                <button className="opcion-tarjeta">
+                <button className="opcion-tarjeta" onClick={() => navigate('/configuracion/cambiar-telefono')}>
                   <div className="opcion-info">
                     <span className="opcion-icono">📱</span>
                     <span className="opcion-texto">Cambiar Teléfono</span>
