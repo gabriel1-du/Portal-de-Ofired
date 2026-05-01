@@ -74,3 +74,21 @@
   color: #666;
   margin-bottom: 4px;
 }
+
+.btn-ver-perfil {
+  align-self: flex-start; /* Alinea el botón a la izquierda del contenedor flex */
+  margin-top: 4px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #f3961c; /* Naranja principal */
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-ver-perfil:hover {
+  background-color: #d88315; /* Naranja un poco más oscuro */
+}

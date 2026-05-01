@@ -7,6 +7,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 @SpringBootApplication
 public class UsuarioApiApplication {
+    
 	public static void main(String[] args) {
 
 		// Carga el archivo .env

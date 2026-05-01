@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext'; // 1. Importamos el contexto
+import { useParams } from 'react-router-dom'; // 1. Importamos useParams para leer la URL
+import { AuthContext } from '../context/AuthContext'; // Importamos el contexto de autenticación
 import { getPerfilFrontByUsuarioId } from '../servicios/perfilesUsuarioService'; // Asegúrate de que la ruta sea correcta
 import '../style/PerfilPantalla.css';
 
 const PerfilPantalla = () => {
-  // 2. Obtenemos el usuario que ha iniciado sesión desde el contexto
-  const { usuario } = useContext(AuthContext);
+  const { idDelPerfil } = useParams(); // 2. Obtenemos el ID del perfil a visualizar desde la URL
+  const { usuario: usuarioLogueado } = useContext(AuthContext); // 3. Obtenemos el usuario que ha iniciado sesión
 
   const [perfil, setPerfil] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -13,38 +14,40 @@ const PerfilPantalla = () => {
 
   useEffect(() => {
     const cargarPerfil = async () => {
-      // 3. Solo intentamos cargar el perfil si hay un usuario en el contexto
-      if (usuario && usuario.idUsuario) {
-        try {
-          setCargando(true);
-          // 4. Usamos el ID del usuario del contexto en lugar del ID de prueba
-          const datos = await getPerfilFrontByUsuarioId(usuario.idUsuario);
-          
-          if (!datos) {
-            setError("No se encontró el perfil para este usuario.");
-          } else {
-            setPerfil(datos);
-          }
-        } catch (err) {
-          setError("Ocurrió un error al intentar cargar el perfil.");
-          console.error(err);
-        } finally {
-          setCargando(false);
+      // 4. Siempre cargamos el perfil basado en el ID de la URL
+      if (!idDelPerfil) {
+        setError("No se ha especificado un perfil para cargar.");
+        setCargando(false);
+        return;
+      }
+      try {
+        setCargando(true);
+        setError(null); // Limpiar errores previos al re-cargar
+        const datos = await getPerfilFrontByUsuarioId(idDelPerfil);
+        
+        if (!datos) {
+          setError("No se encontró el perfil para este usuario.");
+        } else {
+          setPerfil(datos);
         }
-      } else {
-        // Si no hay usuario, no hay nada que cargar.
+      } catch (err) {
+        setError("Ocurrió un error al intentar cargar el perfil.");
+        console.error(err);
+      } finally {
         setCargando(false);
       }
     };
 
     cargarPerfil();
-  }, [usuario]); // 5. El efecto se vuelve a ejecutar si el 'usuario' cambia (login/logout)
+  }, [idDelPerfil]); // 5. El efecto se ejecuta cada vez que el ID en la URL cambia
 
-  //  Manejo de los distintos estados de la carga y la sesión
+  // 6. Comprobamos si el perfil que se está viendo pertenece al usuario logueado.
+  const esMiPerfil = usuarioLogueado && usuarioLogueado.idUsuario === parseInt(idDelPerfil);
+
+  // Manejo de los distintos estados de la carga
   if (cargando) return <div className="estado-mensaje">Cargando perfil...</div>;
-  if (!usuario) return <div className="estado-mensaje">Debes iniciar sesión para ver tu perfil.</div>;
   if (error) return <div className="estado-mensaje error">{error}</div>;
-  if (!perfil) return <div className="estado-mensaje">No se pudo cargar la información del perfil.</div>;
+  if (!perfil) return <div className="estado-mensaje">No se encontró el perfil.</div>;
 
 
   // Destructuramos TODOS los atributos del JSON como pediste
@@ -101,9 +104,12 @@ const PerfilPantalla = () => {
           <button className="btn-maqueta btn-reportar">
              Reportar 🚨
           </button>
-          <button className="btn-maqueta btn-configurar">
-             Configurar ⚙️
-          </button>
+          {/* 7. Mostramos el botón "Configurar" solo si es el perfil del usuario logueado */}
+          {esMiPerfil && (
+            <button className="btn-maqueta btn-configurar">
+               Configurar ⚙️
+            </button>
+          )}
         </div>
       </div>
 

@@ -1,0 +1,174 @@
+/* Contenedor principal de la pantalla */
+.crear-perfil-contenedor {
+  max-width: 800px;
+  margin: 40px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0 20px;
+}
+
+/* Cabecera (Botón volver y Título) */
+.crear-perfil-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.btn-volver {
+  position: absolute;
+  left: 0;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: none;
+  background-color: #fff;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.btn-volver:hover {
+  background-color: #f0f0f0;
+}
+
+.titulo-crear {
+  color: #333;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+/* Tarjeta principal (La caja central) */
+.crear-perfil-tarjeta {
+  background-color: #fff;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 8%);
+  border: 1px solid #e0e0e0;
+}
+
+/* --- ESTILOS COMPARTIDOS PARA INPUTS DE IMAGEN --- */
+.input-archivo-oculto {
+  display: none; /* Oculta el feo botón nativo del navegador */
+}
+
+.input-area {
+  background-color: #f8f9fa; /* Gris claro */
+  border: 2px dashed #ccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.input-area:hover {
+  border-color: #f3961c; /* Naranjo al pasar el mouse */
+  background-color: #fdf6ec; /* Naranjo súper claro */
+}
+
+.texto-placeholder {
+  color: #555;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* 1. Área del Banner */
+.banner-area {
+  width: 100%;
+  height: 200px;
+  border-radius: 20px;
+}
+
+/* 2. Área de la Foto de Perfil */
+.foto-perfil-seccion {
+  display: flex;
+  align-items: center;
+  /* Margen negativo para subir la foto arriba del banner igual que en el diseño */
+  margin-top: -50px; 
+  margin-left: 30px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.foto-area {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 5px solid #fff; /* Borde blanco para separar del banner */
+  background-color: #e9ecef;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 10%);
+}
+
+.icono-camara {
+  font-size: 2rem;
+}
+
+.texto-foto-lateral {
+  margin-left: 20px;
+  margin-top: 50px; /* Para alinearlo visualmente debajo del banner */
+  color: #333;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* 3. Área de Descripción */
+.descripcion-seccion {
+  margin-top: 10px;
+}
+
+.input-descripcion {
+  width: 100%;
+  min-height: 150px;
+  border-radius: 20px;
+  background-color: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  padding: 20px;
+  font-size: 1.1rem;
+  color: #333;
+  font-family: inherit;
+  resize: vertical; /* Permite estirar solo hacia abajo */
+  box-sizing: border-box;
+}
+
+.input-descripcion:focus {
+  outline: none;
+  border-color: #f3961c;
+  background-color: #fff;
+}
+
+/* 4. Botón Siguiente */
+.acciones-seccion {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.btn-siguiente {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #f3961c; /* Naranjo principal */
+  color: #fff;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgb(243 150 28 / 30%);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-siguiente:hover {
+  background-color: #e08919;
+  transform: scale(1.05);
+}

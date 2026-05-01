@@ -64,7 +64,7 @@ public class PerfilesProxyController {
         HttpMethod method = HttpMethod.valueOf(request.getMethod());
         System.out.println("PERFILES targetUrl: " + targetUrl + "  METHOD: " + method);
 
-        if (method == HttpMethod.POST || method == HttpMethod.DELETE || method == HttpMethod.PUT) {
+        if (method == HttpMethod.DELETE || method == HttpMethod.PUT) {
             String authHeader = headers.getFirst(HttpHeaders.AUTHORIZATION);
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

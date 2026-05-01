@@ -8,7 +8,6 @@ import io.github.cdimascio.dotenv.Dotenv;
 @SpringBootApplication
 public class PublicacionesApiApplication {
 
-    
 	public static void main(String[] args) {
 		// Carga el archivo .env
         Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();

@@ -19,6 +19,31 @@ export const getPerfilById = async (id) => {
   }
 };
 
+// Función para crear un nuevo perfil de usuario
+export const createPerfilUsuario = async (perfilData) => {
+  try {
+    console.log("Llamando a la API de Perfiles (POST):", `${API_URL_PERFILES}`);
+    const response = await fetch(`${API_URL_PERFILES}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(perfilData),
+    });
+
+    if (response.ok) {
+      console.log("Perfil de usuario creado exitosamente.");
+      return await response.json();
+    } else {
+      const errorText = await response.text();
+      console.error("Error al crear el perfil de usuario. Respuesta del servidor:", errorText);
+      throw new Error(`Error al crear el perfil: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Algo falló en la petición para crear el perfil de usuario:", error);
+    throw error;
+  }
+};
 
 // Función para obtener un perfil por el ID del Usuario (Cuenta base)
 export const getPerfilByUsuarioId = async (idUsuario) => {
