@@ -24,6 +24,7 @@ import static com.gateway.redireccionApis.ApiUsuarios.Usuario.UsuarioPublicRoute
 import static com.gateway.redireccionApis.ApiUsuarios.TiposUsuarios.TiposUsuarioPublicRoutes.TIPOS_USUARIO_PUBLIC_GET;
 import static com.gateway.redireccionApis.publicacionesApis.publicacionPublicRoutes.PUBLICACION_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.PerfilesUsuarios.PerfilesPublicRoutes.PERFILES_PUBLIC_GET;
+import static com.gateway.redireccionApis.publicacionesApis.ReseniasPublicRoutes.RESENIAS_PUBLIC_GET;
 import java.util.Arrays;
 
 
@@ -68,6 +69,9 @@ public class SecurityConfig {
 
                   // URL públicas API Perfiles
                 .requestMatchers(HttpMethod.GET, PERFILES_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Reseñas
+                .requestMatchers(HttpMethod.GET, RESENIAS_PUBLIC_GET ).permitAll()
                 
 
                 // Otras URL Token obligatorio

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/resenias")
+@RequestMapping("/api/reseniasApi")
 public class ReseniaController {
 
     @Autowired
