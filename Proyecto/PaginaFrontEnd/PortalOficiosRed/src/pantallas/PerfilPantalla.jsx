@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'; // 1. Importamos useP
 import { AuthContext } from '../context/AuthContext'; // Importamos el contexto de autenticación
 import { getPerfilFrontByUsuarioId } from '../servicios/perfilesUsuarioService'; // Asegúrate de que la ruta sea correcta
 import '../style/PerfilPantalla.css';
+import ValoracionCard from '../assets/ValoracionCard'; // Importamos el componente de valoración
 
 const PerfilPantalla = () => {
   const { idDelPerfil } = useParams(); // 2. Obtenemos el ID del perfil a visualizar desde la URL
@@ -75,6 +76,28 @@ const PerfilPantalla = () => {
 
   // Armamos el nombre completo (manejando si no hay segundo nombre/apellido)
   const nombreCompleto = `${primerNombre} ${segundoNombre || ''} ${primerApellido} ${segundoApellido || ''}`.trim();
+
+  // Datos de ejemplo para las valoraciones (maqueta)
+  const valoracionesEjemplo = [
+    {
+      autor: 'Ana Pérez',
+      foto: 'https://randomuser.me/api/portraits/women/44.jpg',
+      calificacion: 5,
+      texto: 'Excelente profesional. Muy rápido y eficiente. Resolvió mi problema en minutos. ¡Totalmente recomendado!'
+    },
+    {
+      autor: 'Carlos Gómez',
+      foto: 'https://randomuser.me/api/portraits/men/32.jpg',
+      calificacion: 4,
+      texto: 'Buen trabajo en general. Fue puntual y amable, aunque tardó un poco más de lo esperado. El resultado final fue satisfactorio.'
+    },
+    {
+      autor: 'Sofía Martínez',
+      foto: null, // Para probar el avatar por defecto
+      calificacion: 5,
+      texto: '¡Un servicio impecable! Muy detallista y cuidadoso con su trabajo. Sin duda volveré a contactarlo si lo necesito.'
+    }
+  ];
 
   return (
     <div className="perfil-pantalla-contenedor">
@@ -151,6 +174,22 @@ const PerfilPantalla = () => {
           </div>
         </div>
 
+      </div>
+
+      {/* 4. SECCIÓN VALORACIONES (Maqueta) */}
+      <div className="perfil-seccion-valoraciones" style={{ marginTop: '40px' }}>
+        <h3 style={{ borderBottom: '2px solid #eee', paddingBottom: '10px', marginBottom: '20px', color: '#333' }}>Valoraciones y Reseñas</h3>
+        <div className="lista-valoraciones" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          {valoracionesEjemplo.map((valoracion, index) => (
+            <ValoracionCard 
+              key={index}
+              autor={valoracion.autor}
+              foto={valoracion.foto}
+              calificacion={valoracion.calificacion}
+              texto={valoracion.texto}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
