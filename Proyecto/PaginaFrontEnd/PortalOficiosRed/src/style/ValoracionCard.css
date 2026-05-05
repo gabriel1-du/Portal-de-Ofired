@@ -91,3 +91,53 @@
     justify-content: center;
   }
 }
+
+/* --- CONTENEDOR DE LA LISTA DE VALORACIONES --- */
+.perfil-seccion-valoraciones {
+  margin-top: 40px;
+  background-color: #2c3e50; /* Un fondo oscuro y elegante */
+  padding: 30px;
+  /* El contenedor principal ya tiene border-radius, así que este no es necesario si el contenedor tiene overflow:hidden */
+}
+
+.perfil-seccion-valoraciones h3 {
+  border-bottom: 2px solid #34495e; /* Un borde sutil, más oscuro que el fondo */
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  color: #fff; /* Texto blanco para que contraste */
+}
+
+.lista-valoraciones {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sin-reseñas-texto {
+  color: #bdc3c7; /* Un gris claro para el texto cuando no hay reseñas */
+  text-align: center;
+  padding: 20px 0;
+  font-style: italic;
+}
+
+/* --- Botón "Ver más reseñas" --- */
+.contenedor-boton-ver-mas {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.btn-ver-mas {
+  background-color: #f3961c; /* Naranja del proyecto */
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-ver-mas:hover {
+  background-color: #d88318; /* Naranja más oscuro */
+  transform: translateY(-2px);
+}

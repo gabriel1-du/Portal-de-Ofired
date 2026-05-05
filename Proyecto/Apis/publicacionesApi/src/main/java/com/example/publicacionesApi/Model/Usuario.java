@@ -38,6 +38,9 @@ package com.example.publicacionesApi.Model;
         @Column(name = "password", nullable = false, length = 255)
         private String password;
      
+        @Column(name = "foto", length = 255)
+        private String foto;
+
         @Column(name = "valoracion", precision = 3, scale = 2)
         private BigDecimal valoracion;
 

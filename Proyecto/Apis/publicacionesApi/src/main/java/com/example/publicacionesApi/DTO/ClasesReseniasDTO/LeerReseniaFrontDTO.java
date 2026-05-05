@@ -8,6 +8,7 @@ public class LeerReseniaFrontDTO {
     private Integer ReseniaId;
     private String nombreAutor;
     private String nombreUsuarioReseniado;
+    private String fotoUsuarioAutor;
     private Double calificacion;
     private String textoResenia;
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'; // 1. Importamos useParams y useNavigate
 import { AuthContext } from '../context/AuthContext'; // Importamos el contexto de autenticación
 import { getPerfilFrontByUsuarioId } from '../servicios/perfilesUsuarioService'; // Asegúrate de que la ruta sea correcta
+import { listarReseniasPorUsuario } from '../servicios/reseniasService'; // Importamos el servicio de reseñas
 import '../style/PerfilPantalla.css';
 import ValoracionCard from '../assets/ValoracionCard'; // Importamos el componente de valoración
 
@@ -13,10 +14,10 @@ const PerfilPantalla = () => {
   const [perfil, setPerfil] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
+  const [reseñas, setReseñas] = useState([]); // Estado para guardar las reseñas
 
   useEffect(() => {
-    const cargarPerfil = async () => {
-      // 4. Siempre cargamos el perfil basado en el ID de la URL
+    const cargarDatos = async () => {
       if (!idDelPerfil) {
         setError("No se ha especificado un perfil para cargar.");
         setCargando(false);
@@ -24,23 +25,32 @@ const PerfilPantalla = () => {
       }
       try {
         setCargando(true);
-        setError(null); // Limpiar errores previos al re-cargar
-        const datos = await getPerfilFrontByUsuarioId(idDelPerfil);
-        
-        if (!datos) {
+        setError(null);
+
+        // Cargamos el perfil y las reseñas en paralelo para mayor eficiencia
+        const [datosPerfil, datosReseñas] = await Promise.all([
+          getPerfilFrontByUsuarioId(idDelPerfil),
+          listarReseniasPorUsuario(idDelPerfil)
+        ]);
+
+        if (!datosPerfil) {
           setError("No se encontró el perfil para este usuario.");
         } else {
-          setPerfil(datos);
+          setPerfil(datosPerfil);
         }
+
+        // El servicio devuelve un array vacío si no hay reseñas, lo cual es perfecto.
+        setReseñas(datosReseñas);
+
       } catch (err) {
-        setError("Ocurrió un error al intentar cargar el perfil.");
+        setError("Ocurrió un error al intentar cargar los datos del perfil o las reseñas.");
         console.error(err);
       } finally {
         setCargando(false);
       }
     };
 
-    cargarPerfil();
+    cargarDatos();
   }, [idDelPerfil]); // 5. El efecto se ejecuta cada vez que el ID en la URL cambia
 
   // 6. Comprobamos si el perfil que se está viendo pertenece al usuario logueado.
@@ -76,28 +86,6 @@ const PerfilPantalla = () => {
 
   // Armamos el nombre completo (manejando si no hay segundo nombre/apellido)
   const nombreCompleto = `${primerNombre} ${segundoNombre || ''} ${primerApellido} ${segundoApellido || ''}`.trim();
-
-  // Datos de ejemplo para las valoraciones (maqueta)
-  const valoracionesEjemplo = [
-    {
-      autor: 'Ana Pérez',
-      foto: 'https://randomuser.me/api/portraits/women/44.jpg',
-      calificacion: 5,
-      texto: 'Excelente profesional. Muy rápido y eficiente. Resolvió mi problema en minutos. ¡Totalmente recomendado!'
-    },
-    {
-      autor: 'Carlos Gómez',
-      foto: 'https://randomuser.me/api/portraits/men/32.jpg',
-      calificacion: 4,
-      texto: 'Buen trabajo en general. Fue puntual y amable, aunque tardó un poco más de lo esperado. El resultado final fue satisfactorio.'
-    },
-    {
-      autor: 'Sofía Martínez',
-      foto: null, // Para probar el avatar por defecto
-      calificacion: 5,
-      texto: '¡Un servicio impecable! Muy detallista y cuidadoso con su trabajo. Sin duda volveré a contactarlo si lo necesito.'
-    }
-  ];
 
   return (
     <div className="perfil-pantalla-contenedor">
@@ -177,19 +165,30 @@ const PerfilPantalla = () => {
       </div>
 
       {/* 4. SECCIÓN VALORACIONES (Maqueta) */}
-      <div className="perfil-seccion-valoraciones" style={{ marginTop: '40px' }}>
-        <h3 style={{ borderBottom: '2px solid #eee', paddingBottom: '10px', marginBottom: '20px', color: '#333' }}>Valoraciones y Reseñas</h3>
-        <div className="lista-valoraciones" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          {valoracionesEjemplo.map((valoracion, index) => (
-            <ValoracionCard 
-              key={index}
-              autor={valoracion.autor}
-              foto={valoracion.foto}
-              calificacion={valoracion.calificacion}
-              texto={valoracion.texto}
-            />
-          ))}
+      <div className="perfil-seccion-valoraciones">
+        <h3>Valoraciones y Reseñas</h3>
+        <div className="lista-valoraciones">
+          {reseñas.length > 0 ? (
+            reseñas.map((reseña) => (
+              <ValoracionCard
+                key={reseña.reseniaId}
+                autor={reseña.nombreAutor}
+                foto={reseña.fotoUsuarioAutor}
+                calificacion={reseña.calificacion}
+                texto={reseña.textoResenia}
+              />
+            ))
+          ) : (
+            <p className="sin-reseñas-texto">Este usuario aún no tiene reseñas.</p>
+          )}
         </div>
+
+        {/* Mostramos el botón solo si hay reseñas */}
+        {reseñas.length > 0 && (
+            <div className="contenedor-boton-ver-mas">
+                <button className="btn-ver-mas">Ver más reseñas</button>
+            </div>
+        )}
       </div>
     </div>
   );

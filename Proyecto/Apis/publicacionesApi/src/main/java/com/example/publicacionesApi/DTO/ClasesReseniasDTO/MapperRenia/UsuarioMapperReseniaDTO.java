@@ -58,7 +58,12 @@ public class UsuarioMapperReseniaDTO {
 
         // Buscar el nombre del autor
         Usuario autor = usuarioRepository.findById(resenia.getIdAutor()).orElse(null);
-        dto.setNombreAutor(autor != null ? autor.getPNombre() + " " + autor.getPApellido() : "Usuario no encontrado");
+        if (autor != null) {
+            dto.setNombreAutor(autor.getPNombre() + " " + autor.getPApellido());
+            dto.setFotoUsuarioAutor(autor.getFoto());
+        } else {
+            dto.setNombreAutor("Usuario no encontrado");
+        }
 
         // Buscar el nombre del usuario reseñado
         Usuario usuarioReseniado = usuarioRepository.findById(resenia.getIdUsuarioReseniado()).orElse(null);
