@@ -20,6 +20,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -92,10 +94,13 @@ public class RespuestaReseniaTest {
     @DisplayName("obtenerPorResenia debe retornar el DTO correcto con los datos de la respuesta")
     void testObtenerPorResenia_DebeRetornarAtributosCorrectos() {
         // 2. Act
-        RespuestaReseniaDTO resultado = respuestaReseniaService.obtenerPorResenia(reseniaExistente.getIdResenia());
+        List<RespuestaReseniaDTO> resultados = respuestaReseniaService.obtenerPorResenia(reseniaExistente.getIdResenia());
 
         // 3. Assert
-        assertNotNull(resultado, "El DTO no debe ser nulo");
+        assertNotNull(resultados, "La lista no debe ser nula");
+        assertFalse(resultados.isEmpty(), "La lista debe contener al menos una respuesta");
+        
+        RespuestaReseniaDTO resultado = resultados.get(0);
         assertEquals(respuestaExistente.getIdRespuestaResenia(), resultado.getIdRespuestaResenia(), "El ID de la respuesta debe coincidir");
         assertEquals(reseniaExistente.getIdResenia(), resultado.getIdResenia(), "El ID de la reseña enlazada debe coincidir");
         assertEquals(autorRespuesta.getIdUsuario(), resultado.getIdAutorRes(), "El autor de la respuesta debe coincidir");
@@ -106,12 +111,13 @@ public class RespuestaReseniaTest {
     @DisplayName("obtenerPorReseniaFront debe retornar el DTO de Frontend con el ID del autor temporalmente")
     void testObtenerPorReseniaFront_DebeRetornarDatosFront() {
         // 2. Act
-        RespuestaReseniaFrontDTO resultado = respuestaReseniaService.obtenerPorReseniaFront(reseniaExistente.getIdResenia());
+        List<RespuestaReseniaFrontDTO> resultados = respuestaReseniaService.obtenerPorReseniaFront(reseniaExistente.getIdResenia());
 
         // 3. Assert
-        assertNotNull(resultado);
+        assertNotNull(resultados);
+        assertFalse(resultados.isEmpty(), "La lista de respuestas front no debe estar vacía");
         // Recordando que en tu Mapper configuramos momentáneamente el Integer en "nombreDelAutor"
-        assertEquals(autorRespuesta.getIdUsuario(), resultado.getNombreDelAutor(), "El ID del autor (mapeado como nombre momentáneamente) debe coincidir");
+        assertEquals(autorRespuesta.getIdUsuario(), resultados.get(0).getNombreDelAutor(), "El ID del autor (mapeado como nombre momentáneamente) debe coincidir");
     }
 
     @Test
@@ -159,11 +165,8 @@ public class RespuestaReseniaTest {
         // Act
         respuestaReseniaService.eliminar(respuestaExistente.getIdRespuestaResenia());
 
-        // Assert: Intentar buscarla de nuevo debe arrojar la excepción de "no encontrada"
-        Exception excepcion = assertThrows(RuntimeException.class, () -> {
-            respuestaReseniaService.obtenerPorResenia(reseniaExistente.getIdResenia());
-        });
-
-        assertTrue(excepcion.getMessage().contains("no encontrada"), "Debe lanzar una excepción indicando que ya no se encuentra la respuesta");
+        // Assert: La lista de respuestas debe estar vacía para esa reseña
+        List<RespuestaReseniaDTO> resultados = respuestaReseniaService.obtenerPorResenia(reseniaExistente.getIdResenia());
+        assertTrue(resultados.isEmpty(), "La lista de respuestas debe estar vacía después de eliminar la respuesta");
     }
 }

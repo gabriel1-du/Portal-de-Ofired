@@ -138,7 +138,7 @@ CREATE TABLE RESENIA (
 
 CREATE TABLE RESPUESTA_RESENIA (
     id_respuesta_resenia INT AUTO_INCREMENT PRIMARY KEY,
-    id_resenia INT NOT NULL UNIQUE, -- Unique porque suele ser 1 respuesta por reseña
+    id_resenia INT NOT NULL ,
     id_autor_res INT NOT NULL,
     texto_respuesta_resenia TEXT NOT NULL,
     CONSTRAINT fk_resp_resenia FOREIGN KEY (id_resenia) REFERENCES RESENIA(id_resenia) ON DELETE CASCADE,

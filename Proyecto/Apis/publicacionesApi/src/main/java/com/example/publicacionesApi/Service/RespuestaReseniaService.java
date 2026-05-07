@@ -5,10 +5,13 @@ import com.example.publicacionesApi.DTO.ClasesRespuestasReseniasDTO.RespuestaRes
 import com.example.publicacionesApi.DTO.ClasesRespuestasReseniasDTO.actualizarRespuestaReseniaDTO;
 import com.example.publicacionesApi.DTO.ClasesRespuestasReseniasDTO.crearRespuestaReseniaDTO;
 
+import java.util.List;
+
 public interface RespuestaReseniaService {
     
-    RespuestaReseniaDTO obtenerPorResenia(Integer idResenia);
-    RespuestaReseniaFrontDTO obtenerPorReseniaFront(Integer idResenia);
+    List<RespuestaReseniaDTO> listarTodas();
+    List<RespuestaReseniaDTO> obtenerPorResenia(Integer idResenia);
+    List<RespuestaReseniaFrontDTO> obtenerPorReseniaFront(Integer idResenia);
     RespuestaReseniaDTO crear(crearRespuestaReseniaDTO respuestaReseniaDTO);
     RespuestaReseniaDTO actualizar(Integer id, actualizarRespuestaReseniaDTO respuestaReseniaDTO);
     void eliminar(Integer id);

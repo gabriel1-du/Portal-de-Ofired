@@ -9,20 +9,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/respuestas")
+@RequestMapping("/api/respuestasReseniasApi")
 public class RespuestaReseniaController {
 
     @Autowired
     private RespuestaReseniaService respuestaReseniaService;
 
+    @GetMapping
+    public ResponseEntity<List<RespuestaReseniaDTO>> listarTodas() {
+        return ResponseEntity.ok(respuestaReseniaService.listarTodas());
+    }
+
     @GetMapping("/resenia/{idResenia}")
-    public ResponseEntity<RespuestaReseniaDTO> obtenerPorResenia(@PathVariable Integer idResenia) {
+    public ResponseEntity<List<RespuestaReseniaDTO>> obtenerPorResenia(@PathVariable Integer idResenia) {
         return ResponseEntity.ok(respuestaReseniaService.obtenerPorResenia(idResenia));
     }
 
     @GetMapping("/front/resenia/{idResenia}")
-    public ResponseEntity<RespuestaReseniaFrontDTO> obtenerPorReseniaFront(@PathVariable Integer idResenia) {
+    public ResponseEntity<List<RespuestaReseniaFrontDTO>> obtenerPorReseniaFront(@PathVariable Integer idResenia) {
         return ResponseEntity.ok(respuestaReseniaService.obtenerPorReseniaFront(idResenia));
     }
 

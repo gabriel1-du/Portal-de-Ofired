@@ -11,6 +11,9 @@ import com.example.publicacionesApi.Service.RespuestaReseniaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class RespuestaReseniaServiceImpl implements RespuestaReseniaService {
 
@@ -21,26 +24,28 @@ public class RespuestaReseniaServiceImpl implements RespuestaReseniaService {
     private RespuestaReseniaMapper respuestaReseniaMapper;
 
     @Override
-    public RespuestaReseniaDTO obtenerPorResenia(Integer idResenia) {
-        RespuestaResenia respuesta = respuestaReseniaRepository.findByResenia_IdResenia(idResenia)
-                .orElseThrow(() -> new RuntimeException("Respuesta no encontrada para la reseña con id: " + idResenia));
-        return respuestaReseniaMapper.toRespuestaReseniaDTO(respuesta);
+    public List<RespuestaReseniaDTO> listarTodas() {
+        return respuestaReseniaRepository.findAll().stream()
+                .map(respuestaReseniaMapper::toRespuestaReseniaDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public RespuestaReseniaFrontDTO obtenerPorReseniaFront(Integer idResenia) {
-        RespuestaResenia respuesta = respuestaReseniaRepository.findByResenia_IdResenia(idResenia)
-                .orElseThrow(() -> new RuntimeException("Respuesta no encontrada para la reseña con id: " + idResenia));
-        return respuestaReseniaMapper.toRespuestaReseniaFrontDTO(respuesta);
+    public List<RespuestaReseniaDTO> obtenerPorResenia(Integer idResenia) {
+        return respuestaReseniaRepository.findByResenia_IdResenia(idResenia).stream()
+                .map(respuestaReseniaMapper::toRespuestaReseniaDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RespuestaReseniaFrontDTO> obtenerPorReseniaFront(Integer idResenia) {
+        return respuestaReseniaRepository.findByResenia_IdResenia(idResenia).stream()
+                .map(respuestaReseniaMapper::toRespuestaReseniaFrontDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public RespuestaReseniaDTO crear(crearRespuestaReseniaDTO respuestaReseniaDTO) {
-        boolean yaExiste = respuestaReseniaRepository
-                .existsByResenia_IdResenia(respuestaReseniaDTO.getIdResenia());
-        if (yaExiste) {
-            throw new RuntimeException("Ya existe una respuesta para esta reseña");
-        }
         RespuestaResenia respuestaResenia = respuestaReseniaMapper.toEntity(respuestaReseniaDTO);
         RespuestaResenia respuestaGuardada = respuestaReseniaRepository.save(respuestaResenia);
         return respuestaReseniaMapper.toRespuestaReseniaDTO(respuestaGuardada);
