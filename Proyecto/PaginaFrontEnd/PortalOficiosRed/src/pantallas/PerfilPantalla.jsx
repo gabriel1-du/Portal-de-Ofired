@@ -1,20 +1,26 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // 1. Importamos useParams y useNavigate
-import { AuthContext } from '../context/AuthContext'; // Importamos el contexto de autenticación
-import { getPerfilFrontByUsuarioId } from '../servicios/perfilesUsuarioService'; // Asegúrate de que la ruta sea correcta
-import { listarReseniasPorUsuario } from '../servicios/reseniasService'; // Importamos el servicio de reseñas
+import { useParams, useNavigate } from 'react-router-dom'; 
+import { AuthContext } from '../context/AuthContext'; 
+import { getPerfilFrontByUsuarioId } from '../servicios/perfilesUsuarioService'; 
+import { listarReseniasPorUsuario } from '../servicios/reseniasService'; 
+// --- AÑADIDO: Importamos el servicio y el componente de la tarjeta ---
+import { getPublicacionesByAutor } from '../servicios/publicacionesService';
+import PublicacionCard from '../assets/PublicacionesCard'; 
 import '../style/PerfilPantalla.css';
-import ValoracionCard from '../assets/ValoracionCard'; // Importamos el componente de valoración
+import ValoracionCard from '../assets/ValoracionCard'; 
 
 const PerfilPantalla = () => {
-  const { idDelPerfil } = useParams(); // 2. Obtenemos el ID del perfil a visualizar desde la URL
+  const { idDelPerfil } = useParams(); 
   const navigate = useNavigate();
-  const { usuario: usuarioLogueado } = useContext(AuthContext); // 3. Obtenemos el usuario que ha iniciado sesión
+  const { usuario: usuarioLogueado } = useContext(AuthContext); 
 
   const [perfil, setPerfil] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-  const [reseñas, setReseñas] = useState([]); // Estado para guardar las reseñas
+  const [reseñas, setReseñas] = useState([]); 
+  
+  // --- AÑADIDO: Estado para guardar las publicaciones y evitar el error "is not defined" ---
+  const [publicacionesDelUsuario, setPublicacionesDelUsuario] = useState([]); 
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -27,10 +33,11 @@ const PerfilPantalla = () => {
         setCargando(true);
         setError(null);
 
-        // Cargamos el perfil y las reseñas en paralelo para mayor eficiencia
-        const [datosPerfil, datosReseñas] = await Promise.all([
+        // --- AÑADIDO: Cargamos el perfil, las reseñas y las PUBLICACIONES en paralelo ---
+        const [datosPerfil, datosReseñas, datosPublicaciones] = await Promise.all([
           getPerfilFrontByUsuarioId(idDelPerfil),
-          listarReseniasPorUsuario(idDelPerfil)
+          listarReseniasPorUsuario(idDelPerfil),
+          getPublicacionesByAutor(idDelPerfil) // Llamada a tu API de publicaciones
         ]);
 
         if (!datosPerfil) {
@@ -39,11 +46,13 @@ const PerfilPantalla = () => {
           setPerfil(datosPerfil);
         }
 
-        // El servicio devuelve un array vacío si no hay reseñas, lo cual es perfecto.
         setReseñas(datosReseñas);
+        
+        // --- AÑADIDO: Guardamos las publicaciones en el estado (si viene nulo, ponemos un array vacío) ---
+        setPublicacionesDelUsuario(datosPublicaciones || []);
 
       } catch (err) {
-        setError("Ocurrió un error al intentar cargar los datos del perfil o las reseñas.");
+        setError("Ocurrió un error al intentar cargar los datos del perfil, reseñas o publicaciones.");
         console.error(err);
       } finally {
         setCargando(false);
@@ -51,18 +60,14 @@ const PerfilPantalla = () => {
     };
 
     cargarDatos();
-  }, [idDelPerfil]); // 5. El efecto se ejecuta cada vez que el ID en la URL cambia
+  }, [idDelPerfil]); 
 
-  // 6. Comprobamos si el perfil que se está viendo pertenece al usuario logueado.
   const esMiPerfil = usuarioLogueado && usuarioLogueado.idUsuario === parseInt(idDelPerfil);
 
-  // Manejo de los distintos estados de la carga
   if (cargando) return <div className="estado-mensaje">Cargando perfil...</div>;
   if (error) return <div className="estado-mensaje error">{error}</div>;
   if (!perfil) return <div className="estado-mensaje">No se encontró el perfil.</div>;
 
-
-  // Destructuramos TODOS los atributos del JSON como pediste
   const {
     idPerfilUsuario,
     idUsuario,
@@ -84,7 +89,6 @@ const PerfilPantalla = () => {
     fechaCreacion
   } = perfil;
 
-  // Armamos el nombre completo (manejando si no hay segundo nombre/apellido)
   const nombreCompleto = `${primerNombre} ${segundoNombre || ''} ${primerApellido} ${segundoApellido || ''}`.trim();
 
   return (
@@ -113,13 +117,11 @@ const PerfilPantalla = () => {
         </div>
 
         <div className="perfil-acciones">
-          {/* 7. Mostramos el botón "Reportar" solo si NO es el perfil del usuario logueado */}
           {!esMiPerfil && (
             <button className="btn-maqueta btn-reportar">
                Reportar 🚨
             </button>
           )}
-          {/* 8. Mostramos el botón "Configurar" solo si SÍ es el perfil del usuario logueado */}
           {esMiPerfil && (
             <button className="btn-maqueta btn-configurar" onClick={() => navigate('/perfil/modificar')}>
                Configurar ⚙️
@@ -148,7 +150,6 @@ const PerfilPantalla = () => {
           <div className="info-item">
             <span className="info-label">Calificación:</span>
             <span className="info-valor estrellas">
-              {/* Simulamos estrellas según la calificación */}
               {calificacion > 0 ? `⭐ ${calificacion}` : 'Sin calificación'}
             </span>
           </div>
@@ -185,12 +186,29 @@ const PerfilPantalla = () => {
 
         {/* Mostramos el botón solo si hay reseñas */}
         {reseñas.length > 0 && (
-            <div className="contenedor-boton-ver-mas">
-                <button className="btn-ver-mas">Ver más reseñas</button>
-            </div>
+          <div className="contenedor-boton-ver-mas">
+            <button className="btn-ver-mas">Ver más reseñas</button>
+          </div>
         )}
       </div>
-    </div>
+
+      {/* --- INSERCIÓN SOLICITADA: MIS TRABAJOS --- */}
+      <div className="mis-publicaciones-container">
+        <h2 className="titulo-seccion">Mis Trabajos Publicados</h2>
+        <div className="publicaciones-grid">
+          {/* Usamos un condicional && por seguridad por si el array viene null o vacío */}
+          {publicacionesDelUsuario && publicacionesDelUsuario.length > 0 ? (
+            publicacionesDelUsuario.map(pub => (
+              <PublicacionCard key={pub.idPublicacion || pub.id} publicacion={pub} />
+            ))
+          ) : (
+            <p className="sin-reseñas-texto">Este profesional aún no ha publicado trabajos.</p>
+          )}
+        </div>
+      </div>
+      {/* --- FIN DE LA INSERCIÓN --- */}
+
+    </div> 
   );
 };
 
