@@ -1,6 +1,9 @@
 package com.example.publicacionesApi.Controller;
 
-import com.example.publicacionesApi.Model.RespuestaResenia;
+import com.example.publicacionesApi.DTO.ClasesRespuestasReseniasDTO.RespuestaReseniaDTO;
+import com.example.publicacionesApi.DTO.ClasesRespuestasReseniasDTO.RespuestaReseniaFrontDTO;
+import com.example.publicacionesApi.DTO.ClasesRespuestasReseniasDTO.actualizarRespuestaReseniaDTO;
+import com.example.publicacionesApi.DTO.ClasesRespuestasReseniasDTO.crearRespuestaReseniaDTO;
 import com.example.publicacionesApi.Service.RespuestaReseniaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +17,23 @@ public class RespuestaReseniaController {
     private RespuestaReseniaService respuestaReseniaService;
 
     @GetMapping("/resenia/{idResenia}")
-    public ResponseEntity<RespuestaResenia> obtenerPorResenia(@PathVariable Integer idResenia) {
+    public ResponseEntity<RespuestaReseniaDTO> obtenerPorResenia(@PathVariable Integer idResenia) {
         return ResponseEntity.ok(respuestaReseniaService.obtenerPorResenia(idResenia));
     }
 
+    @GetMapping("/front/resenia/{idResenia}")
+    public ResponseEntity<RespuestaReseniaFrontDTO> obtenerPorReseniaFront(@PathVariable Integer idResenia) {
+        return ResponseEntity.ok(respuestaReseniaService.obtenerPorReseniaFront(idResenia));
+    }
+
     @PostMapping
-    public ResponseEntity<RespuestaResenia> crear(@RequestBody RespuestaResenia respuestaResenia) {
-        return ResponseEntity.ok(respuestaReseniaService.crear(respuestaResenia));
+    public ResponseEntity<RespuestaReseniaDTO> crear(@RequestBody crearRespuestaReseniaDTO respuestaReseniaDTO) {
+        return ResponseEntity.ok(respuestaReseniaService.crear(respuestaReseniaDTO));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RespuestaReseniaDTO> actualizar(@PathVariable Integer id, @RequestBody actualizarRespuestaReseniaDTO respuestaReseniaDTO) {
+        return ResponseEntity.ok(respuestaReseniaService.actualizar(id, respuestaReseniaDTO));
     }
 
     @DeleteMapping("/{id}")

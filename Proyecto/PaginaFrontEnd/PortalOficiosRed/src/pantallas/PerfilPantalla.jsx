@@ -190,6 +190,12 @@ const PerfilPantalla = () => {
             </div>
         )}
       </div>
+
+
+
+      div
+
+       publicaion card (id de usairo) : 5 pulibcaiones
     </div>
   );
 };
