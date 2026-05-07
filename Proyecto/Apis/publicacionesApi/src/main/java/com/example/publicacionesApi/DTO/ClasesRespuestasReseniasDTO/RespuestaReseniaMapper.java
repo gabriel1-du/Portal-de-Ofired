@@ -3,6 +3,8 @@ package com.example.publicacionesApi.DTO.ClasesRespuestasReseniasDTO;
 import com.example.publicacionesApi.Model.RespuestaResenia;
 import com.example.publicacionesApi.Model.Resenia;
 import com.example.publicacionesApi.Repository.ReseniaRepository;
+import com.example.publicacionesApi.Model.Usuario;
+import com.example.publicacionesApi.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,9 @@ public class RespuestaReseniaMapper {
 
     @Autowired
     private ReseniaRepository reseniaRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public RespuestaResenia toEntity(crearRespuestaReseniaDTO dto) {
         if (dto == null) {
@@ -60,9 +65,14 @@ public class RespuestaReseniaMapper {
             dto.setIdResenia(respuesta.getResenia().getIdResenia());
         }
         
-        // Nota: 'nombreDelAutor' está definido como Integer en tu DTO. 
-        // Lo mapeamos momentáneamente con el ID del autor.
-        dto.setNombreDelAutor(respuesta.getIdAutorRes());
+        // Buscar el nombre y foto del autor de la respuesta
+        Usuario autor = usuarioRepository.findById(respuesta.getIdAutorRes()).orElse(null);
+        if (autor != null) {
+            dto.setNombreDelAutor(autor.getPNombre() + " " + autor.getPApellido());
+            dto.setFotoAutor(autor.getFoto());
+        } else {
+            dto.setNombreDelAutor("Usuario no encontrado");
+        }
         
         dto.setTextoRespuestaResenia(respuesta.getTextoRespuestaResenia());
         

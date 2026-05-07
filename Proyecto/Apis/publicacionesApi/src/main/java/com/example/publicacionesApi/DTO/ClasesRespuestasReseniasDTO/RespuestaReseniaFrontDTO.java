@@ -7,7 +7,8 @@ public class RespuestaReseniaFrontDTO {
 
     private Integer idRespuestaResenia;
     private Integer idResenia;
-    private Integer nombreDelAutor;
+    private String nombreDelAutor;
+    private String fotoAutor;
     private String textoRespuestaResenia;
 
 }

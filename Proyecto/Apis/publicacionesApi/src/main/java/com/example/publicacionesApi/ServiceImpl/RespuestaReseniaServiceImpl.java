@@ -31,6 +31,13 @@ public class RespuestaReseniaServiceImpl implements RespuestaReseniaService {
     }
 
     @Override
+    public List<RespuestaReseniaFrontDTO> listarTodasFront() {
+        return respuestaReseniaRepository.findAll().stream()
+                .map(respuestaReseniaMapper::toRespuestaReseniaFrontDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<RespuestaReseniaDTO> obtenerPorResenia(Integer idResenia) {
         return respuestaReseniaRepository.findByResenia_IdResenia(idResenia).stream()
                 .map(respuestaReseniaMapper::toRespuestaReseniaDTO)

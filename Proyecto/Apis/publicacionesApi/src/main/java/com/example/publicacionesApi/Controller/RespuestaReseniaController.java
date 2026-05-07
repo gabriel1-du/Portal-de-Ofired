@@ -23,6 +23,11 @@ public class RespuestaReseniaController {
         return ResponseEntity.ok(respuestaReseniaService.listarTodas());
     }
 
+    @GetMapping("/front")
+    public ResponseEntity<List<RespuestaReseniaFrontDTO>> listarTodasFront() {
+        return ResponseEntity.ok(respuestaReseniaService.listarTodasFront());
+    }
+
     @GetMapping("/resenia/{idResenia}")
     public ResponseEntity<List<RespuestaReseniaDTO>> obtenerPorResenia(@PathVariable Integer idResenia) {
         return ResponseEntity.ok(respuestaReseniaService.obtenerPorResenia(idResenia));

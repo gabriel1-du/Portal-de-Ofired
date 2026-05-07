@@ -108,7 +108,7 @@ public class RespuestaReseniaTest {
     }
 
     @Test
-    @DisplayName("obtenerPorReseniaFront debe retornar el DTO de Frontend con el ID del autor temporalmente")
+    @DisplayName("obtenerPorReseniaFront debe retornar el DTO de Frontend con el nombre del autor y su foto")
     void testObtenerPorReseniaFront_DebeRetornarDatosFront() {
         // 2. Act
         List<RespuestaReseniaFrontDTO> resultados = respuestaReseniaService.obtenerPorReseniaFront(reseniaExistente.getIdResenia());
@@ -116,8 +116,7 @@ public class RespuestaReseniaTest {
         // 3. Assert
         assertNotNull(resultados);
         assertFalse(resultados.isEmpty(), "La lista de respuestas front no debe estar vacía");
-        // Recordando que en tu Mapper configuramos momentáneamente el Integer en "nombreDelAutor"
-        assertEquals(autorRespuesta.getIdUsuario(), resultados.get(0).getNombreDelAutor(), "El ID del autor (mapeado como nombre momentáneamente) debe coincidir");
+        assertEquals("Maria Gomez", resultados.get(0).getNombreDelAutor(), "El nombre del autor debe coincidir");
     }
 
     @Test

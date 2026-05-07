@@ -10,6 +10,7 @@ import java.util.List;
 public interface RespuestaReseniaService {
     
     List<RespuestaReseniaDTO> listarTodas();
+    List<RespuestaReseniaFrontDTO> listarTodasFront();
     List<RespuestaReseniaDTO> obtenerPorResenia(Integer idResenia);
     List<RespuestaReseniaFrontDTO> obtenerPorReseniaFront(Integer idResenia);
     RespuestaReseniaDTO crear(crearRespuestaReseniaDTO respuestaReseniaDTO);
