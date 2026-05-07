@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,6 +66,7 @@ public class ReseniaTest {
         resenia.setIdUsuarioReseniado(usuarioReseniado.getIdUsuario());
         resenia.setCalificacion(4.5);
         resenia.setTextoResenia("Excelente trabajo, muy recomendado.");
+        resenia.setFechaCreacion(LocalDateTime.now()); // Asignamos la fecha para cumplir restricción NOT NULL
         reseniaExistente = reseniaRepository.save(resenia);
     }
 
@@ -80,6 +82,7 @@ public class ReseniaTest {
         assertEquals(usuarioReseniado.getIdUsuario(), resultado.getIdUsuarioReseniado(), "El ID del usuario reseñado debe coincidir.");
         assertEquals(4.5, resultado.getCalificacion(), "La calificación debe coincidir.");
         assertEquals("Excelente trabajo, muy recomendado.", resultado.getTextoResenia(), "El texto de la reseña debe coincidir.");
+        assertNotNull(resultado.getFechaCreacion(), "La fecha de creación no debe ser nula.");
     }
 
     @Test
@@ -112,6 +115,7 @@ public class ReseniaTest {
         assertEquals("Juan Perez", reseniaFront.getNombreUsuarioReseniado(), "El nombre del usuario reseñado debe estar concatenado correctamente.");
         assertEquals(4.5, reseniaFront.getCalificacion(), "La calificación debe coincidir.");
         assertEquals("Excelente trabajo, muy recomendado.", reseniaFront.getTextoResenia(), "El texto debe coincidir.");
+        assertNotNull(reseniaFront.getFechaCreacion(), "La fecha de creación no debe ser nula.");
     }
 
     @Test

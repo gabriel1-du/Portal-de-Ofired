@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -80,6 +81,7 @@ public class RespuestaReseniaTest {
         resenia.setIdUsuarioReseniado(usuarioReseniado.getIdUsuario());
         resenia.setCalificacion(5.0);
         resenia.setTextoResenia("El servicio fue excelente, muy recomendado.");
+        resenia.setFechaCreacion(LocalDateTime.now()); // Asignamos la fecha para cumplir restricción NOT NULL
         reseniaExistente = reseniaRepository.save(resenia);
 
         // Crear la Respuesta a esa Reseña
@@ -128,6 +130,7 @@ public class RespuestaReseniaTest {
         nuevaReseniaLibre.setIdUsuarioReseniado(usuarioReseniado.getIdUsuario());
         nuevaReseniaLibre.setCalificacion(4.0);
         nuevaReseniaLibre.setTextoResenia("Buen trabajo.");
+        nuevaReseniaLibre.setFechaCreacion(LocalDateTime.now()); // Asignamos la fecha aquí también
         nuevaReseniaLibre = reseniaRepository.save(nuevaReseniaLibre);
 
         crearRespuestaReseniaDTO crearDTO = new crearRespuestaReseniaDTO();

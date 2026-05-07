@@ -10,6 +10,7 @@ import com.example.publicacionesApi.Repository.ReseniaRepository;
 import com.example.publicacionesApi.Service.ReseniaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,10 @@ public class ReseniaServiceImpl implements ReseniaService {
     @Override
     public LeerReseniaDTO crear(CrearReniaDTO reseniaDTO) {
         Resenia resenia = reseniaMapper.toEntity(reseniaDTO);
+        
+        // Asignamos la fecha actual en el momento de la creación de la reseña
+        resenia.setFechaCreacion(LocalDateTime.now());
+        
         Resenia reseniaGuardada = reseniaRepository.save(resenia);
         return reseniaMapper.toLeerReseniaDTO(reseniaGuardada);
     }
