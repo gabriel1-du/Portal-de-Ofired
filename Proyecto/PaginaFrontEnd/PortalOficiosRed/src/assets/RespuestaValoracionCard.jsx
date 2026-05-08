@@ -23,7 +23,7 @@ const RespuestaValoracionCard = ({ nombreDelAutor, fotoAutor, textoRespuestaRese
 
       {/* Lado Derecho: Contenido */}
       <div className="respuesta-contenido-columna">
-        <p className="respuesta-texto">"{textoRespuestaResenia}"</p>
+        <p className="respuesta-texto">{textoRespuestaResenia}</p>
         <span className="respuesta-fecha">{formatearFecha(fechaCreacion)}</span>
       </div>
     </div>

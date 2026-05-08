@@ -46,7 +46,7 @@ const ValoracionCard = ({ autor, foto, calificacion, texto, fecha, usuarioReseni
           {fechaFormateada && <span className="valoracion-fecha" style={{ fontSize: '0.85rem', color: '#6c757d' }}>{fechaFormateada}</span>}
         </div>
         {usuarioReseniado && <p className="valoracion-reseniado" style={{ fontSize: '0.9rem', color: '#f3961c', fontWeight: 'bold', margin: '0 0 8px 0' }}>Para: {usuarioReseniado}</p>}
-        <p className="valoracion-texto-resena">"{texto}"</p>
+        <p className="valoracion-texto-resena">{texto}</p>
       </div>
 
     </div>

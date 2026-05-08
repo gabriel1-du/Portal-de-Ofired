@@ -1,45 +1,41 @@
+/* TARJETA DE RESPUESTA */
 .tarjeta-respuesta {
-  background-color: #fcfcfc; /* Un fondo ligerísimamente más gris para diferenciarlo */
+  background-color: #f0f2f5; /* Un tono gris claro/opaco para restarle protagonismo */
   border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 15px rgb(0 0 0 / 4%);
-  border: 1px solid #e9ecef;
+  padding: 15px 20px;
   display: flex;
-  gap: 20px;
+  gap: 15px;
   align-items: center;
-  transition: transform 0.2s ease;
-  width: 100%;
-  box-sizing: border-box;
+  width: 90%; /* Hace que sea menos ancha que la carta principal */
+  border: 1px solid #e1e4e8;
+  box-shadow: none; /* Quitamos la sombra para que se vea plana y tenue */
 }
 
-.tarjeta-respuesta:hover {
-  transform: translateX(5px); /* Pequeño efecto de deslizamiento en lugar de salto */
-}
-
+/* Lado Izquierdo: Perfil */
 .respuesta-perfil-columna {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-width: 100px;
+  min-width: 80px;
 }
 
 .respuesta-avatar {
-  width: 60px; /* Un poco más pequeña que la foto principal */
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #03a9f4; /* Borde azul de tu paleta */
-  margin-bottom: 8px;
+  border: 2px solid #e1e4e8;
+  margin-bottom: 5px;
 }
 
 .respuesta-nombre-autor {
   font-size: 0.85rem;
-  font-weight: 700;
-  color: #555;
+  font-weight: 600;
+  color: #666; /* Texto un poco más gris */
   text-align: center;
 }
 
+/* Lado Derecho: Contenido */
 .respuesta-contenido-columna {
   flex: 1;
   display: flex;
@@ -48,25 +44,23 @@
 }
 
 .respuesta-texto {
-  font-size: 1rem;
-  color: #444;
+  font-size: 0.95rem;
+  color: #555;
   line-height: 1.5;
-  margin: 0 0 10px 0;
+  margin: 0 0 8px 0;
 }
 
 .respuesta-fecha {
-  font-size: 0.8rem;
-  color: #999;
-  align-self: flex-end; /* Fecha alineada a la derecha */
+  font-size: 0.75rem;
+  color: #888;
 }
 
 /* Responsividad para móviles */
 @media (max-width: 600px) {
   .tarjeta-respuesta {
     flex-direction: column;
+    width: 100%;
     text-align: center;
-  }
-  .respuesta-fecha {
-    align-self: center;
+    gap: 10px;
   }
 }

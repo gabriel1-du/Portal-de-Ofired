@@ -1,0 +1,106 @@
+.formulario-resenia-contenedor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 20px;
+}
+
+.formulario-resenia-tarjeta {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.formulario-resenia-tarjeta h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.formulario-resenia-tarjeta p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.mensaje-estado {
+  color: #d9534f;
+  background-color: #f9f2f4;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.form-resenia {
+  text-align: left;
+}
+
+.form-group-resenia {
+  margin-bottom: 20px;
+}
+
+.form-group-resenia label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-group-resenia select,
+.form-group-resenia textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.form-group-resenia select:focus,
+.form-group-resenia textarea:focus {
+  outline: none;
+  border-color: #f3961c;
+  box-shadow: 0 0 0 2px rgba(243, 150, 28, 0.2);
+}
+
+.botones-resenia {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.btn-cancelar, .btn-enviar {
+  flex: 1;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-cancelar {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.btn-cancelar:hover {
+  background-color: #ccc;
+}
+
+.btn-enviar {
+  background-color: #f3961c;
+  color: white;
+}
+
+.btn-enviar:hover:not(:disabled) {
+  background-color: #d88318;
+}
+
+.btn-enviar:disabled {
+  background-color: #f9c784;
+  cursor: not-allowed;
+}

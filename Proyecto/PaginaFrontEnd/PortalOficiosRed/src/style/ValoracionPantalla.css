@@ -1,3 +1,12 @@
+/* Contenedor principal: hace que las cartas sean menos anchas y estén centradas */
+.lista-tarjetas-valoraciones {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 /* Contenedor que agrupa la reseña y sus respuestas */
 .hilo-valoracion-contenedor {
   display: flex;
@@ -42,4 +51,30 @@
     padding-left: 20px;
     margin-left: 10px;
   }
+}
+
+/* Encabezado con título y botón */
+.encabezado-valoraciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto 20px auto;
+  padding: 0 10px;
+}
+
+.btn-crear-resenia {
+  background-color: #f3961c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-crear-resenia:hover {
+  background-color: #d88318;
+  transform: translateY(-2px);
 }
