@@ -2,6 +2,8 @@ package com.example.publicacionesApi.DTO.ClasesReseniasDTO;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class LeerReseniaFrontDTO {
 
@@ -11,5 +13,6 @@ public class LeerReseniaFrontDTO {
     private String fotoUsuarioAutor;
     private Double calificacion;
     private String textoResenia;
+    private LocalDateTime fechaCreacion;
 
 }

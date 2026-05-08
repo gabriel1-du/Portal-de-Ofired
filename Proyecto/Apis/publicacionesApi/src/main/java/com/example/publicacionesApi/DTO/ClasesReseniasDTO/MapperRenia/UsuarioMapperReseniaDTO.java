@@ -10,6 +10,8 @@ import com.example.publicacionesApi.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class UsuarioMapperReseniaDTO {
 
@@ -48,6 +50,10 @@ public class UsuarioMapperReseniaDTO {
         dto.setIdUsuarioReseniado(resenia.getIdUsuarioReseniado());
         dto.setCalificacion(resenia.getCalificacion());
         dto.setTextoResenia(resenia.getTextoResenia());
+        
+        // Seteo con fallback a LocalDateTime.now() si no viene en el registro
+        dto.setFechaCreacion(resenia.getFechaCreacion() != null ? resenia.getFechaCreacion() : LocalDateTime.now());
+        
         return dto;
     }
 
@@ -71,6 +77,10 @@ public class UsuarioMapperReseniaDTO {
 
         dto.setCalificacion(resenia.getCalificacion());
         dto.setTextoResenia(resenia.getTextoResenia());
+        
+        // Seteo con fallback a LocalDateTime.now() si no viene en el registro
+        dto.setFechaCreacion(resenia.getFechaCreacion() != null ? resenia.getFechaCreacion() : LocalDateTime.now());
+        
         return dto;
     }
 

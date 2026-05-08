@@ -132,15 +132,18 @@ CREATE TABLE RESENIA (
     id_usuario_reseniado INT NOT NULL,
     calificacion DECIMAL(3,2) NOT NULL,
     texto_resenia TEXT NOT NULL,
+	fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_resenia_autor FOREIGN KEY (id_autor) REFERENCES USUARIO(id_usuario),
     CONSTRAINT fk_resenia_destinatario FOREIGN KEY (id_usuario_reseniado) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
 );
 
 CREATE TABLE RESPUESTA_RESENIA (
     id_respuesta_resenia INT AUTO_INCREMENT PRIMARY KEY,
-    id_resenia INT NOT NULL UNIQUE, -- Unique porque suele ser 1 respuesta por reseña
+    id_resenia INT NOT NULL ,
     id_autor_res INT NOT NULL,
     texto_respuesta_resenia TEXT NOT NULL,
+	fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
     CONSTRAINT fk_resp_resenia FOREIGN KEY (id_resenia) REFERENCES RESENIA(id_resenia) ON DELETE CASCADE,
     CONSTRAINT fk_resp_autor FOREIGN KEY (id_autor_res) REFERENCES USUARIO(id_usuario)
 );

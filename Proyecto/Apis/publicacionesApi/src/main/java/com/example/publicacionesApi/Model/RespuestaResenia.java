@@ -11,8 +11,8 @@ public class RespuestaResenia {
     @Column(name = "id_respuesta_resenia")
     private Integer idRespuestaResenia;
 
-    @OneToOne
-    @JoinColumn(name = "id_resenia", nullable = false, unique = true)
+    @ManyToOne
+    @JoinColumn(name = "id_resenia", nullable = false)
     private Resenia resenia;
 
     @Column(name = "id_autor_res", nullable = false)
