@@ -1,0 +1,45 @@
+/* Contenedor que agrupa la reseña y sus respuestas */
+.hilo-valoracion-contenedor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Botón sutil para ver/ocultar respuestas */
+.btn-desplegar-respuestas {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: #03a9f4;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 5px 15px;
+  margin-left: 20px;
+  transition: color 0.2s ease;
+}
+
+.btn-desplegar-respuestas:hover {
+  color: #f3961c;
+  text-decoration: underline;
+}
+
+/* Contenedor indentado para las tarjetas de respuesta */
+.respuestas-anidadas-contenedor {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-left: 50px; /* Esta es la indentación que las hace ver como respuestas */
+  border-left: 3px solid #f3961c; /* Línea naranja lateral */
+  margin-top: 5px;
+  margin-left: 30px;
+}
+
+/* Responsividad para la indentación en móviles */
+@media (max-width: 600px) {
+  .respuestas-anidadas-contenedor {
+    padding-left: 20px;
+    margin-left: 10px;
+  }
+}

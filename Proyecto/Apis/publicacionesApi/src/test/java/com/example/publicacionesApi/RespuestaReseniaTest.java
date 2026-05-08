@@ -89,6 +89,7 @@ public class RespuestaReseniaTest {
         respuesta.setResenia(reseniaExistente);
         respuesta.setIdAutorRes(autorRespuesta.getIdUsuario());
         respuesta.setTextoRespuestaResenia("¡Muchas gracias por tu comentario, Gabo!");
+        respuesta.setFechaCreacion(LocalDateTime.now()); // Asignamos la fecha para cumplir restricción
         respuestaExistente = respuestaReseniaRepository.save(respuesta);
     }
 
@@ -107,6 +108,7 @@ public class RespuestaReseniaTest {
         assertEquals(reseniaExistente.getIdResenia(), resultado.getIdResenia(), "El ID de la reseña enlazada debe coincidir");
         assertEquals(autorRespuesta.getIdUsuario(), resultado.getIdAutorRes(), "El autor de la respuesta debe coincidir");
         assertEquals("¡Muchas gracias por tu comentario, Gabo!", resultado.getTextoRespuestaResenia(), "El texto debe coincidir con el guardado inicialmente");
+        assertNotNull(resultado.getFechaCreacion(), "La fecha de creación no debe ser nula");
     }
 
     @Test
@@ -119,6 +121,7 @@ public class RespuestaReseniaTest {
         assertNotNull(resultados);
         assertFalse(resultados.isEmpty(), "La lista de respuestas front no debe estar vacía");
         assertEquals("Maria Gomez", resultados.get(0).getNombreDelAutor(), "El nombre del autor debe coincidir");
+        assertNotNull(resultados.get(0).getFechaCreacion(), "La fecha de creación en el front no debe ser nula");
     }
 
     @Test
@@ -144,6 +147,7 @@ public class RespuestaReseniaTest {
         // Assert
         assertNotNull(resultado.getIdRespuestaResenia(), "Debe haberse generado un ID al guardar");
         assertEquals("Gracias, intentaré mejorar al 5.0", resultado.getTextoRespuestaResenia(), "El texto guardado debe coincidir");
+        assertNotNull(resultado.getFechaCreacion(), "Debe haberse asignado automáticamente una fecha de creación");
     }
 
     @Test

@@ -187,7 +187,12 @@ const PerfilPantalla = () => {
         {/* Mostramos el botón solo si hay reseñas */}
         {reseñas.length > 0 && (
           <div className="contenedor-boton-ver-mas">
-            <button className="btn-ver-mas">Ver más reseñas</button>
+            <button 
+              className="btn-ver-mas" 
+              onClick={() => navigate(`/valoraciones/${idDelPerfil}`)}
+            >
+              Ver más reseñas
+            </button>
           </div>
         )}
       </div>

@@ -1,0 +1,72 @@
+.tarjeta-respuesta {
+  background-color: #fcfcfc; /* Un fondo ligerísimamente más gris para diferenciarlo */
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgb(0 0 0 / 4%);
+  border: 1px solid #e9ecef;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  transition: transform 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tarjeta-respuesta:hover {
+  transform: translateX(5px); /* Pequeño efecto de deslizamiento en lugar de salto */
+}
+
+.respuesta-perfil-columna {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+}
+
+.respuesta-avatar {
+  width: 60px; /* Un poco más pequeña que la foto principal */
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #03a9f4; /* Borde azul de tu paleta */
+  margin-bottom: 8px;
+}
+
+.respuesta-nombre-autor {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #555;
+  text-align: center;
+}
+
+.respuesta-contenido-columna {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.respuesta-texto {
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.5;
+  margin: 0 0 10px 0;
+}
+
+.respuesta-fecha {
+  font-size: 0.8rem;
+  color: #999;
+  align-self: flex-end; /* Fecha alineada a la derecha */
+}
+
+/* Responsividad para móviles */
+@media (max-width: 600px) {
+  .tarjeta-respuesta {
+    flex-direction: column;
+    text-align: center;
+  }
+  .respuesta-fecha {
+    align-self: center;
+  }
+}

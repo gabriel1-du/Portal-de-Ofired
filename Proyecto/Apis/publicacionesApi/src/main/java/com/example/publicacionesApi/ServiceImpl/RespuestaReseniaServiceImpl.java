@@ -11,6 +11,7 @@ import com.example.publicacionesApi.Service.RespuestaReseniaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +55,10 @@ public class RespuestaReseniaServiceImpl implements RespuestaReseniaService {
     @Override
     public RespuestaReseniaDTO crear(crearRespuestaReseniaDTO respuestaReseniaDTO) {
         RespuestaResenia respuestaResenia = respuestaReseniaMapper.toEntity(respuestaReseniaDTO);
+        
+        // Asignamos la fecha actual en el momento de la creación
+        respuestaResenia.setFechaCreacion(LocalDateTime.now());
+        
         RespuestaResenia respuestaGuardada = respuestaReseniaRepository.save(respuestaResenia);
         return respuestaReseniaMapper.toRespuestaReseniaDTO(respuestaGuardada);
     }

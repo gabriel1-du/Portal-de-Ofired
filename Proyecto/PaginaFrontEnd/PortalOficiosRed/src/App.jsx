@@ -15,6 +15,7 @@ import ConfiguracionesPantalla from './pantallas/ConfiguracionesPantalla';
 import CambiarCorreoPantalla from './pantallas/FormulariosConfig/CambiarCorreoPantalla';
 import CambiarTelefonoPantalla from './pantallas/FormulariosConfig/CambiarTelefonoPantalla';
 import FormularioCambiarDatosUsuario from './pantallas/FormulariosConfig/FormularioCambiarDatosUsuario';
+import ValoracionesPantalla from './pantallas/ValoracionPantalla'; // Importamos la pantalla de valoraciones
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/configuracion/cambiar-correo" element={<CambiarCorreoPantalla />} />
           <Route path="/configuracion/cambiar-telefono" element={<CambiarTelefonoPantalla />} />
           <Route path="/configuracion/modificar-datos" element={<FormularioCambiarDatosUsuario />} />
+          <Route path="/valoraciones/:idUsuario" element={<ValoracionesPantalla />} /> {/* Nueva ruta para ver valoraciones */}
         </Routes>
       </div>
     </Router>

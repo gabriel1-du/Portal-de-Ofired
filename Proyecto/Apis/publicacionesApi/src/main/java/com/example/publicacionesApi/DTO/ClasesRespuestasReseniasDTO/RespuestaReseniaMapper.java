@@ -8,6 +8,8 @@ import com.example.publicacionesApi.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class RespuestaReseniaMapper {
 
@@ -51,6 +53,9 @@ public class RespuestaReseniaMapper {
         dto.setIdAutorRes(respuesta.getIdAutorRes());
         dto.setTextoRespuestaResenia(respuesta.getTextoRespuestaResenia());
         
+        // Seteo de fecha con fallback a LocalDateTime.now() si no viene en el registro
+        dto.setFechaCreacion(respuesta.getFechaCreacion() != null ? respuesta.getFechaCreacion() : LocalDateTime.now());
+        
         return dto;
     }
 
@@ -75,6 +80,9 @@ public class RespuestaReseniaMapper {
         }
         
         dto.setTextoRespuestaResenia(respuesta.getTextoRespuestaResenia());
+        
+        // Seteo de fecha con fallback a LocalDateTime.now() si no viene en el registro
+        dto.setFechaCreacion(respuesta.getFechaCreacion() != null ? respuesta.getFechaCreacion() : LocalDateTime.now());
         
         return dto;
     }
