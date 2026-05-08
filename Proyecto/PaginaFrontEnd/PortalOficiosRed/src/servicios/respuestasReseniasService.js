@@ -25,3 +25,26 @@ export const getRespuestasPorReseniaFront = async (idResenia) => {
     throw error;
   }
 };
+
+export const createRespuestaResenia = async (respuestaData, token) => {
+  try {
+    const url = `${API_URL_RESPUESTAS_RESENIAS}`;
+    console.log("Llamando a la API de Respuestas de Reseñas (POST):", url);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(respuestaData)
+    });
+    if (!response.ok) {
+      console.error("Error al crear la respuesta de reseña:", response.status, response.statusText);
+      throw new Error("Error al crear la respuesta de reseña.");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error en createRespuestaResenia:", error);
+    throw error;
+  }
+};

@@ -3,18 +3,23 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ValoracionCard from '../assets/ValoracionCard'; // Ruta corregida según tu proyecto
 import RespuestaValoracionCard from '../assets/RespuestaValoracionCard'; // Ajusta la ruta
 import { listarReseniasPorUsuario } from '../servicios/reseniasService';
-import { getRespuestasPorReseniaFront } from '../servicios/respuestasReseniasService';
+import { getRespuestasPorReseniaFront, createRespuestaResenia } from '../servicios/respuestasReseniasService';
 import { AuthContext } from '../context/AuthContext';
 import '../style/ValoracionPantalla.css'; // Asegúrate de tener este archivo CSS para los estilos
+import '../style/CajaComentario.css'; // Estilos para la caja de comentarios
 
 const ValoracionesPantalla = () => {
   const navigate = useNavigate();
   const { idUsuario } = useParams(); // Rescata el idUsuario de la URL
-  const { usuario } = useContext(AuthContext); // Extraemos el usuario logueado
+  const { usuario, token } = useContext(AuthContext); // Extraemos el usuario logueado y el token
 
   // ESTADO: Controla qué reseñas tienen sus respuestas visibles (Ej: { 1: true, 2: false })
   const [respuestasExpandidas, setRespuestasExpandidas] = useState({});
   
+  // ESTADOS para la caja de comentarios
+  const [respondiendoResenia, setRespondiendoResenia] = useState({});
+  const [textosRespuesta, setTextosRespuesta] = useState({});
+
   // ESTADO: Controla las respuestas cargadas por cada reseña y su estado de carga
   const [respuestasPorResenia, setRespuestasPorResenia] = useState({});
   const [cargandoRespuestas, setCargandoRespuestas] = useState({});
@@ -75,6 +80,49 @@ const ValoracionesPantalla = () => {
     }));
   };
 
+  // Funciones para manejar la respuesta
+  const handleResponderClic = (idResenia) => {
+    if (!usuario) {
+      alert("Debe iniciar sesión para responder a una reseña.");
+      return;
+    }
+    setRespondiendoResenia((prev) => ({ ...prev, [idResenia]: true }));
+  };
+
+  const handleCancelarRespuesta = (idResenia) => {
+    setRespondiendoResenia((prev) => ({ ...prev, [idResenia]: false }));
+    setTextosRespuesta((prev) => ({ ...prev, [idResenia]: '' }));
+  };
+
+  const handleEnviarRespuesta = async (idResenia) => {
+    const texto = textosRespuesta[idResenia];
+    if (!texto || !texto.trim()) {
+      alert("El comentario no puede estar vacío.");
+      return;
+    }
+
+    try {
+      const respuestaData = {
+        idResenia: idResenia,
+        idAutorRes: usuario.idUsuario,
+        textoRespuestaResenia: texto.trim()
+      };
+      
+      await createRespuestaResenia(respuestaData, token);
+      alert("¡Respuesta enviada!");
+      
+      handleCancelarRespuesta(idResenia); // Cerramos y limpiamos la caja
+      
+      // Recargamos las respuestas para mostrar la nueva sin recargar la página entera
+      const data = await getRespuestasPorReseniaFront(idResenia);
+      const dataArray = Array.isArray(data) ? data : (data ? [data] : []);
+      setRespuestasPorResenia((prev) => ({ ...prev, [idResenia]: dataArray }));
+      setRespuestasExpandidas((prev) => ({ ...prev, [idResenia]: true })); // Aseguramos que se expanda para verla
+    } catch (error) {
+      alert("Ocurrió un error al enviar la respuesta.");
+    }
+  };
+
   // Función para manejar el clic en "Crear Reseña"
   const handleCrearResenia = () => {
     if (!usuario) {
@@ -103,6 +151,7 @@ const ValoracionesPantalla = () => {
           const estaExpandido = respuestasExpandidas[resenia.reseniaId];
           const isLoadingResp = cargandoRespuestas[resenia.reseniaId];
           const respuestasDeEstaResenia = respuestasPorResenia[resenia.reseniaId] || [];
+          const estaRespondiendo = respondiendoResenia[resenia.reseniaId];
 
           return (
             <div key={resenia.reseniaId} className="hilo-valoracion-contenedor">
@@ -116,13 +165,42 @@ const ValoracionesPantalla = () => {
                 usuarioReseniado={resenia.nombreUsuarioReseniado}
               />
 
-              {/* Botón de despliegue (Siempre visible ahora para permitir buscar respuestas) */}
-              <button 
-                className="btn-desplegar-respuestas"
-                onClick={() => toggleRespuestas(resenia.reseniaId)}
-              >
-                {estaExpandido ? `Ocultar respuestas` : `Ver respuestas`}
-              </button>
+              {/* Contenedor de botones de acción */}
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                {/* Botón de despliegue */}
+                <button 
+                  className="btn-desplegar-respuestas"
+                  onClick={() => toggleRespuestas(resenia.reseniaId)}
+                >
+                  {estaExpandido ? `Ocultar respuestas` : `Ver respuestas`}
+                </button>
+
+                {/* Botón para abrir la caja de comentario (desaparece si la caja está abierta) */}
+                {!estaRespondiendo && (
+                  <button 
+                    className="btn-responder-resenia"
+                    onClick={() => handleResponderClic(resenia.reseniaId)}
+                  >
+                    Responder reseña
+                  </button>
+                )}
+              </div>
+
+              {/* Caja de comentario que aparece cuando el usuario hace clic en "Responder" */}
+              {estaRespondiendo && (
+                <div className="caja-comentario-card">
+                  <textarea
+                    className="caja-comentario-textarea"
+                    placeholder="Escribe tu respuesta aquí..."
+                    value={textosRespuesta[resenia.reseniaId] || ''}
+                    onChange={(e) => setTextosRespuesta((prev) => ({ ...prev, [resenia.reseniaId]: e.target.value }))}
+                  />
+                  <div className="caja-comentario-acciones">
+                    <button className="btn-cancelar-comentario" onClick={() => handleCancelarRespuesta(resenia.reseniaId)}>Cancelar</button>
+                    <button className="btn-enviar-comentario" onClick={() => handleEnviarRespuesta(resenia.reseniaId)}>Enviar</button>
+                  </div>
+                </div>
+              )}
 
               {/* Contenedor anidado de respuestas (Se muestra si está expandido) */}
               {estaExpandido && (
