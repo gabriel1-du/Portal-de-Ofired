@@ -1,11 +1,15 @@
 package com.example.usuarioApi.ServiceImpl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.usuarioApi.DTO.ClasesChatDTO.crearChatDTO;
 import com.example.usuarioApi.DTO.ClasesChatDTO.leerFrontChatDTO;
+import com.example.usuarioApi.DTO.ClasesChatDTO.LeerChatIDDTO;
 import com.example.usuarioApi.DTO.ClasesChatDTO.mapperChatDTO;
 import com.example.usuarioApi.Model.Chat;
 import com.example.usuarioApi.Model.Usuario;
@@ -51,6 +55,22 @@ public class ChatServiceImpl implements ChatService {
         Chat chat = chatRepository.findById(idChat)
                 .orElseThrow(() -> new RuntimeException("Chat no encontrado con el ID: " + idChat));
         return chatMapper.mapToLeerFrontDTO(chat);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<LeerChatIDDTO> leerTodosLosChatsId() {
+        return chatRepository.findAll().stream()
+                .map(chatMapper::mapToLeerIDDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<leerFrontChatDTO> leerTodosLosChatsFront() {
+        return chatRepository.findAll().stream()
+                .map(chatMapper::mapToLeerFrontDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

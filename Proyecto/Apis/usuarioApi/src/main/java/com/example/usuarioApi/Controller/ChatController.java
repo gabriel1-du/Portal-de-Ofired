@@ -1,5 +1,7 @@
 package com.example.usuarioApi.Controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,10 +9,11 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.usuarioApi.DTO.ClasesChatDTO.crearChatDTO;
 import com.example.usuarioApi.DTO.ClasesChatDTO.leerFrontChatDTO;
+import com.example.usuarioApi.DTO.ClasesChatDTO.LeerChatIDDTO;
 import com.example.usuarioApi.Service.ChatService;
 
 @RestController
-@RequestMapping("/api/chat")
+@RequestMapping("/api/chatApi")
 public class ChatController {
 
     @Autowired
@@ -26,6 +29,18 @@ public class ChatController {
     public ResponseEntity<leerFrontChatDTO> leerChatPorId(@PathVariable Integer id) {
         leerFrontChatDTO chat = chatService.leerChatPorId(id);
         return new ResponseEntity<>(chat, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<LeerChatIDDTO>> leerTodosLosChatsId() {
+        List<LeerChatIDDTO> chats = chatService.leerTodosLosChatsId();
+        return new ResponseEntity<>(chats, HttpStatus.OK);
+    }
+
+    @GetMapping("/leer-todos")
+    public ResponseEntity<List<leerFrontChatDTO>> leerTodosLosChatsFront() {
+        List<leerFrontChatDTO> chats = chatService.leerTodosLosChatsFront();
+        return new ResponseEntity<>(chats, HttpStatus.OK);
     }
 
     @DeleteMapping("/eliminar/{id}")
