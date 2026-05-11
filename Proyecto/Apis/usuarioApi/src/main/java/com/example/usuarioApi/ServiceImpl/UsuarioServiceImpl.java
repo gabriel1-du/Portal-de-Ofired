@@ -1,6 +1,6 @@
 package com.example.usuarioApi.ServiceImpl;
 
-import com.example.usuarioApi.Controller.SexoUsuarioController;
+
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTO;

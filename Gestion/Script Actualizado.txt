@@ -113,6 +113,7 @@ CREATE TABLE PUBLICACION (
     id_comuna INT NOT NULL,
     ubicacion_publicacion VARCHAR(255) DEFAULT 'indefinido',
     descripcion_publicacion TEXT NOT NULL,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     cantidad_likes INT DEFAULT 0,
     CONSTRAINT fk_publi_autor FOREIGN KEY (id_autor) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
     CONSTRAINT fk_publi_region FOREIGN KEY (id_region) REFERENCES REGION(id_region),
@@ -148,17 +149,17 @@ CREATE TABLE RESPUESTA_RESENIA (
     CONSTRAINT fk_resp_autor FOREIGN KEY (id_autor_res) REFERENCES USUARIO(id_usuario)
 );
 
-CREATE TABLE CHAT_INBOX (
+CREATE TABLE CHAT (
     id_chat INT AUTO_INCREMENT PRIMARY KEY,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE PARTICIPANTES_CHAT (
     id_participantes_chat INT AUTO_INCREMENT PRIMARY KEY,
-    id_chat_inbox INT NOT NULL,
-    id_usuario_paticipante INT NOT NULL,
-    CONSTRAINT fk_participante_chat FOREIGN KEY (id_chat_inbox) REFERENCES CHAT_INBOX(id_chat) ON DELETE CASCADE,
-    CONSTRAINT fk_participante_usuario FOREIGN KEY (id_usuario_paticipante) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
+    id_chat INT NOT NULL,
+    id_usuario_participante INT NOT NULL, -- (Corregido: faltaba la 'r')
+    CONSTRAINT fk_participante_chat FOREIGN KEY (id_chat) REFERENCES CHAT(id_chat) ON DELETE CASCADE,
+    CONSTRAINT fk_participante_usuario FOREIGN KEY (id_usuario_participante) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
 );
 
 CREATE TABLE MENSAJES_CHAT (
@@ -167,7 +168,7 @@ CREATE TABLE MENSAJES_CHAT (
     id_autor_mensaje INT NOT NULL,
     mensaje_texto TEXT NOT NULL,
     fecha_hora_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_mensaje_chat FOREIGN KEY (id_chat) REFERENCES CHAT_INBOX(id_chat) ON DELETE CASCADE,
+    CONSTRAINT fk_mensaje_chat FOREIGN KEY (id_chat) REFERENCES CHAT(id_chat) ON DELETE CASCADE,
     CONSTRAINT fk_mensaje_autor FOREIGN KEY (id_autor_mensaje) REFERENCES USUARIO(id_usuario)
 );
 

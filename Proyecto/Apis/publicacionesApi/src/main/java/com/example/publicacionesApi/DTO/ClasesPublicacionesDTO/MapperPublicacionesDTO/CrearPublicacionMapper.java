@@ -9,6 +9,7 @@ import com.example.publicacionesApi.Repository.comunaRepository;
 import com.example.publicacionesApi.Repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import java.time.LocalDateTime;
 
 @Component
 public class CrearPublicacionMapper {
@@ -31,6 +32,7 @@ public class CrearPublicacionMapper {
         publicacion.setUbicacionPublicacion(dto.getUbicacionPublicacion());
         publicacion.setDescripcionPublicacion(dto.getDescripcionPublicacion());
         publicacion.setFechaPublicacion(dto.getFechaPublicacion());
+        
         
         // Buscar y setear la Región validando que exista en la base de datos
         if (dto.getIdRegion() != null) {
