@@ -1,5 +1,7 @@
 package com.example.usuarioApi.Controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +13,7 @@ import com.example.usuarioApi.DTO.ClasesParticicipantesChatDTO.LeerParticipanteC
 import com.example.usuarioApi.Service.ParticipanteChatService;
 
 @RestController
-@RequestMapping("/api/participantes-chat")
-@CrossOrigin(origins = "*") // Permite peticiones desde el frontend
+@RequestMapping("/api/participantes-chatApi")
 public class ParticipanteChatController {
 
     @Autowired
@@ -34,6 +35,18 @@ public class ParticipanteChatController {
     public ResponseEntity<LeerParticipanteChatFrontDTO> leerParticipanteFrontPorId(@PathVariable Integer id) {
         LeerParticipanteChatFrontDTO participante = participanteChatService.leerParticipanteFrontPorId(id);
         return new ResponseEntity<>(participante, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<LeerParticipanteChatIdDTO>> leerTodosLosParticipantesId() {
+        List<LeerParticipanteChatIdDTO> participantes = participanteChatService.leerTodosLosParticipantesId();
+        return new ResponseEntity<>(participantes, HttpStatus.OK);
+    }
+
+    @GetMapping("/leer-todos")
+    public ResponseEntity<List<LeerParticipanteChatFrontDTO>> leerTodosLosParticipantesFront() {
+        List<LeerParticipanteChatFrontDTO> participantes = participanteChatService.leerTodosLosParticipantesFront();
+        return new ResponseEntity<>(participantes, HttpStatus.OK);
     }
 
     @DeleteMapping("/eliminar/{id}")

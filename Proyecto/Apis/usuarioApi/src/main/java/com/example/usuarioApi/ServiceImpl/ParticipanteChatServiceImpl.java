@@ -1,5 +1,8 @@
 package com.example.usuarioApi.ServiceImpl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +63,22 @@ public class ParticipanteChatServiceImpl implements ParticipanteChatService {
         ParticipanteChat participante = participanteChatRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Participante no encontrado con ID: " + id));
         return participanteChatMapper.mapToLeerFrontDTO(participante);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<LeerParticipanteChatIdDTO> leerTodosLosParticipantesId() {
+        return participanteChatRepository.findAll().stream()
+                .map(participanteChatMapper::mapToLeerIdDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<LeerParticipanteChatFrontDTO> leerTodosLosParticipantesFront() {
+        return participanteChatRepository.findAll().stream()
+                .map(participanteChatMapper::mapToLeerFrontDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
