@@ -13,7 +13,7 @@ import com.example.usuarioApi.DTO.ClasesMensajesChatDTO.LeerMensajeChatIdDTO;
 import com.example.usuarioApi.Service.MensajeChatService;
 
 @RestController
-@RequestMapping("/api/mensajes-chat")
+@RequestMapping("/api/mensajes-chatApi")
 @CrossOrigin(origins = "*") // Permite peticiones desde React o tu aplicación Front-end
 public class MensajeChatController {
 

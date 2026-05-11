@@ -28,6 +28,7 @@ import static com.gateway.redireccionApis.publicacionesApis.ReseniasPublicRoutes
 import static com.gateway.redireccionApis.publicacionesApis.RespuestasReseniasPublicRoutes.RESPUESTAS_RESENIAS_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.Chat.ChatPublicRoutes.CHAT_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.ParticipantesChat.ParticipantesChatPublicRoutes.PARTICIPANTES_CHAT_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.MensajesChat.MensajesChatPublicRoutes.MENSAJES_CHAT_PUBLIC_GET;
 import java.util.Arrays;
 
 
@@ -84,6 +85,9 @@ public class SecurityConfig {
 
                 // URL públicas API Participantes Chat
                 .requestMatchers(HttpMethod.GET, PARTICIPANTES_CHAT_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Mensajes Chat
+                .requestMatchers(HttpMethod.GET, MENSAJES_CHAT_PUBLIC_GET ).permitAll()
 
 
                 // Otras URL Token obligatorio
