@@ -6,13 +6,15 @@ import { listarReseniasPorUsuario } from '../servicios/reseniasService';
 // --- AÑADIDO: Importamos el servicio y el componente de la tarjeta ---
 import { getPublicacionesByAutor } from '../servicios/publicacionesService';
 import PublicacionCard from '../assets/PublicacionesCard'; 
+import { crearChat } from '../servicios/chatService';
+import { leerTodosLosParticipantesFront } from '../servicios/participantesChatService';
 import '../style/PerfilPantalla.css';
 import ValoracionCard from '../assets/ValoracionCard'; 
 
 const PerfilPantalla = () => {
   const { idDelPerfil } = useParams(); 
   const navigate = useNavigate();
-  const { usuario: usuarioLogueado } = useContext(AuthContext); 
+  const { usuario: usuarioLogueado, token } = useContext(AuthContext); 
 
   const [perfil, setPerfil] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -21,6 +23,7 @@ const PerfilPantalla = () => {
   
   // --- AÑADIDO: Estado para guardar las publicaciones y evitar el error "is not defined" ---
   const [publicacionesDelUsuario, setPublicacionesDelUsuario] = useState([]); 
+  const [iniciandoChat, setIniciandoChat] = useState(false);
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -63,6 +66,43 @@ const PerfilPantalla = () => {
   }, [idDelPerfil]); 
 
   const esMiPerfil = usuarioLogueado && usuarioLogueado.idUsuario === parseInt(idDelPerfil);
+
+  // Lógica para enviar mensaje: Corrobora si existe el chat o lo crea
+  const handleMensajeClick = async () => {
+    if (!usuarioLogueado) {
+      alert("Debes iniciar sesión para enviar un mensaje.");
+      navigate('/iniciar-sesion');
+      return;
+    }
+    try {
+      setIniciandoChat(true);
+      // 1. Obtener todos los participantes de chat para corroborar existencia
+      const participantes = await leerTodosLosParticipantesFront(token);
+      
+      // 2. Extraer los chats donde tú estás y los chats donde la otra persona está
+      const misChatsIds = participantes.filter(p => p.idUsuario === usuarioLogueado.idUsuario).map(p => p.idChat);
+      const destChatsIds = participantes.filter(p => p.idUsuario === parseInt(idDelPerfil)).map(p => p.idChat);
+      
+      // 3. Buscar intersección (El chat que tienen en común)
+      const chatComunId = misChatsIds.find(id => destChatsIds.includes(id));
+
+      if (chatComunId) {
+        // ¡Ya existe! Navegamos directo a ese chat
+        navigate(`/chat/${chatComunId}`);
+      } else {
+        // No existe, creamos uno nuevo usando la estructura DTO
+        const dto = { idUsuario_uno: usuarioLogueado.idUsuario, idUsuario_dos: parseInt(idDelPerfil) };
+        const nuevoChat = await crearChat(dto, token);
+        const nuevoChatId = nuevoChat.idChat || nuevoChat.id; // Nos aseguramos de sacar el ID correctamente
+        navigate(`/chat/${nuevoChatId}`);
+      }
+    } catch (err) {
+      console.error("Error al buscar o crear el chat:", err);
+      alert("No se pudo iniciar el chat. Intenta más tarde.");
+    } finally {
+      setIniciandoChat(false);
+    }
+  };
 
   if (cargando) return <div className="estado-mensaje">Cargando perfil...</div>;
   if (error) return <div className="estado-mensaje error">{error}</div>;
@@ -118,9 +158,15 @@ const PerfilPantalla = () => {
 
         <div className="perfil-acciones">
           {!esMiPerfil && (
-            <button className="btn-maqueta btn-reportar">
-               Reportar 🚨
-            </button>
+            <>
+              {/* Icono / Botón de mensaje, estilizado levemente en línea para no romper tus CSS base */}
+              <button className="btn-maqueta btn-mensaje" onClick={handleMensajeClick} disabled={iniciandoChat} style={{ marginRight: '10px', backgroundColor: '#03a9f4', color: 'white', borderColor: '#03a9f4' }}>
+                {iniciandoChat ? 'Cargando...' : 'Mensaje 💬'}
+              </button>
+              <button className="btn-maqueta btn-reportar">
+                 Reportar 🚨
+              </button>
+            </>
           )}
           {esMiPerfil && (
             <button className="btn-maqueta btn-configurar" onClick={() => navigate('/perfil/modificar')}>

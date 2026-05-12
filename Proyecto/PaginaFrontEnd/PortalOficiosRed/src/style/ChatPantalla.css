@@ -1,0 +1,125 @@
+.chat-pantalla-principal {
+  display: flex;
+  flex-direction: column;
+  height: 90vh; /* Ocupa casi toda la pantalla */
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: #e5ddd5; /* Color de fondo relajante tipo mensajería */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.chat-cargando {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #555;
+}
+
+/* HEADER */
+.chat-header {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 15px 20px;
+  border-bottom: 1px solid #ddd;
+  z-index: 10;
+}
+
+.chat-btn-volver {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #03a9f4;
+  margin-right: 15px;
+  padding: 5px;
+}
+
+.chat-info-usuario {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.chat-avatar-header {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f3961c;
+}
+
+.chat-nombre-header {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* MAIN - AREA DE MENSAJES */
+.chat-area-mensajes {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-vacio-mensaje {
+  margin: auto;
+  background-color: rgba(255,255,255,0.8);
+  padding: 15px 25px;
+  border-radius: 20px;
+  text-align: center;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* FOOTER - CAJA INPUT */
+.chat-footer-input {
+  background-color: #f0f0f0;
+  padding: 15px 20px;
+  border-top: 1px solid #ddd;
+}
+
+.chat-formulario {
+  display: flex;
+  gap: 15px;
+}
+
+.chat-caja-texto {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-caja-texto:focus {
+  border-color: #f3961c;
+}
+
+.chat-btn-enviar-msj {
+  background-color: #f3961c;
+  color: white;
+  border: none;
+  padding: 0 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.chat-btn-enviar-msj:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.chat-btn-enviar-msj:not(:disabled):hover {
+  background-color: #d88318;
+}

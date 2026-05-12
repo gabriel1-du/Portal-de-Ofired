@@ -17,6 +17,7 @@ import CambiarTelefonoPantalla from './pantallas/FormulariosConfig/CambiarTelefo
 import FormularioCambiarDatosUsuario from './pantallas/FormulariosConfig/FormularioCambiarDatosUsuario';
 import ValoracionesPantalla from './pantallas/ValoracionPantalla'; // Importamos la pantalla de valoraciones
 import FormularioCrearResenia from './pantallas/Formularios/FormularioCrearResenia'; // Importamos el nuevo form
+import ChatPantalla from './pantallas/ChatPantalla'; // Importamos la pantalla de chat
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="/configuracion/modificar-datos" element={<FormularioCambiarDatosUsuario />} />
           <Route path="/valoraciones/:idUsuario" element={<ValoracionesPantalla />} /> {/* Nueva ruta para ver valoraciones */}
           <Route path="/crear-resenia/:idUsuarioReseniado" element={<FormularioCrearResenia />} /> {/* Ruta para crear reseña */}
+          <Route path="/chat/:idChat" element={<ChatPantalla />} /> {/* Ruta para la interfaz de chat */}
         </Routes>
       </div>
     </Router>
