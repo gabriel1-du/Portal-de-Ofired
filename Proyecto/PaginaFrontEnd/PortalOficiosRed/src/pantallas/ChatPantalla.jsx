@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { leerMensajesPorChat, crearMensaje } from '../servicios/mensajesChatService';
+import { leerMensajesPorChat } from '../servicios/mensajesChatService';
 import { leerTodosLosParticipantesFront } from '../servicios/participantesChatService';
+import { webSocketService } from '../servicios/webSocketService';
 import MensajeCard from '../assets/MensajeCard';
 import '../style/ChatPantalla.css';
 
@@ -16,6 +17,8 @@ const ChatPantalla = () => {
   const [nuevoMensaje, setNuevoMensaje] = useState('');
   const [cargando, setCargando] = useState(true);
 
+  const mensajesEndRef = useRef(null); // Ref para el auto-scroll hacia el final
+
   useEffect(() => {
     if (!usuario || !token) {
       navigate('/iniciar-sesion');
@@ -23,6 +26,11 @@ const ChatPantalla = () => {
     }
     cargarDatosChat();
   }, [idChat, usuario]);
+
+  // Hacemos scroll hacia abajo cada vez que el arreglo de mensajes se actualiza
+  useEffect(() => {
+    mensajesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [mensajes]);
 
   const cargarDatosChat = async () => {
     try {
@@ -47,28 +55,60 @@ const ChatPantalla = () => {
   const cargarSoloMensajes = async () => {
     try {
       const msjs = await leerMensajesPorChat(idChat, token);
-      setMensajes(msjs || []);
+      
+      // Ordenamos los mensajes del más viejo al más nuevo por fechaHoraEnvio
+      if (msjs && msjs.length > 0) {
+        msjs.sort((a, b) => new Date(a.fechaHoraEnvio) - new Date(b.fechaHoraEnvio));
+      }
+      
+      setMensajes(prevMensajes => {
+        // Comparamos la cantidad actual con la nueva para saber si llegó algo nuevo.
+        // Esto evita "parpadeos" y que la pantalla baje forzosamente cada 3 segundos si no hay novedades.
+        const nuevaCantidad = msjs ? msjs.length : 0;
+        if (prevMensajes.length !== nuevaCantidad) {
+          return msjs || [];
+        }
+        return prevMensajes;
+      });
     } catch (error) {
       console.error("Error al recargar mensajes:", error);
     }
   };
+
+  // EFECTO DE WEBSOCKETS: Conecta y escucha mensajes en tiempo real
+  useEffect(() => {
+    if (!idChat || !token) return;
+    
+    webSocketService.connect(token, () => {
+      webSocketService.subscribeToChat(idChat, (nuevoMensaje) => {
+        setMensajes((prevMensajes) => {
+          // Evita duplicar el mensaje si por latencia se colara dos veces
+          if (prevMensajes.some(m => m.idMensajeChat === nuevoMensaje.idMensajeChat)) return prevMensajes;
+          return [...prevMensajes, nuevoMensaje];
+        });
+      });
+    });
+
+    // Nos desconectamos educadamente al salir de esta pantalla
+    return () => webSocketService.disconnect();
+  }, [idChat, token]);
 
   const handleEnviar = async (e) => {
     e.preventDefault();
     if (!nuevoMensaje.trim()) return;
     
     try {
+      // DTO con la estructura exacta: mensajeTexto, idChat, idAutor
       const dtoMensaje = {
         mensajeTexto: nuevoMensaje.trim(),
         idChat: parseInt(idChat),
         idAutor: usuario.idUsuario
       };
       
-      await crearMensaje(dtoMensaje, token);
+      // En lugar de hacer HTTP POST, mandamos el mensaje por el tubo de WebSocket
+      webSocketService.sendMessage(dtoMensaje);
       setNuevoMensaje('');
       
-      // Recargamos el historial inmediatamente después del post
-      await cargarSoloMensajes();
     } catch (error) {
       console.error("Error al enviar el mensaje:", error);
     }
@@ -101,9 +141,15 @@ const ChatPantalla = () => {
           </div>
         ) : (
           mensajes.map((msj) => (
-            <MensajeCard key={msj.idMensajeChat || msj.fechaHoraEnvio + msj.idAutor} mensaje={msj} esMio={msj.idAutor === usuario.idUsuario} />
+            <MensajeCard 
+              key={msj.idMensajeChat || msj.fechaHoraEnvio + msj.idAutor} 
+              mensaje={msj} 
+              esMio={msj.idAutor === usuario.idUsuario} 
+            />
           ))
         )}
+        {/* Elemento invisible al final de la lista para hacer scroll hacia él */}
+        <div ref={mensajesEndRef} />
       </main>
 
       {/* CAJA DE TEXTO (INPUT) */}
