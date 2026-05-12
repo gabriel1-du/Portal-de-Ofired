@@ -1,4 +1,4 @@
-package com.gateway.redireccionApis.chatApis;
+package com.gateway.redireccionApis.ApiUsuarios.MensajesChat;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
