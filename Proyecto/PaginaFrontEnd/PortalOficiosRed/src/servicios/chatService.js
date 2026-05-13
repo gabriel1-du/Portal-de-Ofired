@@ -57,6 +57,35 @@ export const leerChatPorId = async (id, token) => {
   }
 };
 
+// Función para buscar los chats de un usuario por su ID
+export const buscarChatPorUsuario = async (idUsuario, token) => {
+  try {
+    const url = `${API_URL_CHAT}/usuario/${idUsuario}`;
+    console.log("Llamando a la API de Chat (GET por Usuario):", url);
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}` 
+      }
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+         console.warn(`Aviso: El usuario con ID ${idUsuario} no tiene chats.`);
+         return []; 
+      }
+      console.error(`Error en la respuesta de la red (GET Chats by Usuario ID ${idUsuario}):`, response.status, response.statusText);
+      throw new Error(`Error al obtener los chats del usuario con ID ${idUsuario}.`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error(`Error al intentar obtener los chats del usuario con ID ${idUsuario}:`, error);
+    throw error;
+  }
+};
+
 // Función para obtener únicamente los IDs de todos los chats
 export const leerTodosLosChatsId = async (token) => {
   try {

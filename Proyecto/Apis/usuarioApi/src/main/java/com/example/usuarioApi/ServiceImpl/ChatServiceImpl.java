@@ -74,6 +74,14 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<leerFrontChatDTO> buscarChatsPorIdUsuario(Integer idUsuario) {
+        return chatRepository.buscarChatsPorIdUsuario(idUsuario).stream()
+                .map(chatMapper::mapToLeerFrontDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public void eliminarChat(Integer idChat) {
         if (!chatRepository.existsById(idChat)) {

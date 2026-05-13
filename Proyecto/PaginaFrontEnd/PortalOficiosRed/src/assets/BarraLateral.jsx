@@ -35,6 +35,9 @@ const BarraLateral = ({ abierta, alCerrar }) => {
               <Link to={`/perfil/${usuario.idUsuario}`} onClick={alCerrar} className="sidebar-link">
                 Ver mi Perfil
               </Link>
+              <Link to="/mis-mensajes" onClick={alCerrar} className="sidebar-link">
+                Ver mis mensajes
+              </Link>
               <Link to="/configuracion" onClick={alCerrar} className="sidebar-link">
                 Configuraciones
               </Link>

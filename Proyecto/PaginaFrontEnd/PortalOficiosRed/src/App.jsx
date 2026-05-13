@@ -18,6 +18,7 @@ import FormularioCambiarDatosUsuario from './pantallas/FormulariosConfig/Formula
 import ValoracionesPantalla from './pantallas/ValoracionPantalla'; // Importamos la pantalla de valoraciones
 import FormularioCrearResenia from './pantallas/Formularios/FormularioCrearResenia'; // Importamos el nuevo form
 import ChatPantalla from './pantallas/ChatPantalla'; // Importamos la pantalla de chat
+import MisMensajesPantalla from './pantallas/MisMensajesPantalla'; // Importamos la lista de chats
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="/valoraciones/:idUsuario" element={<ValoracionesPantalla />} /> {/* Nueva ruta para ver valoraciones */}
           <Route path="/crear-resenia/:idUsuarioReseniado" element={<FormularioCrearResenia />} /> {/* Ruta para crear reseña */}
           <Route path="/chat/:idChat" element={<ChatPantalla />} /> {/* Ruta para la interfaz de chat */}
+          <Route path="/mis-mensajes" element={<MisMensajesPantalla />} /> {/* Ruta de mis mensajes */}
         </Routes>
       </div>
     </Router>

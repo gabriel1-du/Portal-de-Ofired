@@ -43,6 +43,12 @@ public class ChatController {
         return new ResponseEntity<>(chats, HttpStatus.OK);
     }
 
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<leerFrontChatDTO>> buscarChatsPorIdUsuario(@PathVariable Integer idUsuario) {
+        List<leerFrontChatDTO> chats = chatService.buscarChatsPorIdUsuario(idUsuario);
+        return new ResponseEntity<>(chats, HttpStatus.OK);
+    }
+
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> eliminarChat(@PathVariable Integer id) {
         chatService.eliminarChat(id);

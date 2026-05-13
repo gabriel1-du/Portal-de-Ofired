@@ -16,6 +16,8 @@ public interface ChatService {
 
     List<leerFrontChatDTO> leerTodosLosChatsFront();
 
+    List<leerFrontChatDTO> buscarChatsPorIdUsuario(Integer idUsuario);
+
     void eliminarChat(Integer idChat);
 
 }
