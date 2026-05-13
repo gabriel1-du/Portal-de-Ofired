@@ -204,7 +204,15 @@ CREATE TABLE DENUNCIAS (
     CONSTRAINT fk_denuncia_resenia_target FOREIGN KEY (id_resenia_denunciada) REFERENCES RESENIA(id_resenia) ON DELETE CASCADE,
     CONSTRAINT fk_denuncia_resp_target FOREIGN KEY (id_respuesta_denunciada) REFERENCES RESPUESTA_RESENIA(id_respuesta_resenia) ON DELETE CASCADE
 );
-
+CREATE TABLE USUARIOS_BLOQUEADOS (
+    id_bloqueo INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario_que_bloquea INT NOT NULL,
+    id_usuario_bloqueado INT NOT NULL,
+    habilitador BOOLEAN DEFAULT TRUE,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_bloqueo_autor FOREIGN KEY (id_usuario_que_bloquea) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
+    CONSTRAINT fk_bloqueo_destino FOREIGN KEY (id_usuario_bloqueado) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
+);
 -- =========================================================================
 -- ALTERACIONES POSTERIORES
 -- =========================================================================
