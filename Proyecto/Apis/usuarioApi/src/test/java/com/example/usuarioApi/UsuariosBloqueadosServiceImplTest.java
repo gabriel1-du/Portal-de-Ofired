@@ -21,7 +21,6 @@ import com.example.usuarioApi.DTO.ClasesUsuariosBloqueadosDTO.LeerUsuariosBloque
 import com.example.usuarioApi.Model.SexoUsuario;
 import com.example.usuarioApi.Model.TipoUsuario;
 import com.example.usuarioApi.Model.Usuario;
-import com.example.usuarioApi.Repository.BloqueoUsuarioRepository;
 import com.example.usuarioApi.Repository.SexoUsuarioRepository;
 import com.example.usuarioApi.Repository.TipoUsuarioRepository;
 import com.example.usuarioApi.Repository.UsuarioRepository;

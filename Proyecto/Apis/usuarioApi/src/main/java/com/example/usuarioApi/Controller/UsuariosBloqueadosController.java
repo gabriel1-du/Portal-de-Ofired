@@ -13,7 +13,7 @@ import com.example.usuarioApi.DTO.ClasesUsuariosBloqueadosDTO.LeerUsuariosBloque
 import com.example.usuarioApi.Service.UsuariosBloqueadosService;
 
 @RestController
-@RequestMapping("/api/usuarios-bloqueados")
+@RequestMapping("/api/usuarios-bloqueadosApi")
 public class UsuariosBloqueadosController {
 
     @Autowired

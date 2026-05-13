@@ -30,6 +30,7 @@ import static com.gateway.redireccionApis.ApiUsuarios.Chat.ChatPublicRoutes.CHAT
 import static com.gateway.redireccionApis.ApiUsuarios.ParticipantesChat.ParticipantesChatPublicRoutes.PARTICIPANTES_CHAT_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.MensajesChat.MensajesChatPublicRoutes.MENSAJES_CHAT_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.WebSocket.WebSocketPublicRoutes.WEBSOCKET_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.BloqueoUsuarios.UsuariosBloqueadosPublicRoutes.USUARIOS_BLOQUEADOS_PUBLIC_GET;
 import java.util.Arrays;
 
 
@@ -92,6 +93,9 @@ public class SecurityConfig {
 
                 // URL públicas API WebSocket
                 .requestMatchers(HttpMethod.GET, WEBSOCKET_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Usuarios Bloqueados
+                .requestMatchers(HttpMethod.GET, USUARIOS_BLOQUEADOS_PUBLIC_GET ).permitAll()
 
 
                 // Otras URL Token obligatorio
