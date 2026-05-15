@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import '../style/BarraLateral.css'; // Heredamos los estilos de fondo y estructura de tu barra original
 import '../style/BarraLateralChat.css'; // Estilos específicos para los botones del chat
 
-const BarraLateralChat = ({ abierta, alCerrar, otroNombre, yoLoBloquee, onToggleBloqueo }) => {
+const BarraLateralChat = ({ abierta, alCerrar, otroNombre, yoLoBloquee, onToggleBloqueo, onCrearTransaccion }) => {
   if (!abierta) {
     return null;
   }
@@ -19,6 +19,12 @@ const BarraLateralChat = ({ abierta, alCerrar, otroNombre, yoLoBloquee, onToggle
           <button onClick={alCerrar} className="btn-cerrar-sidebar">&times;</button>
         </div>
         <nav className="sidebar-nav">
+          <button 
+            onClick={() => { onCrearTransaccion(); alCerrar(); }} 
+            className="sidebar-link"
+          >
+            🤝 Generar Trato
+          </button>
           <button 
             onClick={() => { onToggleBloqueo(); alCerrar(); }} 
             className={`sidebar-link btn-bloqueo ${yoLoBloquee ? 'desbloquear' : 'bloquear'}`}

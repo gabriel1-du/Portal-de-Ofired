@@ -19,6 +19,7 @@ import ValoracionesPantalla from './pantallas/ValoracionPantalla'; // Importamos
 import FormularioCrearResenia from './pantallas/Formularios/FormularioCrearResenia'; // Importamos el nuevo form
 import ChatPantalla from './pantallas/ChatPantalla'; // Importamos la pantalla de chat
 import MisMensajesPantalla from './pantallas/MisMensajesPantalla'; // Importamos la lista de chats
+import FormularioTransaccion from './pantallas/Formularios/FormularioTransaccion'; // Importamos el formulario de transacciones
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
           <Route path="/crear-resenia/:idUsuarioReseniado" element={<FormularioCrearResenia />} /> {/* Ruta para crear reseña */}
           <Route path="/chat/:idChat" element={<ChatPantalla />} /> {/* Ruta para la interfaz de chat */}
           <Route path="/mis-mensajes" element={<MisMensajesPantalla />} /> {/* Ruta de mis mensajes */}
+          <Route path="/crear-transaccion/:idCliente" element={<FormularioTransaccion />} /> {/* Ruta para crear transacciones */}
         </Routes>
       </div>
     </Router>

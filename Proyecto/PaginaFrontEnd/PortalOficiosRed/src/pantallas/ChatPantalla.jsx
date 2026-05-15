@@ -196,6 +196,17 @@ const ChatPantalla = () => {
     }
   };
 
+  // FUNCIÓN PARA CREAR TRANSACCIÓN
+  const handleCrearTransaccion = () => {
+    // AQUÍ SE VERIFICA SI EL USUARIO TIENE OFICIO O NO.
+    // Se comprueba si existe el "rut", ya que solo los usuarios de tipo "oficio" lo poseen en el sistema.
+    if (usuario.rut === null) {
+      alert("Debes ser un usuario de tipo oficio");
+      return;
+    }
+    navigate(`/crear-transaccion/${otroParticipante.idUsuario}`);
+  };
+
   if (cargando) return <div className="chat-cargando">Cargando conversación...</div>;
 
   return (
@@ -213,6 +224,15 @@ const ChatPantalla = () => {
             <h2 className="chat-nombre-header">{otroParticipante.nombreUsuario}</h2>
           </div>
         )}
+        {/* Botón de acceso rápido para iniciar transacción */}
+        <button 
+          className="chat-btn-transaccion" 
+          onClick={handleCrearTransaccion}
+          title="Generar Trato"
+          style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', marginRight: '15px' }}
+        >
+          🤝
+        </button>
         {/* Botón de tres puntos para abrir las opciones */}
         <button 
           className="chat-btn-opciones" 
@@ -264,6 +284,7 @@ const ChatPantalla = () => {
           otroNombre={otroParticipante.nombreUsuario} 
           yoLoBloquee={yoLoBloquee} 
           onToggleBloqueo={handleToggleBloqueo} 
+          onCrearTransaccion={handleCrearTransaccion}
         />
       )}
     </div>
