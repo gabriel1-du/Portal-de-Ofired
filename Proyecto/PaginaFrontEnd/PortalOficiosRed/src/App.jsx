@@ -20,6 +20,7 @@ import FormularioCrearResenia from './pantallas/Formularios/FormularioCrearResen
 import ChatPantalla from './pantallas/ChatPantalla'; // Importamos la pantalla de chat
 import MisMensajesPantalla from './pantallas/MisMensajesPantalla'; // Importamos la lista de chats
 import FormularioTransaccion from './pantallas/Formularios/FormularioTransaccion'; // Importamos el formulario de transacciones
+import ListaTratos from './pantallas/ListaTratos'; // Importamos la lista de tratos
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Route path="/chat/:idChat" element={<ChatPantalla />} /> {/* Ruta para la interfaz de chat */}
           <Route path="/mis-mensajes" element={<MisMensajesPantalla />} /> {/* Ruta de mis mensajes */}
           <Route path="/crear-transaccion/:idCliente" element={<FormularioTransaccion />} /> {/* Ruta para crear transacciones */}
+          <Route path="/mis-tratos" element={<ListaTratos />} /> {/* Ruta para ver los tratos pendientes */}
         </Routes>
       </div>
     </Router>

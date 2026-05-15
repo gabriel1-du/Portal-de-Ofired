@@ -62,14 +62,36 @@ export const leerTodasLasTransaccionesId = async () => {
   }
 };
 
+// Función para buscar transacciones por usuario (GET /usuario/{idUsuario})
+export const buscarTransaccionesPorUsuario = async (idUsuario, token) => {
+  try {
+    console.log("Llamando a la API de Transacciones (GET por Usuario):", `${API_URL}/usuario/${idUsuario}`);
+    const response = await fetch(`${API_URL}/usuario/${idUsuario}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (!response.ok) {
+      if (response.status === 404) return [];
+      throw new Error(`Error al obtener transacciones del usuario ${idUsuario}.`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error al intentar obtener las transacciones del usuario ${idUsuario}:`, error);
+    throw error;
+  }
+};
+
 // Función para actualizar el estado de una transacción (PUT /actualizar-estado/{id})
-export const actualizarEstadoTransaccion = async (id, dto) => {
+export const actualizarEstadoTransaccion = async (id, dto, token) => {
   try {
     console.log("Llamando a la API de Transacciones (PUT Estado):", `${API_URL}/actualizar-estado/${id}`);
     const response = await fetch(`${API_URL}/actualizar-estado/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(dto),
     });

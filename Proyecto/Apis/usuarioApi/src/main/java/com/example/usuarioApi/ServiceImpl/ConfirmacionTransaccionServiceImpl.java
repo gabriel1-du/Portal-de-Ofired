@@ -95,4 +95,10 @@ public class ConfirmacionTransaccionServiceImpl implements ConfirmacionTransacci
     public List<LeerConfirmacionTransaccionDTO> leerTodasLasTransaccionesId() {
         return transaccionRepository.findAll().stream().map(mapper::mapToLeerIdDTO).collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<LeerConfirmacionTransaccionFrontDTO> buscarPorUsuarioInvolucrado(Integer idUsuario) {
+        return transaccionRepository.buscarPorCualquierUsuario(idUsuario).stream().map(mapper::mapToLeerFrontDTO).collect(Collectors.toList());
+    }
 }

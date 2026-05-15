@@ -63,7 +63,8 @@ const FormularioTransaccion = () => {
         montoServicio: parseFloat(montoServicio),
         idMedioPago: parseInt(idMedioPago),
         idTipoTrabajo: parseInt(idTipoTrabajo),
-        observacionesTrato: observacionesTrato.trim()
+        observacionesTrato: observacionesTrato.trim(),
+        aceptado: null // Forzamos intencionalmente que llegue como null a la base de datos
       };
 
       await crearTransaccion(dto, token);

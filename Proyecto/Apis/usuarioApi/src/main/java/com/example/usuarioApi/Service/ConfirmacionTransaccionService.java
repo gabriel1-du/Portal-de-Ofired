@@ -20,4 +20,6 @@ public interface ConfirmacionTransaccionService {
     List<LeerConfirmacionTransaccionFrontDTO> leerTodasLasTransaccionesFront();
     
     List<LeerConfirmacionTransaccionDTO> leerTodasLasTransaccionesId();
+
+    List<LeerConfirmacionTransaccionFrontDTO> buscarPorUsuarioInvolucrado(Integer idUsuario);
 }

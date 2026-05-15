@@ -1,0 +1,52 @@
+.trato-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  padding: 1.5rem;
+  border: 1px solid #eee;
+  transition: transform 0.2s;
+}
+.trato-card:hover {
+  transform: translateY(-2px);
+}
+.trato-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 0.8rem;
+}
+.trato-header h4 { margin: 0; color: #333; }
+.estado-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+.estado-badge.pendiente { background-color: #fff3e0; color: #ef6c00; }
+.estado-badge.aceptado { background-color: #e8f5e9; color: #2e7d32; }
+.estado-badge.rechazado { background-color: #ffebee; color: #c62828; }
+.trato-body p {
+  margin: 8px 0;
+  color: #555;
+}
+.trato-footer {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.trato-footer button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-rechazar {
+  background-color: #ffebee;
+  color: #c62828;
+}
+.btn-rechazar:hover { background-color: #ffcdd2; }
+.btn-aceptar {
+  background-color: #03a9f4;
+  color: white;
+}
+.btn-aceptar:hover { background-color: #0288d1; }

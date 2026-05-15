@@ -21,7 +21,7 @@ public class ConfirmacionTransaccionMapper {
         entity.setMedioPago(medioPago);
         entity.setTipoTrabajo(tipoTrabajo);
         entity.setObservacionesTrato(dto.getObservacionesTrato());
-        entity.setAceptado(false);
+        entity.setAceptado(null);
         entity.setFechaRegistro(Timestamp.from(Instant.now()));
         return entity;
     }

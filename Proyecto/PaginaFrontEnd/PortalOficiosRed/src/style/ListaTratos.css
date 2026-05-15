@@ -1,0 +1,29 @@
+.lista-tratos-container {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: calc(100vh - 80px);
+}
+.lista-tratos-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.lista-tratos-header .btn-volver {
+  background: none;
+  border: none;
+  color: #03a9f4;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 20px;
+}
+.mensaje-estado {
+  text-align: center;
+  color: #666;
+}
+.tratos-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}

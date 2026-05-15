@@ -233,21 +233,21 @@ CREATE TABLE TIPO_DE_TRABAJO (
 -- Tabla transaccional central: El acuerdo firmado entre dos partes
 CREATE TABLE CONFIRMACION_TRANSACCION (
     id_transaccion INT AUTO_INCREMENT PRIMARY KEY,
-    
-    -- Los actores involucrados (El cliente y el gasfíter/especialista)
-    id_usuario_oferente INT NOT NULL, -- El especialista que ofrece y hace el trabajo
-    id_usuario_cliente INT NOT NULL,  -- El cliente que contrata el servicio
-    
-    -- Detalles financieros y de categorización
+    id_usuario_oferente INT NOT NULL,
+    id_usuario_cliente INT NOT NULL,
     monto_servicio DECIMAL(10,2) NOT NULL,
     id_medio_pago INT NOT NULL,
     id_tipo_trabajo INT NOT NULL,
     
-    -- Fechas de registro
-    fecha_acuerdo DATETIME NOT NULL, -- Cuándo dijeron "sí, hagamos el trato" (ingresado por el usuario o app)
-    fecha_registro_sistema TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Cuándo se guardó esto en la BD realmente
+    -- Nuevo: Estado de aceptación
+    aceptado BOOLEAN DEFAULT NULL, 
     
-    -- Llaves Foráneas (Restricciones)
+    -- Nuevo: Campo de texto para detalles o acuerdos específicos
+    observaciones_trato TEXT, 
+    
+    -- Solo fecha del sistema para garantizar integridad
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    
     CONSTRAINT fk_trans_oferente FOREIGN KEY (id_usuario_oferente) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
     CONSTRAINT fk_trans_cliente FOREIGN KEY (id_usuario_cliente) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
     CONSTRAINT fk_trans_medio_pago FOREIGN KEY (id_medio_pago) REFERENCES MEDIO_DE_PAGO(id_medio_pago),

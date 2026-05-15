@@ -1,9 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import '../style/BarraLateral.css'; // Heredamos los estilos de fondo y estructura de tu barra original
 import '../style/BarraLateralChat.css'; // Estilos específicos para los botones del chat
 
 const BarraLateralChat = ({ abierta, alCerrar, otroNombre, yoLoBloquee, onToggleBloqueo, onCrearTransaccion }) => {
+  const navigate = useNavigate();
+
   if (!abierta) {
     return null;
   }
@@ -24,6 +27,12 @@ const BarraLateralChat = ({ abierta, alCerrar, otroNombre, yoLoBloquee, onToggle
             className="sidebar-link"
           >
             🤝 Generar Trato
+          </button>
+          <button 
+            onClick={() => { navigate('/mis-tratos'); alCerrar(); }} 
+            className="sidebar-link"
+          >
+            📋 Ver Tratos
           </button>
           <button 
             onClick={() => { onToggleBloqueo(); alCerrar(); }} 

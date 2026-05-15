@@ -49,4 +49,9 @@ public class ConfirmacionTransaccionController {
         service.eliminarTransaccion(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<LeerConfirmacionTransaccionFrontDTO>> buscarPorUsuario(@PathVariable Integer idUsuario) {
+        return new ResponseEntity<>(service.buscarPorUsuarioInvolucrado(idUsuario), HttpStatus.OK);
+    }
 }
