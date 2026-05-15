@@ -21,6 +21,7 @@ import ChatPantalla from './pantallas/ChatPantalla'; // Importamos la pantalla d
 import MisMensajesPantalla from './pantallas/MisMensajesPantalla'; // Importamos la lista de chats
 import FormularioTransaccion from './pantallas/Formularios/FormularioTransaccion'; // Importamos el formulario de transacciones
 import ListaTratos from './pantallas/ListaTratos'; // Importamos la lista de tratos
+import PantallaAdministradorUsuarios from './pantallas/SeccionAdministrador/PantallaAdministradorUsuarios'; // Importamos pantalla de administrador
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route path="/mis-mensajes" element={<MisMensajesPantalla />} /> {/* Ruta de mis mensajes */}
           <Route path="/crear-transaccion/:idCliente" element={<FormularioTransaccion />} /> {/* Ruta para crear transacciones */}
           <Route path="/mis-tratos" element={<ListaTratos />} /> {/* Ruta para ver los tratos pendientes */}
+          <Route path="/admin/usuarios" element={<PantallaAdministradorUsuarios />} /> {/* Ruta administrador */}
         </Routes>
       </div>
     </Router>

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import '../style/configPantalla.css';
 
 const ConfiguracionesPantalla = () => {
   const navigate = useNavigate();
+  const { usuario } = useContext(AuthContext);
   // Estado para controlar qué opción del menú lateral está seleccionada
   const [menuActivo, setMenuActivo] = useState('datos');
 
@@ -37,12 +39,15 @@ const ConfiguracionesPantalla = () => {
             >
               Mensajería
             </button>
-            <button
-              className={`sidebar-btn ${menuActivo === 'admin' ? 'activo' : ''}`}
-              onClick={() => setMenuActivo('admin')}
-            >
-              Menú administrador
-            </button>
+            {/* Solo mostramos el menú si el usuario tiene permiso de administrador */}
+            {(usuario?.habilitador_administrador === true || usuario?.habilitadorAdministrador === true) && (
+              <button
+                className="sidebar-btn"
+                onClick={() => navigate('/admin/usuarios')}
+              >
+                Menú administrador
+              </button>
+            )}
           </nav>
 
           <div className="sidebar-footer">

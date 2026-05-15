@@ -1,0 +1,32 @@
+.admin-usuarios-contenedor {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  min-height: calc(100vh - 80px);
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.admin-header .btn-volver {
+  background: none;
+  border: none;
+  color: #03a9f4;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.admin-main {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  color: #333;
+}

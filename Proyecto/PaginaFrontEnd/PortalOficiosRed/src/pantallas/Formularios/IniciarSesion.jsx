@@ -27,11 +27,15 @@ function IniciarSesion() {
         // 2. Decodificamos el token para obtener el payload (los datos del usuario)
         const decodedToken = jwtDecode(data.token);
 
+        // Evaluamos si el claim "rol" indica que es administrador (soporta booleano true, texto 'true' o 'ADMIN')
+        const esAdministrador = decodedToken.rol === true || String(decodedToken.rol).toLowerCase() === 'true' || String(decodedToken.rol).toUpperCase() === 'ADMIN';
+
         // 3. Creamos un objeto 'usuario' con los datos del token
         const usuarioParaContexto = {
           idUsuario: decodedToken.userId,
           username: decodedToken.username,
           rol: decodedToken.rol,
+          habilitadorAdministrador: esAdministrador
         };
 
         // 4. Llamamos a iniciarSesion con el token y el objeto de usuario que acabamos de crear.
