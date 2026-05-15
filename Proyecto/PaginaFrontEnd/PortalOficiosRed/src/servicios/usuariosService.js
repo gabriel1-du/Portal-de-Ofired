@@ -91,6 +91,34 @@ export const updateUsuario = async (idUsuario, usuarioData, token) => {
   }
 };
 
+// Función para actualizar un usuario por parte de un administrador
+export const actualizarUsuarioAdmin = async (idUsuario, usuarioData, token) => {
+  try {
+    const url = `${API_URL_USUARIOS}/updateAdmin/${idUsuario}`;
+    console.log("Llamando a la API de Usuarios (PUT Admin):", url);
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(usuarioData),
+    });
+
+   if (response.ok) {
+      console.log("Usuario actualizado por administrador exitosamente.");
+      const responseBody = await response.text();
+      return responseBody ? JSON.parse(responseBody) : { success: true };
+    } else {
+      const errorText = await response.text();
+      console.error("Error al actualizar el usuario (Admin). Respuesta del servidor:", errorText);
+      throw new Error(`Error al actualizar el usuario por admin: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Algo falló en la petición para actualizar el usuario (Admin):", error);
+    throw error;
+  }
+};
 
 //
 export const crearUsuarioOficio= async (datosUsuario) => {

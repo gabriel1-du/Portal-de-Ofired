@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { leerTodosLosUsuarios } from '../../servicios/usuariosService'; // Importamos tu servicio
+import { leerTodosLosUsuarios } from '../../servicios/usuariosService'; 
+import FormularioEditarUsuarioAdmin from './FormulariosAdmisnitrador/FormularioEditarUsuarioAdmin'; 
 import '../../style/styleAdmin/pantallaAdminUsuarios.css';
 
 const PantallaAdministradorUsuarios = () => {
@@ -11,7 +12,29 @@ const PantallaAdministradorUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-  const [menuActivo, setMenuActivo] = useState('usuarios'); // Controla la barra lateral
+  const [menuActivo, setMenuActivo] = useState('usuarios'); 
+  
+  // Estado para controlar a qué usuario estamos editando
+  const [usuarioEditandoId, setUsuarioEditandoId] = useState(null);
+
+  // Extraemos cargarUsuarios en un useCallback para poder llamarlo desde el modal
+  const cargarUsuarios = useCallback(async () => {
+    try {
+      setCargando(true);
+      const data = await leerTodosLosUsuarios();
+      
+      if (typeof data === 'string') {
+        setError(data);
+      } else {
+        setUsuarios(data || []);
+      }
+    } catch (err) {
+      console.error("Error al cargar usuarios:", err);
+      setError("No se pudieron cargar los usuarios. Verifica tu conexión.");
+    } finally {
+      setCargando(false);
+    }
+  }, []);
 
   useEffect(() => {
     // Seguridad extra: Si alguien intenta entrar por la URL sin ser admin, se le expulsa
@@ -20,28 +43,8 @@ const PantallaAdministradorUsuarios = () => {
       return;
     }
 
-    const cargarUsuarios = async () => {
-      try {
-        setCargando(true);
-        // Llamamos al método de tu servicio de usuarios (con los paréntesis para ejecutarlo)
-        const data = await leerTodosLosUsuarios();
-        
-        // Como tu servicio devuelve un String cuando hay error, lo manejamos así:
-        if (typeof data === 'string') {
-          setError(data);
-        } else {
-          setUsuarios(data || []);
-        }
-      } catch (err) {
-        console.error("Error al cargar usuarios:", err);
-        setError("No se pudieron cargar los usuarios. Verifica tu conexión.");
-      } finally {
-        setCargando(false);
-      }
-    };
-
     cargarUsuarios();
-  }, [token, usuario, navigate]);
+  }, [usuario, navigate, cargarUsuarios]);
 
   return (
     <div className="admin-layout-contenedor">
@@ -87,7 +90,10 @@ const PantallaAdministradorUsuarios = () => {
                         <th>Correo Electrónico</th>
                         <th>RUT</th>
                         <th>Teléfono</th>
+                        <th>Región</th>
+                        <th>Comuna</th>
                         <th>Es Administrador</th>
+                        <th>Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -99,16 +105,26 @@ const PantallaAdministradorUsuarios = () => {
                           <td>{u.correoElec || u.email}</td>
                           <td>{u.rut ? u.rut : <span style={{color: '#999'}}>N/A (Cliente)</span>}</td>
                           <td>{u.numeroTelef || u.telefono}</td>
+                          <td>{u.nombreRegion || u.idRegionUsu || <span style={{color: '#999'}}>N/A</span>}</td>
+                          <td>{u.nombreComuna || u.idComunaUsu || <span style={{color: '#999'}}>N/A</span>}</td>
                           <td>
                             <span className={`badge-admin ${u.admin || u.habilitador_administrador ? 'si' : 'no'}`}>
                               {u.admin || u.habilitador_administrador ? 'Verdadero' : 'Falso'}
                             </span>
                           </td>
+                          <td>
+                            <button 
+                              style={{ backgroundColor: '#ffc107', color: '#000', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: '500' }}
+                              onClick={() => setUsuarioEditandoId(u.idUsuario || u.id)}
+                            >
+                              Editar
+                            </button>
+                          </td>
                         </tr>
                       ))}
                       {usuarios.length === 0 && (
                         <tr>
-                          <td colSpan="7" className="text-center">No hay usuarios registrados.</td>
+                          <td colSpan="10" className="text-center">No hay usuarios registrados.</td>
                         </tr>
                       )}
                     </tbody>
@@ -119,6 +135,15 @@ const PantallaAdministradorUsuarios = () => {
           )}
         </main>
       </div>
+
+      {/* Renderizamos el modal flotante de edición si hay un ID seleccionado */}
+      {usuarioEditandoId && (
+        <FormularioEditarUsuarioAdmin 
+          usuarioEdicionId={usuarioEditandoId} 
+          onClose={() => setUsuarioEditandoId(null)} 
+          onRefresh={cargarUsuarios}
+        />
+      )}
     </div>
   );
 };
