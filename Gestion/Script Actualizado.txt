@@ -213,6 +213,46 @@ CREATE TABLE USUARIOS_BLOQUEADOS (
     CONSTRAINT fk_bloqueo_autor FOREIGN KEY (id_usuario_que_bloquea) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
     CONSTRAINT fk_bloqueo_destino FOREIGN KEY (id_usuario_bloqueado) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
 );
+
+-- =========================================================================
+-- FASE 5: HISTORIAL DE TRATOS / TRANSACCIONES
+-- =========================================================================
+
+-- Tabla catálogo para los Medios de Pago
+CREATE TABLE MEDIO_DE_PAGO (
+    id_medio_pago INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_medio_pago VARCHAR(100) NOT NULL
+);
+
+-- Tabla catálogo para los Tipos de Trabajo
+CREATE TABLE TIPO_DE_TRABAJO (
+    id_tipo_trabajo INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_tipo_trabajo VARCHAR(100) NOT NULL
+);
+
+-- Tabla transaccional central: El acuerdo firmado entre dos partes
+CREATE TABLE CONFIRMACION_TRANSACCION (
+    id_transaccion INT AUTO_INCREMENT PRIMARY KEY,
+    
+    -- Los actores involucrados (El cliente y el gasfíter/especialista)
+    id_usuario_oferente INT NOT NULL, -- El especialista que ofrece y hace el trabajo
+    id_usuario_cliente INT NOT NULL,  -- El cliente que contrata el servicio
+    
+    -- Detalles financieros y de categorización
+    monto_servicio DECIMAL(10,2) NOT NULL,
+    id_medio_pago INT NOT NULL,
+    id_tipo_trabajo INT NOT NULL,
+    
+    -- Fechas de registro
+    fecha_acuerdo DATETIME NOT NULL, -- Cuándo dijeron "sí, hagamos el trato" (ingresado por el usuario o app)
+    fecha_registro_sistema TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Cuándo se guardó esto en la BD realmente
+    
+    -- Llaves Foráneas (Restricciones)
+    CONSTRAINT fk_trans_oferente FOREIGN KEY (id_usuario_oferente) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
+    CONSTRAINT fk_trans_cliente FOREIGN KEY (id_usuario_cliente) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
+    CONSTRAINT fk_trans_medio_pago FOREIGN KEY (id_medio_pago) REFERENCES MEDIO_DE_PAGO(id_medio_pago),
+    CONSTRAINT fk_trans_tipo_trabajo FOREIGN KEY (id_tipo_trabajo) REFERENCES TIPO_DE_TRABAJO(id_tipo_trabajo)
+);
 -- =========================================================================
 -- ALTERACIONES POSTERIORES
 -- =========================================================================

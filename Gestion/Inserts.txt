@@ -1,0 +1,10 @@
+-- Insertar Medios de Pago básicos
+INSERT INTO MEDIO_DE_PAGO (nombre_medio_pago) VALUES 
+('Efectivo'),
+('Transferencia Bancaria');
+
+-- Insertar Tipos de Trabajo iniciales
+INSERT INTO TIPO_DE_TRABAJO (nombre_tipo_trabajo) VALUES 
+('Reparación'),
+('Instalación Nueva'),
+('Mantenimiento Preventivo');
