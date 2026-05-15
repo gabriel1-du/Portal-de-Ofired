@@ -45,7 +45,7 @@ public class UsuariosBloqueadosController {
         return new ResponseEntity<>(bloqueoService.buscarPorUsuarioInvolucrado(idUsuario), HttpStatus.OK);
     }
 
-    @GetMapping("/buscar-relacion")
+    @GetMapping("/buscar-relacion") // Ejemplo de petición: GET http://localhost:8080/api/usuarios-bloqueadosApi/buscar-relacion?idUsuarioQueBloquea=1&idUsuarioBloqueado=2
     public ResponseEntity<LeerUsuariosBloqueadosIdDTO> buscarRelacionSimultanea(@RequestParam Integer idUsuarioQueBloquea, @RequestParam Integer idUsuarioBloqueado) {
         return new ResponseEntity<>(bloqueoService.buscarRelacionSimultanea(idUsuarioQueBloquea, idUsuarioBloqueado), HttpStatus.OK);
     }

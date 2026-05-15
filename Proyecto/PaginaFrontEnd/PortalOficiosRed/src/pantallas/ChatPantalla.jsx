@@ -4,7 +4,10 @@ import { AuthContext } from '../context/AuthContext';
 import { leerMensajesPorChat } from '../servicios/mensajesChatService';
 import { leerTodosLosParticipantesFront } from '../servicios/participantesChatService';
 import { webSocketService } from '../servicios/webSocketService';
+import { buscarRelacionSimultanea, crearBloqueo, actualizarBloqueo } from '../servicios/usuariosBloqueadosService';
+import { conectarBloqueosWebSocket, desconectarBloqueosWebSocket } from '../servicios/bloqueosWebSocketService';
 import MensajeCard from '../assets/MensajeCard';
+import BarraLateralChat from '../assets/BarraLateralChat';
 import '../style/ChatPantalla.css';
 
 const ChatPantalla = () => {
@@ -18,6 +21,12 @@ const ChatPantalla = () => {
   const [cargando, setCargando] = useState(true);
 
   const mensajesEndRef = useRef(null); // Ref para el auto-scroll hacia el final
+  
+  // ESTADOS PARA MANEJAR BLOQUEOS Y MENÚ
+  const [sidebarChatAbierta, setSidebarChatAbierta] = useState(false);
+  const [yoLoBloquee, setYoLoBloquee] = useState(false);
+  const [elMeBloqueo, setElMeBloqueo] = useState(false);
+  const [idBloqueoMio, setIdBloqueoMio] = useState(null);
 
   useEffect(() => {
     if (!usuario || !token) {
@@ -31,6 +40,49 @@ const ChatPantalla = () => {
   useEffect(() => {
     mensajesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [mensajes]);
+
+  // EFECTO PARA VERIFICAR BLOQUEOS CADA VEZ QUE SE CARGA EL CHAT
+  useEffect(() => {
+    const verificarBloqueos = async () => {
+      if (!usuario || !otroParticipante || !token) return;
+      try {
+        // 1. Verificar si yo bloqueé al otro usuario
+        const miBloqueo = await buscarRelacionSimultanea(usuario.idUsuario, otroParticipante.idUsuario, token);
+        if (miBloqueo) {
+          // Guardamos el ID del bloqueo (usando el nombre exacto del DTO: idBloqueo)
+          setIdBloqueoMio(miBloqueo.idBloqueo);
+          setYoLoBloquee(miBloqueo.habilitador === true); // Si el habilitador es true, está bloqueado
+        } else {
+          setIdBloqueoMio(null);
+          setYoLoBloquee(false);
+        }
+
+        // 2. Verificar si él me bloqueó a mí
+        const suBloqueo = await buscarRelacionSimultanea(otroParticipante.idUsuario, usuario.idUsuario, token);
+        if (suBloqueo) {
+          setElMeBloqueo(suBloqueo.habilitador === true);
+        } else {
+          setElMeBloqueo(false);
+        }
+      } catch (error) {
+        console.error("Error al verificar la relación de bloqueo", error);
+      }
+    };
+    
+    // 1. Llamada inicial al entrar a la pantalla
+    verificarBloqueos();
+
+    // 2. Conexión al WebSocket para reaccionar en Tiempo Real
+    if (usuario && usuario.idUsuario) {
+      conectarBloqueosWebSocket(usuario.idUsuario, (datosBloqueo) => {
+        // Cuando el servidor grita que hubo un cambio de bloqueo, revisamos la base de datos de inmediato.
+        verificarBloqueos();
+      });
+    }
+
+    // 3. Desconectarnos limpiamente al salir del chat
+    return () => desconectarBloqueosWebSocket();
+  }, [usuario, otroParticipante, token]);
 
   const cargarDatosChat = async () => {
     try {
@@ -114,6 +166,36 @@ const ChatPantalla = () => {
     }
   };
 
+  // FUNCIÓN PARA EJECUTAR EL BLOQUEO/DESBLOQUEO
+  const handleToggleBloqueo = async () => {
+    try {
+      if (yoLoBloquee) {
+        // Si ya está bloqueado, hacemos PUT para desbloquear
+        await actualizarBloqueo(idBloqueoMio, { habilitador: false }, token);
+        setYoLoBloquee(false);
+      } else {
+        // Si NO está bloqueado...
+        if (idBloqueoMio) {
+          // Si existe un registro anterior, solo le cambiamos el estado
+          await actualizarBloqueo(idBloqueoMio, { habilitador: true }, token);
+          setYoLoBloquee(true);
+        } else {
+          // Si no existía, creamos la relación desde cero
+          const dto = {
+            idUsuarioQueBloquea: usuario.idUsuario,
+            idUsuarioBloqueado: otroParticipante.idUsuario
+          };
+          const nuevo = await crearBloqueo(dto, token);
+          setIdBloqueoMio(nuevo.idBloqueo);
+          setYoLoBloquee(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error al cambiar estado de bloqueo", error);
+      alert("Hubo un problema al actualizar el bloqueo. Intenta nuevamente.");
+    }
+  };
+
   if (cargando) return <div className="chat-cargando">Cargando conversación...</div>;
 
   return (
@@ -131,6 +213,14 @@ const ChatPantalla = () => {
             <h2 className="chat-nombre-header">{otroParticipante.nombreUsuario}</h2>
           </div>
         )}
+        {/* Botón de tres puntos para abrir las opciones */}
+        <button 
+          className="chat-btn-opciones" 
+          onClick={() => setSidebarChatAbierta(true)} 
+          title="Opciones"
+        >
+          &#8942;
+        </button>
       </header>
 
       {/* ÁREA DE MENSAJES (HISTORIAL) */}
@@ -152,13 +242,30 @@ const ChatPantalla = () => {
         <div ref={mensajesEndRef} />
       </main>
 
-      {/* CAJA DE TEXTO (INPUT) */}
-      <footer className="chat-footer-input">
-        <form className="chat-formulario" onSubmit={handleEnviar}>
-          <input type="text" className="chat-caja-texto" placeholder="Escribe un mensaje aquí..." value={nuevoMensaje} onChange={(e) => setNuevoMensaje(e.target.value)} />
-          <button type="submit" className="chat-btn-enviar-msj" disabled={!nuevoMensaje.trim()}>Enviar</button>
-        </form>
-      </footer>
+      {/* CAJA DE TEXTO (INPUT) O MENSAJE DE BLOQUEO */}
+      {(yoLoBloquee || elMeBloqueo) ? (
+        <footer className="chat-footer-input chat-bloqueado-msg">
+          <p>{yoLoBloquee ? "Has bloqueado a este usuario." : "No puedes enviar mensajes a este usuario."}</p>
+        </footer>
+      ) : (
+        <footer className="chat-footer-input">
+          <form className="chat-formulario" onSubmit={handleEnviar}>
+            <input type="text" className="chat-caja-texto" placeholder="Escribe un mensaje aquí..." value={nuevoMensaje} onChange={(e) => setNuevoMensaje(e.target.value)} />
+            <button type="submit" className="chat-btn-enviar-msj" disabled={!nuevoMensaje.trim()}>Enviar</button>
+          </form>
+        </footer>
+      )}
+
+      {/* MENÚ LATERAL DE OPCIONES */}
+      {otroParticipante && (
+        <BarraLateralChat 
+          abierta={sidebarChatAbierta} 
+          alCerrar={() => setSidebarChatAbierta(false)} 
+          otroNombre={otroParticipante.nombreUsuario} 
+          yoLoBloquee={yoLoBloquee} 
+          onToggleBloqueo={handleToggleBloqueo} 
+        />
+      )}
     </div>
   );
 };

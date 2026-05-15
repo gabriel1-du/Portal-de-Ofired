@@ -18,6 +18,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws-chat")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
+                
+        // Nuevo endpoint con "api" en el nombre para mantener compatibilidad con tu API Gateway
+        registry.addEndpoint("/ws-api")
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
     }
 
     @Override
