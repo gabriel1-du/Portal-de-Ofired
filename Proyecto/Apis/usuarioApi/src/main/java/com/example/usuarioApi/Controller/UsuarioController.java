@@ -4,6 +4,7 @@ import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.eliminarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTO;
+import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL1DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL2DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTO;
@@ -43,6 +44,12 @@ public class UsuarioController {
     @PostMapping("/crearUsuarioLVL2")
     public ResponseEntity<leerUsuarioDTO> crearUsuarioLVL2(@RequestBody crearUsuarioLVL2DTO usuarioDTO) {
         leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioLVL2(usuarioDTO);
+        return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/admin/crear")
+    public ResponseEntity<leerUsuarioDTO> crearUsuarioPorAdmin(@RequestBody crearUsuarioDTOAdmin dto) {
+        leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioAdmin(dto);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 

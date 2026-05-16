@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTO;
+import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL1DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL2DTO;
 import com.example.usuarioApi.Model.Comuna;
@@ -187,4 +188,52 @@ public class UsuarioMapCreate {
         return usuario;
     }
 
+    public Usuario mapCrearUsuarioAdminDTOtoUsuario(crearUsuarioDTOAdmin dto) {
+        Usuario usuario = new Usuario();
+
+        // Mapeo de datos personales, con "N" como valor por defecto para strings vacíos o nulos.
+        usuario.setPNombre(defaultIfBlank(dto.getPrimerNombre(), "N"));
+        usuario.setSNombre(defaultIfBlank(dto.getSegundoNombre(), "N"));
+        usuario.setPApellido(defaultIfBlank(dto.getPrimerApellido(), "N"));
+        usuario.setSApellido(defaultIfBlank(dto.getSegundoApellido(), "N"));
+
+        // Mapeo de credenciales y todos los datos adicionales habilitados para Admin
+        usuario.setCorreoElec(dto.getCorreoElec());
+        usuario.setPassword(dto.getPassword()); // Se hashea en el Service
+        usuario.setRut(defaultIfBlank(dto.getRut(), "N"));
+        usuario.setRutDv(defaultIfBlank(dto.getRutDv(), "N"));
+        usuario.setNumeroTelef(defaultIfBlank(dto.getNumeroTelef(), "N"));
+        usuario.setFoto(defaultIfBlank(dto.getFoto(), "N"));
+        usuario.setHabilitadorAdministrador(dto.getHabilitadorAdministrador() != null ? dto.getHabilitadorAdministrador() : false);
+        usuario.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+        usuario.setValoracion(dto.getValoracion() != null ? java.math.BigDecimal.valueOf(dto.getValoracion()) : java.math.BigDecimal.ZERO);
+        
+        // Mapeo de relaciones sin restricciones de niveles
+        if (dto.getIdRegionUsu() != null) {
+            Region region = regionRepository.findById(dto.getIdRegionUsu())
+                    .orElseThrow(() -> new RuntimeException("Región no encontrada con id: " + dto.getIdRegionUsu()));
+            usuario.setRegion(region);
+        }
+        if (dto.getIdComunaUsu() != null) {
+            Comuna comuna = comunaRepository.findById(dto.getIdComunaUsu())
+                    .orElseThrow(() -> new RuntimeException("Comuna no encontrada con id: " + dto.getIdComunaUsu()));
+            usuario.setComuna(comuna);
+        }
+        if (dto.getIdOficio() != null) {
+            Oficio oficio = oficioRepository.findById(dto.getIdOficio())
+                    .orElseThrow(() -> new RuntimeException("Oficio no encontrado con id: " + dto.getIdOficio()));
+            usuario.setOficio(oficio);
+        }
+        if (dto.getIdTipoUsu() != null) {
+            TipoUsuario tipoUsuario = tipoUsuarioRepository.findById(dto.getIdTipoUsu())
+                    .orElseThrow(() -> new RuntimeException("Tipo de Usuario no encontrado con id: " + dto.getIdTipoUsu()));
+            usuario.setTipoUsuario(tipoUsuario);
+        }
+        if (dto.getIdSexoUsu() != null) {
+            SexoUsuario sexo = sexoRepository.findById(dto.getIdSexoUsu())
+                    .orElseThrow(() -> new RuntimeException("Sexo no encontrado con id: " + dto.getIdSexoUsu()));
+            usuario.setSexo(sexo);
+        }
+        return usuario;
+    }
 }

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { leerTodosLosUsuarios } from '../../servicios/usuariosService'; 
+import { leerTodosLosUsuarios, eliminarUsuario } from '../../servicios/usuariosService'; 
 import FormularioEditarUsuarioAdmin from './FormulariosAdmisnitrador/FormularioEditarUsuarioAdmin'; 
+import FormularioCrearUsuarioAdmin from './FormulariosAdmisnitrador/FormularioCrearUsuarioAdmin'; 
 import '../../style/styleAdmin/pantallaAdminUsuarios.css';
 
 const PantallaAdministradorUsuarios = () => {
@@ -13,9 +14,11 @@ const PantallaAdministradorUsuarios = () => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [menuActivo, setMenuActivo] = useState('usuarios'); 
+  const [terminoBusqueda, setTerminoBusqueda] = useState(''); // Estado para la barra de búsqueda
   
   // Estado para controlar a qué usuario estamos editando
   const [usuarioEditandoId, setUsuarioEditandoId] = useState(null);
+  const [mostrarModalCrear, setMostrarModalCrear] = useState(false); // Estado para abrir el modal de creación
 
   // Extraemos cargarUsuarios en un useCallback para poder llamarlo desde el modal
   const cargarUsuarios = useCallback(async () => {
@@ -46,6 +49,26 @@ const PantallaAdministradorUsuarios = () => {
     cargarUsuarios();
   }, [usuario, navigate, cargarUsuarios]);
 
+  // Lógica para filtrar los usuarios según lo que se escriba en la barra de búsqueda
+  const usuariosFiltrados = usuarios.filter((u) => {
+    if (!terminoBusqueda) return true;
+    const nombreCompleto = `${u.primerNombre || u.nombre || ''} ${u.segundoNombre || ''} ${u.primerApellido || u.apellido || ''} ${u.segundoApellido || ''}`.toLowerCase();
+    return nombreCompleto.includes(terminoBusqueda.toLowerCase());
+  });
+
+  // Función para manejar la eliminación de un usuario
+  const handleEliminarUsuario = async (idUsuario) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.")) {
+      try {
+        await eliminarUsuario(idUsuario, token);
+        alert("Usuario eliminado correctamente.");
+        cargarUsuarios(); // Recargar la tabla automáticamente
+      } catch (err) {
+        alert("Ocurrió un error al intentar eliminar el usuario.");
+      }
+    }
+  };
+
   return (
     <div className="admin-layout-contenedor">
       {/* Cabecera superior */}
@@ -75,6 +98,20 @@ const PantallaAdministradorUsuarios = () => {
               <h2>Tabla de Usuarios</h2>
               <p>Visualización en tiempo real de los datos registrados en el sistema.</p>
               
+              {/* Controles de la Tabla: Barra de Búsqueda y Botón Crear */}
+              <div className="admin-controles-tabla">
+                <input 
+                  type="text" 
+                  className="admin-busqueda" 
+                  placeholder="🔍 Buscar usuario por nombre..." 
+                  value={terminoBusqueda}
+                  onChange={(e) => setTerminoBusqueda(e.target.value)}
+                />
+                <button className="btn-crear-usuario" onClick={() => setMostrarModalCrear(true)}>
+                  + Crear Usuario
+                </button>
+              </div>
+
               {cargando ? (
                 <div className="admin-loading">Cargando base de datos...</div>
               ) : error ? (
@@ -97,7 +134,7 @@ const PantallaAdministradorUsuarios = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {usuarios.map(u => (
+                      {usuariosFiltrados.map(u => (
                         <tr key={u.idUsuario || u.id}>
                           <td>{u.idUsuario || u.id}</td>
                           <td>{`${u.primerNombre || u.nombre || ''} ${u.segundoNombre || ''}`}</td>
@@ -113,16 +150,23 @@ const PantallaAdministradorUsuarios = () => {
                             </span>
                           </td>
                           <td>
-                            <button 
-                              style={{ backgroundColor: '#ffc107', color: '#000', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: '500' }}
-                              onClick={() => setUsuarioEditandoId(u.idUsuario || u.id)}
+                            {/* Botón Desplegable Nativo para Acciones */}
+                            <select 
+                              className="admin-action-select"
+                              value=""
+                              onChange={(e) => {
+                                if (e.target.value === 'editar') setUsuarioEditandoId(u.idUsuario || u.id);
+                                if (e.target.value === 'eliminar') handleEliminarUsuario(u.idUsuario || u.id);
+                              }}
                             >
-                              Editar
-                            </button>
+                              <option value="" disabled>Acciones...</option>
+                              <option value="editar">✏️ Editar</option>
+                              <option value="eliminar">🗑️ Eliminar</option>
+                            </select>
                           </td>
                         </tr>
                       ))}
-                      {usuarios.length === 0 && (
+                      {usuariosFiltrados.length === 0 && (
                         <tr>
                           <td colSpan="10" className="text-center">No hay usuarios registrados.</td>
                         </tr>
@@ -141,6 +185,14 @@ const PantallaAdministradorUsuarios = () => {
         <FormularioEditarUsuarioAdmin 
           usuarioEdicionId={usuarioEditandoId} 
           onClose={() => setUsuarioEditandoId(null)} 
+          onRefresh={cargarUsuarios}
+        />
+      )}
+
+      {/* Renderizamos el modal de creación si se presionó "+ Crear Usuario" */}
+      {mostrarModalCrear && (
+        <FormularioCrearUsuarioAdmin 
+          onClose={() => setMostrarModalCrear(false)} 
           onRefresh={cargarUsuarios}
         />
       )}

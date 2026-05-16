@@ -4,6 +4,7 @@ package com.example.usuarioApi.ServiceImpl;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTO;
+import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL1DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL2DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.eliminarUserDTO;
@@ -114,6 +115,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         return readMapper.mapUsuarioToLeerUsuarioDTO(nuevoUsuario);
     }
 
+    @Override
+    public leerUsuarioDTO crearUsuarioAdmin(crearUsuarioDTOAdmin usuarioDTO) {
+        Usuario usuario = createMapper.mapCrearUsuarioAdminDTOtoUsuario(usuarioDTO);
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        Usuario nuevoUsuario = usuarioRepository.save(usuario);
+        return readMapper.mapUsuarioToLeerUsuarioDTO(nuevoUsuario);
+    }
 
     @Override
     public leerUsuarioDTO leerUsuario(Integer id) {

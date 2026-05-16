@@ -91,6 +91,34 @@ export const updateUsuario = async (idUsuario, usuarioData, token) => {
   }
 };
 
+// Función para CREAR un usuario por parte de un administrador
+export const crearUsuarioPorAdmin = async (usuarioData, token) => {
+  try {
+    const url = `${API_URL_USUARIOS}/admin/crear`;
+    console.log("Llamando a la API de Usuarios (POST Admin):", url);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(usuarioData),
+    });
+
+    if (response.ok) {
+      console.log("Usuario creado por administrador exitosamente.");
+      return await response.json();
+    } else {
+      const errorText = await response.text();
+      console.error("Error al crear el usuario (Admin). Respuesta del servidor:", errorText);
+      throw new Error(`Error al crear el usuario por admin: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Algo falló en la petición para crear el usuario (Admin):", error);
+    throw error;
+  }
+};
+
 // Función para actualizar un usuario por parte de un administrador
 export const actualizarUsuarioAdmin = async (idUsuario, usuarioData, token) => {
   try {
@@ -140,5 +168,31 @@ export const crearUsuarioOficio= async (datosUsuario) => {
     }
   } catch (error) {
     console.error("Algo falló en la petición para crear el usuario:", error);
+  }
+};
+
+// Función para eliminar un usuario por su ID (Administrador)
+export const eliminarUsuario = async (idUsuario, token) => {
+  try {
+    const url = `${API_URL_USUARIOS}/${idUsuario}`;
+    console.log("Llamando a la API de Usuarios (DELETE):", url);
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      console.log(`Usuario con ID ${idUsuario} eliminado exitosamente.`);
+      return true;
+    } else {
+      const errorText = await response.text();
+      console.error("Error al eliminar el usuario. Respuesta del servidor:", errorText);
+      throw new Error(`Error al eliminar el usuario: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Algo falló en la petición para eliminar el usuario:", error);
+    throw error;
   }
 };

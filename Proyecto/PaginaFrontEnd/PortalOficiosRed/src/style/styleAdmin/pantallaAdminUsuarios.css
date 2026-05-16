@@ -88,6 +88,47 @@
   margin-bottom: 1.5rem;
 }
 
+/* --- CONTROLES SUPERIORES (Busqueda y Crear) --- */
+.admin-controles-tabla {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-busqueda {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 400px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.admin-busqueda:focus {
+  border-color: #03a9f4;
+}
+
+.btn-crear-usuario {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn-crear-usuario:hover {
+  background-color: #45a049;
+}
+
 /* --- TABLA BASE DE DATOS --- */
 .table-responsive {
   width: 100%;
@@ -149,6 +190,17 @@
   color: #757575;
 }
 
+/* --- DESPLEGABLE DE ACCIONES --- */
+.admin-action-select {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  outline: none;
+}
+
 /* --- ESTADOS CARGA Y ERROR --- */
 .admin-loading,
 .admin-error {
@@ -160,3 +212,73 @@
 .admin-error {
   color: #c62828;
 }
+
+/* --- MODALES ADMIN (Crear y Editar) --- */
+.admin-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.admin-modal-contenido {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.admin-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.admin-modal-header h3 { 
+  margin: 0; 
+  color: #333; 
+  font-size: 1.5rem;
+}
+
+.btn-cerrar-modal {
+  background: none; border: none; font-size: 2rem; cursor: pointer; color: #999; line-height: 1;
+}
+.btn-cerrar-modal:hover { color: #f44336; }
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.admin-form-group { display: flex; flex-direction: column; }
+.admin-form-group label { margin-bottom: 0.5rem; font-weight: 600; color: #555; font-size: 0.95rem;}
+.admin-form-group input, .admin-form-group select {
+  padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; outline: none; font-size: 1rem; transition: border-color 0.2s;
+}
+.admin-form-group input:focus, .admin-form-group select:focus { border-color: #03a9f4; }
+
+.full-width { grid-column: 1 / -1; }
+
+.btn-submit-modal {
+  background-color: #4CAF50; color: white; padding: 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.1rem; width: 100%; margin-top: 1rem; transition: background-color 0.2s;
+}
+.btn-submit-modal:hover { background-color: #43a047; }
+
+.admin-form-group-checkbox {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+  padding: 10px 0;
+}
+
+.admin-error-box { background: #ffebee; color: #c62828; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; border-left: 5px solid #f44336;}
