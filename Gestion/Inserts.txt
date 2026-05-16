@@ -1,9 +1,40 @@
--- Insertar Medios de Pago básicos
+-- =========================================================================
+-- POBLAR TABLAS CATEGÓRICAS
+-- =========================================================================
+
+-- 1. Insertar Tipos de Usuario (Roles)
+INSERT INTO TIPO_USUARIO (nombre_rol) VALUES 
+('Usuario'), 
+('Técnico/Especialista'), 
+('Administrador');
+
+-- 2. Insertar Sexo de Usuario
+INSERT INTO SEXO_USUARIO (nombre_sexo) VALUES 
+('Masculino'), 
+('Femenino');
+
+-- 3. Insertar Regiones (Aprovecharemos el AUTO_INCREMENT: id 1 y id 2)
+INSERT INTO REGION (nombre_region) VALUES 
+('Región Metropolitana de Santiago'), 
+('Región de Valparaíso');
+
+-- 4. Insertar Comunas referenciando a las Regiones anteriores
+-- Para la Región Metropolitana (id_region = 1)
+INSERT INTO COMUNA (id_region, nombre_comuna) VALUES 
+(1, 'Maipú'), 
+(1, 'Santiago Centro');
+
+-- Para la Región de Valparaíso (id_region = 2)
+INSERT INTO COMUNA (id_region, nombre_comuna) VALUES 
+(2, 'Valparaíso'), 
+(2, 'Viña del Mar');
+
+-- 5-Insertar Medios de Pago básicos
 INSERT INTO MEDIO_DE_PAGO (nombre_medio_pago) VALUES 
 ('Efectivo'),
 ('Transferencia Bancaria');
 
--- Insertar Tipos de Trabajo iniciales
+-- 6- Insertar Tipos de Trabajo iniciales
 INSERT INTO TIPO_DE_TRABAJO (nombre_tipo_trabajo) VALUES 
 ('Reparación'),
 ('Instalación Nueva'),
