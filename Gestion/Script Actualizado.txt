@@ -6,19 +6,22 @@ CREATE TABLE REGION (
     nombre_region VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE OFICIO (
-    id_oficio INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_oficio VARCHAR(100) NOT NULL
+
+CREATE TABLE MEDIO_DE_PAGO (
+    id_medio_pago INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_medio_pago VARCHAR(100) NOT NULL
 );
+
+
+CREATE TABLE TIPO_DE_TRABAJO (
+    id_tipo_trabajo INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_tipo_trabajo VARCHAR(100) NOT NULL
+);
+
 
 CREATE TABLE TIPO_USUARIO (
     id_tipo_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre_rol VARCHAR(50) NOT NULL
-);
-
-CREATE TABLE TIPO_SERVICIO(
-    id_tipo_servicio INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_servicio VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE SEXO_USUARIO (
@@ -172,15 +175,6 @@ CREATE TABLE MENSAJES_CHAT (
     CONSTRAINT fk_mensaje_autor FOREIGN KEY (id_autor_mensaje) REFERENCES USUARIO(id_usuario)
 );
 
-CREATE TABLE BLOQUEO_USUARIO (
-    id_bloqueo INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario_que_bloquea INT NOT NULL,
-    id_usuario_bloqueado INT NOT NULL,
-    fecha_bloqueo TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_bloqueador FOREIGN KEY (id_usuario_que_bloquea) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
-    CONSTRAINT fk_bloqueado FOREIGN KEY (id_usuario_bloqueado) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
-);
-
 CREATE TABLE DENUNCIAS (
     id_denuncia INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario_denunciante INT NOT NULL,
@@ -204,6 +198,7 @@ CREATE TABLE DENUNCIAS (
     CONSTRAINT fk_denuncia_resenia_target FOREIGN KEY (id_resenia_denunciada) REFERENCES RESENIA(id_resenia) ON DELETE CASCADE,
     CONSTRAINT fk_denuncia_resp_target FOREIGN KEY (id_respuesta_denunciada) REFERENCES RESPUESTA_RESENIA(id_respuesta_resenia) ON DELETE CASCADE
 );
+
 CREATE TABLE USUARIOS_BLOQUEADOS (
     id_bloqueo INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario_que_bloquea INT NOT NULL,
@@ -218,17 +213,6 @@ CREATE TABLE USUARIOS_BLOQUEADOS (
 -- FASE 5: HISTORIAL DE TRATOS / TRANSACCIONES
 -- =========================================================================
 
--- Tabla catálogo para los Medios de Pago
-CREATE TABLE MEDIO_DE_PAGO (
-    id_medio_pago INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_medio_pago VARCHAR(100) NOT NULL
-);
-
--- Tabla catálogo para los Tipos de Trabajo
-CREATE TABLE TIPO_DE_TRABAJO (
-    id_tipo_trabajo INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_tipo_trabajo VARCHAR(100) NOT NULL
-);
 
 -- Tabla transaccional central: El acuerdo firmado entre dos partes
 CREATE TABLE CONFIRMACION_TRANSACCION (
@@ -239,13 +223,10 @@ CREATE TABLE CONFIRMACION_TRANSACCION (
     id_medio_pago INT NOT NULL,
     id_tipo_trabajo INT NOT NULL,
     
-    -- Nuevo: Estado de aceptación
+    -- CORREGIDO: Se quitó el 'NULL3' que causaba error de sintaxis
     aceptado BOOLEAN DEFAULT NULL, 
     
-    -- Nuevo: Campo de texto para detalles o acuerdos específicos
     observaciones_trato TEXT, 
-    
-    -- Solo fecha del sistema para garantizar integridad
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
     
     CONSTRAINT fk_trans_oferente FOREIGN KEY (id_usuario_oferente) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
@@ -260,3 +241,6 @@ CREATE TABLE CONFIRMACION_TRANSACCION (
 -- Alter para agregar el atributo de fecha de publicación solicitado
 ALTER TABLE PUBLICACION
 ADD COLUMN fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+
+
