@@ -1,30 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import '../style/home.css';
 import PublicacionCard from '../assets/PublicacionesCard.jsx'; 
 import BarraBusqueda from '../assets/barraBusqueda.jsx';
+import { AuthContext } from '../context/AuthContext'; // CORREGIDO: Subimos solo un nivel
 
 function PaginaHome() {
   // Estado para guardar la lista de publicaciones que vengan del backend
   const [publicaciones, setPublicaciones] = useState([]);
   const [cargando, setCargando] = useState(true);
+  
+  // Extraemos el token para poder pasarlo en la cabecera de la petición
+  const { token } = useContext(AuthContext); 
 
   useEffect(() => {
-    // URL de tu endpoint de Spring Boot (Puerto 8085 según tus capturas)
-    // Agregamos un límite (ejemplo: traer un máximo de 10 publicaciones iniciales)
+    // Límite de publicaciones iniciales
     const limitePublicaciones = 10; 
     
-    fetch(`http://localhost:8085/api/publicacionesApi?limit=${limitePublicaciones}`)
+    // CORRECCIÓN: Apunta a la ApiGateway (8888) usando la ruta /proxy/
+    fetch(`http://localhost:8888/api/proxy/publicacionesApi?limit=${limitePublicaciones}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        // Pasamos el Token para cruzar la seguridad de la Gateway y del Microservicio
+        "Authorization": `Bearer ${token}`
+      }
+    })
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Error en la respuesta del servidor");
+          throw new Error("Error en la respuesta del servidor o falta de autorización");
         }
         return res.json();
       })
       .then((data) => {
-        // Si tu backend devuelve un array directamente, lo guardamos.
-        // Si viene paginado en un objeto (ej: data.content), asegúrate de adaptarlo.
-        // Aquí tomamos un slice de respaldo por si el backend no soporta el parámetro ?limit todavía
-        const listaLimitada = Array.isArray(data) ? data.slice(0, limitePublicaciones) : [];
+        // Soporte por si el backend devuelve el array limpio o dentro de un objeto paginado (.content)
+        const publicacionesRaw = Array.isArray(data) ? data : (data.content || []);
+        const listaLimitada = publicacionesRaw.slice(0, limitePublicaciones);
+        
         setPublicaciones(listaLimitada);
         setCargando(false);
       })
@@ -32,7 +43,7 @@ function PaginaHome() {
         console.error("Error cargando publicaciones generales:", err);
         setCargando(false);
       });
-  }, []);
+  }, [token]); // Si el token tarda en cargar, el useEffect se vuelve a disparar de forma segura
 
   return (
     <div>
@@ -56,10 +67,10 @@ function PaginaHome() {
             <p style={{ color: '#777', margin: 0 }}>No hay publicaciones activas de momento. ¡Sé el primero en ofrecer un servicio!</p>
           </div>
         ) : (
-          // El contenedor de tus tarjetas (puedes meterle clases de Bootstrap si usas, ej: row o grid CSS)
+          // Contenedor en cuadricula para las tarjetas
           <div className="publicaciones-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
             {publicaciones.map((pub) => (
-              // Mapeamos el array y le pasamos cada publicación individual al componente Card
+              // Mapeamos el array y le pasamos cada publicación al componente Card
               <PublicacionCard key={pub.idPublicacion} publicacion={pub} />
             ))}
           </div>

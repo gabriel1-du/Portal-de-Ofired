@@ -21,30 +21,28 @@ function IniciarSesion() {
       const credenciales = { email, password };
       const data = await login(credenciales); // Llama a la función de login del servicio
 
-      // Modificado: Ahora el backend devuelve un objeto usuario directo con idUsuario en vez de un token
-      if (data && data.idUsuario) {
+      // CORRECCIÓN: Ahora verificamos si el backend nos mandó el pase VIP (el token)
+      if (data && data.token) {
         
-        // Evaluamos el rol según el campo que devuelva el DTO de tu amigo (ejemplo: idRol)
-        const esAdministrador = data.idRol === 1 || String(data.idRol).toUpperCase() === 'ADMIN';
+        const tokenReal = data.token; // Guardamos el token real
 
-        // Creamos el objeto 'usuario' usando directamente los datos planos que vienen de MySQL
+        // Armamos un perfil básico para el navegador usando tu correo
         const usuarioParaContexto = {
-          idUsuario: data.idUsuario,
-          username: data.nombreUsuario || data.primerNombre || 'Usuario',
-          rol: data.idRol || null,
-          habilitadorAdministrador: esAdministrador
+          email: email,
+          username: email.split('@')[0], // Saca tu nombre del correo (ej: diegotsimiranda)
+          rol: 'USER', 
+          habilitadorAdministrador: false
         };
 
-        // Simulamos un string de token local para que el AuthContext (el localStorage) no quede como undefined
-        const tokenSimulado = "sesion_activa_local";
-
-        // Pasamos el token simulado y los datos reales del usuario al contexto
-        iniciarSesion(tokenSimulado, usuarioParaContexto);
+        // El sistema guarda el token automáticamente sin que tú hagas nada manual
+        iniciarSesion(tokenReal, usuarioParaContexto);
         
         setMensaje('Inicio de sesión exitoso. Redirigiendo...');
+        
         setTimeout(() => {
-          navigate('/home'); // Redirige a la página principal de forma orgánica
-        }, 2000); // Redirige después de 2 segundos
+          navigate('/home'); // Redirige a la página principal
+        }, 2000); 
+        
       } else {
         setError('Respuesta de login inválida. No se reconocieron los datos del usuario.');
       }

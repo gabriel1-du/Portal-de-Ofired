@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-// Corregido apuntando exactamente a tus componentes en assets
 import PublicacionCard from '../assets/PublicacionesCard'; 
-
-// COMENTADO: Eliminamos la importación del CSS porque no existe en tu carpeta 'style'
-// import '../../style/PublicacionCard.css'; 
+import { AuthContext } from '../context/AuthContext'; 
 
 const DetallePublicacionPantalla = () => {
     const { idPublicacion } = useParams(); 
@@ -13,13 +10,21 @@ const DetallePublicacionPantalla = () => {
     const [nuevoComentario, setNuevoComentario] = useState("");
     const [cargandoPublicacion, setCargandoPublicacion] = useState(true);
 
+    const { token } = useContext(AuthContext); 
+
     const usuarioActivo = { idUsuario: 1, nombreUsuario: "Diego Alejandro" };
 
     useEffect(() => {
         setCargandoPublicacion(true);
 
-        // Fetch a la Gateway para traer la publicación
-        fetch(`http://localhost:8888/api/publicacionesApi/${idPublicacion}`)
+        // 1. Fetch para traer la publicación
+        fetch(`http://localhost:8888/api/proxy/publicacionesApi/${idPublicacion}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
             .then(res => {
                 if (!res.ok) {
                     throw new Error("No se pudo obtener la publicación");
@@ -35,8 +40,14 @@ const DetallePublicacionPantalla = () => {
                 setCargandoPublicacion(false);
             });
 
-        // Fetch a la Gateway para traer los comentarios
-        fetch(`http://localhost:8888/api/comentarios/publicacion/${idPublicacion}`)
+        // 2. CORRECCIÓN DEFINITIVA: Ruta combinada para listar comentarios del microservicio publicacionesApi
+        fetch(`http://localhost:8888/api/proxy/publicacionesApi/api/comentarios/publicacion/${idPublicacion}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
             .then(res => {
                 if (!res.ok) return [];
                 return res.json();
@@ -46,7 +57,7 @@ const DetallePublicacionPantalla = () => {
                 console.error("Error cargando comentarios:", err);
                 setComentarios([]); 
             });
-    }, [idPublicacion]);
+    }, [idPublicacion, token]); 
 
     const handleEnviarComentario = (e) => {
         e.preventDefault();
@@ -58,9 +69,13 @@ const DetallePublicacionPantalla = () => {
             contenido: nuevoComentario
         };
 
-        fetch("http://localhost:8888/api/comentarios", {
+        // 3. CORRECCIÓN DEFINITIVA: Ruta combinada para guardar comentarios mediante POST
+        fetch("http://localhost:8888/api/proxy/publicacionesApi/api/comentarios", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
             body: JSON.stringify(comentarioPayload)
         })
         .then(res => {
@@ -86,12 +101,10 @@ const DetallePublicacionPantalla = () => {
 
     return (
         <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', fontFamily: 'sans-serif' }}>
-            {/* Renderiza tu tarjeta */}
             <PublicacionCard publicacion={publicacion} />
 
             <hr style={{ margin: '30px 0', borderColor: '#ccc' }} />
 
-            {/* SECCIÓN DE COMENTARIOS */}
             <div className="comentarios-section">
                 <h3>Comentarios ({comentarios.length})</h3>
 

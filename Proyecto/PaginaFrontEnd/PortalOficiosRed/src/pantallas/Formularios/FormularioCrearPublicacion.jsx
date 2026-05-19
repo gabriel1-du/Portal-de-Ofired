@@ -1,21 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
 const FormularioCrearPublicacion = () => {
     const navigate = useNavigate();
+    const { token } = useContext(AuthContext);
 
-    // Estado para controlar los campos del formulario
+    // Estados para guardar las listas de la base de datos
+    const [listaRegiones, setListaRegiones] = useState([]);
+    const [listaComunas, setListaComunas] = useState([]);
+
     const [formData, setFormData] = useState({
         tituloPublicacion: '',
         descripcionPublicacion: '',
-        nombreRegion: '',
-        nombreComuna: '',
+        idRegion: '', // Ahora guardamos el ID (número)
+        idComuna: '', // Ahora guardamos el ID (número)
         precioServicio: '',
         imagenUrl: ''
     });
 
-    // Simulación del ID del usuario logueado (luego lo sacas de tu AuthContext)
-    const idUsuarioCreador = 1; 
+    // 1. Cargar las regiones al abrir el formulario
+    useEffect(() => {
+        fetch("http://localhost:8888/api/proxy/regionesApi", {
+            headers: { "Authorization": `Bearer ${token}` }
+        })
+        .then(res => res.json())
+        .then(data => setListaRegiones(data))
+        .catch(err => console.error("Error cargando regiones:", err));
+        
+        // 2. Cargar comunas (puedes optimizar esto después para que filtre por región)
+        fetch("http://localhost:8888/api/proxy/comunasApi", {
+            headers: { "Authorization": `Bearer ${token}` }
+        })
+        .then(res => res.json())
+        .then(data => setListaComunas(data))
+        .catch(err => console.error("Error cargando comunas:", err));
+    }, [token]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -28,38 +48,38 @@ const FormularioCrearPublicacion = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validaciones básicas antes de enviar
         if (!formData.tituloPublicacion.trim() || !formData.descripcionPublicacion.trim()) {
-            alert("Por favor, rellena los campos obligatorios (Título y Descripción)");
+            alert("Por favor, rellena los campos obligatorios.");
             return;
         }
 
-        // Estructuramos el objeto tal cual lo espera tu DTO / Modelo en Spring Boot
+        // Armamos el paquete con los IDs convertidos a números
         const publicacionPayload = {
-            idUsuario: idUsuarioCreador,
+            idAutor: 1, // Lo dejamos en 1 por ahora para la prueba
             tituloPublicacion: formData.tituloPublicacion,
             descripcionPublicacion: formData.descripcionPublicacion,
-            nombreRegion: formData.nombreRegion,
-            nombreComuna: formData.nombreComuna,
+            idRegion: formData.idRegion ? parseInt(formData.idRegion) : null,
+            idComuna: formData.idComuna ? parseInt(formData.idComuna) : null,
             precioServicio: formData.precioServicio ? parseFloat(formData.precioServicio) : null,
             imagenUrl: formData.imagenUrl || null,
-            cantidadLikes: 0 // Inicia en cero
+            cantidadLikes: 0 
         };
 
-        // CORRECCIÓN: Ahora apunta a la ApiGateWay (Puerto 8888) de forma centralizada
-        fetch("http://localhost:8888/api/publicacionesApi", { 
+        // CORRECCIÓN: Le agregamos "/proxy/" a la ruta para que el Gateway no nos tire error 403
+        fetch("http://localhost:8888/api/proxy/publicacionesApi", { 
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` 
             },
             body: JSON.stringify(publicacionPayload)
         })
         .then(res => {
             if (res.ok) {
                 alert("¡Publicación creada con éxito! 🎉");
-                navigate("/home"); // Redirigimos al Home para que vea su tarjeta creada
+                navigate("/home"); 
             } else {
-                alert("Hubo un error al crear la publicación a través de la Gateway.");
+                alert("Sigue habiendo un error en el servidor. Revisa la consola de Spring Boot.");
             }
         })
         .catch(err => console.error("Error al conectar con la ApiGateWay:", err));
@@ -76,7 +96,6 @@ const FormularioCrearPublicacion = () => {
                     <input 
                         type="text" 
                         name="tituloPublicacion"
-                        placeholder="Ej: Gasfíter a domicilio urgente"
                         value={formData.tituloPublicacion}
                         onChange={handleChange}
                         style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
@@ -88,7 +107,6 @@ const FormularioCrearPublicacion = () => {
                     <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Descripción del Servicio *</label>
                     <textarea 
                         name="descripcionPublicacion"
-                        placeholder="Describe detalladamente qué incluye tu trabajo, experiencia, horarios, etc..."
                         value={formData.descripcionPublicacion}
                         onChange={handleChange}
                         rows="4"
@@ -97,28 +115,41 @@ const FormularioCrearPublicacion = () => {
                     />
                 </div>
 
+                {/* --- MENÚS DESPLEGABLES DE REGIÓN Y COMUNA --- */}
                 <div style={{ display: 'flex', gap: '15px' }}>
                     <div style={{ flex: 1 }}>
                         <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Región</label>
-                        <input 
-                            type="text" 
-                            name="nombreRegion"
-                            placeholder="Ej: Metropolitana"
-                            value={formData.nombreRegion}
+                        <select 
+                            name="idRegion"
+                            value={formData.idRegion}
                             onChange={handleChange}
                             style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-                        />
+                            required
+                        >
+                            <option value="">Selecciona una región...</option>
+                            {listaRegiones.map(region => (
+                                <option key={region.idRegion} value={region.idRegion}>
+                                    {region.nombreRegion}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div style={{ flex: 1 }}>
                         <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Comuna</label>
-                        <input 
-                            type="text" 
-                            name="nombreComuna"
-                            placeholder="Ej: Maipú"
-                            value={formData.nombreComuna}
+                        <select 
+                            name="idComuna"
+                            value={formData.idComuna}
                             onChange={handleChange}
                             style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-                        />
+                            required
+                        >
+                            <option value="">Selecciona una comuna...</option>
+                            {listaComunas.map(comuna => (
+                                <option key={comuna.idComuna} value={comuna.idComuna}>
+                                    {comuna.nombreComuna}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 </div>
 
@@ -127,20 +158,7 @@ const FormularioCrearPublicacion = () => {
                     <input 
                         type="number" 
                         name="precioServicio"
-                        placeholder="Ej: 15000 (Opcional)"
                         value={formData.precioServicio}
-                        onChange={handleChange}
-                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-                    />
-                </div>
-
-                <div>
-                    <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>URL de la Imagen de Portada</label>
-                    <input 
-                        type="url" 
-                        name="imagenUrl"
-                        placeholder="https://enlace-de-tu-foto.com/imagen.jpg (Opcional)"
-                        value={formData.imagenUrl}
                         onChange={handleChange}
                         style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
                     />
