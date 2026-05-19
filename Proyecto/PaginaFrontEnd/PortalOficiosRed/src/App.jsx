@@ -1,4 +1,3 @@
-
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -23,36 +22,47 @@ import FormularioTransaccion from './pantallas/Formularios/FormularioTransaccion
 import ListaTratos from './pantallas/ListaTratos'; // Importamos la lista de tratos
 import PantallaAdministradorUsuarios from './pantallas/SeccionAdministrador/PantallaAdministradorUsuarios'; // Importamos pantalla de administrador
 
+// IMPORTAMOS LA PANTALLA DE COMENTARIOS
+import DetallePublicacionPantalla from './pantallas/DetallePublicacionPantalla'; 
+
+// IMPLEMENTACIÓN: IMPORTAMOS EL NUEVO FORMULARIO DE CREAR PUBLICACIÓN
+import FormularioCrearPublicacion from './pantallas/Formularios/FormularioCrearPublicacion';
+
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/home" element={<PaginaHome />} /> {/* Nueva ruta para la Home */
-          }
+          <Route path="/home" element={<PaginaHome />} />
           <Route path="/crear-cuenta" element={<FormularioCrearUsuarioCliente />} />
           <Route path="/crear-perfil" element={<FormularioCreacionDePerfilUsuario />} />
-          <Route path="/crear-cuentOfi" element={<FormularioCrearUsuarioOficio />} /> {/* Ruta para crear cuenta de oficio */}
-          <Route path="/iniciar-sesion" element={<IniciarSesion />} /> {/* Nueva ruta para iniciar sesión */}
-          <Route path="/resultados" element={<ResultadosBusqueda />} /> {/* Ruta para la página de resultados */}
-          <Route path="/perfil/:idDelPerfil" element={<PerfilPantalla />} /> {/* Ruta para la pantalla de perfil */}
+          <Route path="/crear-cuentOfi" element={<FormularioCrearUsuarioOficio />} />
+          <Route path="/iniciar-sesion" element={<IniciarSesion />} />
+          <Route path="/resultados" element={<ResultadosBusqueda />} />
+          <Route path="/perfil/:idDelPerfil" element={<PerfilPantalla />} />
           <Route path="/perfil/modificar" element={<ModificarPerfilUsuario />} />
           <Route path="/configuracion" element={<ConfiguracionesPantalla />} />
           <Route path="/configuracion/cambiar-correo" element={<CambiarCorreoPantalla />} />
           <Route path="/configuracion/cambiar-telefono" element={<CambiarTelefonoPantalla />} />
           <Route path="/configuracion/modificar-datos" element={<FormularioCambiarDatosUsuario />} />
-          <Route path="/valoraciones/:idUsuario" element={<ValoracionesPantalla />} /> {/* Nueva ruta para ver valoraciones */}
-          <Route path="/crear-resenia/:idUsuarioReseniado" element={<FormularioCrearResenia />} /> {/* Ruta para crear reseña */}
-          <Route path="/chat/:idChat" element={<ChatPantalla />} /> {/* Ruta para la interfaz de chat */}
-          <Route path="/mis-mensajes" element={<MisMensajesPantalla />} /> {/* Ruta de mis mensajes */}
-          <Route path="/crear-transaccion/:idCliente" element={<FormularioTransaccion />} /> {/* Ruta para crear transacciones */}
-          <Route path="/mis-tratos" element={<ListaTratos />} /> {/* Ruta para ver los tratos pendientes */}
-          <Route path="/admin/usuarios" element={<PantallaAdministradorUsuarios />} /> {/* Ruta administrador */}
+          <Route path="/valoraciones/:idUsuario" element={<ValoracionesPantalla />} />
+          <Route path="/crear-resenia/:idUsuarioReseniado" element={<FormularioCrearResenia />} />
+          <Route path="/chat/:idChat" element={<ChatPantalla />} />
+          <Route path="/mis-mensajes" element={<MisMensajesPantalla />} />
+          <Route path="/crear-transaccion/:idCliente" element={<FormularioTransaccion />} />
+          <Route path="/mis-tratos" element={<ListaTratos />} />
+          <Route path="/admin/usuarios" element={<PantallaAdministradorUsuarios />} />
+
+          {/* RUTA DINÁMICA PARA EL DETALLE Y COMENTARIOS DE LA PUBLICACIÓN */}
+          <Route path="/publicacion/:idPublicacion" element={<DetallePublicacionPantalla />} />
+
+          {/* IMPLEMENTACIÓN: NUEVA RUTA PARA EL FORMULARIO DE CREACIÓN */}
+          <Route path="/crear-publicacion" element={<FormularioCrearPublicacion />} />
         </Routes>
       </div>
     </Router>
   );
 }
 
-export default App
+export default App;
