@@ -1,5 +1,25 @@
 const API_URL_USUARIOS = import.meta.env.VITE_API_URL_USUARIOS; //url de acceso a la api de usuarios
 
+
+
+// Función para obtener un usuario por su ID
+export const getUsuarioById = async (id) => {
+  try {
+    console.log("Llamando a la API de Usuarios (GET by ID):", `${API_URL_USUARIOS}/${id}`);
+    const response = await fetch(`${API_URL_USUARIOS}/${id}`);
+    if (!response.ok) {
+      console.error(`Error en la respuesta de la red (GET Usuario by ID ${id}):`, response.status, response.statusText);
+      throw new Error(`Error al obtener el usuario con ID ${id}.`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error al intentar obtener el usuario con ID ${id}:`, error);
+    throw error;
+  }
+};
+
+
 // Función para leer todos los usuarios desde la API Gateway
 export const leerTodosLosUsuarios = async () => {
   try {
@@ -42,6 +62,91 @@ export const crearUsuarioCliente = async (datosUsuario) => {
   }
 };
 
+// Función para actualizar un usuario existente
+export const updateUsuario = async (idUsuario, usuarioData, token) => {
+  try {
+    const url = `${API_URL_USUARIOS}/${idUsuario}`;
+    console.log("Llamando a la API de Usuarios (PUT):", url);
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(usuarioData),
+    });
+
+    if (response.ok) {
+      console.log("Usuario actualizado exitosamente.");
+      const responseBody = await response.text();
+      return responseBody ? JSON.parse(responseBody) : { success: true };
+    } else {
+      const errorText = await response.text();
+      console.error("Error al actualizar el usuario. Respuesta del servidor:", errorText);
+      throw new Error(`Error al actualizar el usuario: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Algo falló en la petición para actualizar el usuario:", error);
+    throw error;
+  }
+};
+
+// Función para CREAR un usuario por parte de un administrador
+export const crearUsuarioPorAdmin = async (usuarioData, token) => {
+  try {
+    const url = `${API_URL_USUARIOS}/admin/crear`;
+    console.log("Llamando a la API de Usuarios (POST Admin):", url);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(usuarioData),
+    });
+
+    if (response.ok) {
+      console.log("Usuario creado por administrador exitosamente.");
+      return await response.json();
+    } else {
+      const errorText = await response.text();
+      console.error("Error al crear el usuario (Admin). Respuesta del servidor:", errorText);
+      throw new Error(`Error al crear el usuario por admin: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Algo falló en la petición para crear el usuario (Admin):", error);
+    throw error;
+  }
+};
+
+// Función para actualizar un usuario por parte de un administrador
+export const actualizarUsuarioAdmin = async (idUsuario, usuarioData, token) => {
+  try {
+    const url = `${API_URL_USUARIOS}/updateAdmin/${idUsuario}`;
+    console.log("Llamando a la API de Usuarios (PUT Admin):", url);
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(usuarioData),
+    });
+
+   if (response.ok) {
+      console.log("Usuario actualizado por administrador exitosamente.");
+      const responseBody = await response.text();
+      return responseBody ? JSON.parse(responseBody) : { success: true };
+    } else {
+      const errorText = await response.text();
+      console.error("Error al actualizar el usuario (Admin). Respuesta del servidor:", errorText);
+      throw new Error(`Error al actualizar el usuario por admin: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Algo falló en la petición para actualizar el usuario (Admin):", error);
+    throw error;
+  }
+};
 
 //
 export const crearUsuarioOficio= async (datosUsuario) => {
@@ -63,5 +168,31 @@ export const crearUsuarioOficio= async (datosUsuario) => {
     }
   } catch (error) {
     console.error("Algo falló en la petición para crear el usuario:", error);
+  }
+};
+
+// Función para eliminar un usuario por su ID (Administrador)
+export const eliminarUsuario = async (idUsuario, token) => {
+  try {
+    const url = `${API_URL_USUARIOS}/${idUsuario}`;
+    console.log("Llamando a la API de Usuarios (DELETE):", url);
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      console.log(`Usuario con ID ${idUsuario} eliminado exitosamente.`);
+      return true;
+    } else {
+      const errorText = await response.text();
+      console.error("Error al eliminar el usuario. Respuesta del servidor:", errorText);
+      throw new Error(`Error al eliminar el usuario: ${errorText}`);
+    }
+  } catch (error) {
+    console.error("Algo falló en la petición para eliminar el usuario:", error);
+    throw error;
   }
 };

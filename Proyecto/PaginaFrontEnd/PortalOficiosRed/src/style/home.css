@@ -1,14 +1,19 @@
 /* --- Estructura del Navbar --- */
 .navbar-busqueda {
   display: flex;
-  flex-direction: row;        /* Obliga a que sea horizontal */
-  align-items: center;        /* Centra verticalmente */
-  justify-content: flex-start;/* Alinea de izquierda a derecha */
-  gap: 20px;                  /* Espacio entre el botón Filtro y la Barra */
+  flex-direction: row; /* Obliga a que sea horizontal */
+  align-items: center; /* Centra verticalmente */
+  justify-content: flex-start; /* Alinea de izquierda a derecha */
+  gap: 20px; /* Espacio entre el botón Filtro y la Barra */
   background-color: #f3961c;
   padding: 15px 30px;
   box-shadow: 0 2px 15px rgba(0,0,0,0.05);
   border-bottom: 1px solid #eaeaea;
+
+  /* --- Estilos para que se pegue arriba --- */
+  position: sticky;
+  top: 0;
+  z-index: 1020;
 }
 
 /* --- Lado Izquierdo: Botón y Menú --- */
@@ -125,4 +130,22 @@
   border-radius: 6px;
   cursor: pointer;
   margin-top: 10px;
+}
+
+/* --- Lado Derecho: Botón de Usuario/Sidebar --- */
+.contenedor-usuario {
+  margin-left: auto; /* Empuja este contenedor al final */
+  flex-shrink: 0;
+}
+
+.btn-usuario {
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  color: #333;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }

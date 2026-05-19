@@ -51,6 +51,9 @@ public class UsuarioMapActualizar {
         if (dto.getSegundoApellido() != null) {
             usuario.setSApellido(defaultIfBlank(dto.getSegundoApellido(), "N"));
         }
+        if (dto.getPassword() != null) {
+            usuario.setPassword(dto.getPassword());
+        }
 
         // Mapeo de otros datos, solo si no son nulos.
         if (dto.getCorreoElec() != null) {

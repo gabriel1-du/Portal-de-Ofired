@@ -6,19 +6,27 @@ CREATE TABLE REGION (
     nombre_region VARCHAR(100) NOT NULL
 );
 
+
 CREATE TABLE OFICIO (
     id_oficio INT AUTO_INCREMENT PRIMARY KEY,
     nombre_oficio VARCHAR(100) NOT NULL
 );
 
+CREATE TABLE MEDIO_DE_PAGO (
+    id_medio_pago INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_medio_pago VARCHAR(100) NOT NULL
+);
+
+
+CREATE TABLE TIPO_DE_TRABAJO (
+    id_tipo_trabajo INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_tipo_trabajo VARCHAR(100) NOT NULL
+);
+
+
 CREATE TABLE TIPO_USUARIO (
     id_tipo_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre_rol VARCHAR(50) NOT NULL
-);
-
-CREATE TABLE TIPO_SERVICIO(
-    id_tipo_servicio INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_servicio VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE SEXO_USUARIO (
@@ -80,7 +88,7 @@ MODIFY valoracion DECIMAL(3,2) NOT NULL DEFAULT 0.00;
 
 CREATE TABLE PERFIL_USUARIO (
     id_perfil_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL UNIQUE, -- Vínculo 1 a 1 estricto
+    id_usuario INT NOT NULL UNIQUE, 
     nombre_apodo VARCHAR(100),
     p_nombre VARCHAR(50),
     s_nombre VARCHAR(50),
@@ -89,6 +97,7 @@ CREATE TABLE PERFIL_USUARIO (
     numero_telefono VARCHAR(20),
     foto_perfil VARCHAR(255) NULL,
     fotografia_banner VARCHAR(255) NULL,
+    descripcion VARCHAR(500) NULL, -- Límite estricto de 500 caracteres implementado
     id_region INT,
     id_comuna INT,
     id_oficio INT,
@@ -100,7 +109,6 @@ CREATE TABLE PERFIL_USUARIO (
     CONSTRAINT fk_perfil_oficio FOREIGN KEY (id_oficio) REFERENCES OFICIO(id_oficio),
     CONSTRAINT fk_perfil_sexo FOREIGN KEY (sexo_usu_per) REFERENCES SEXO_USUARIO(id_sexo)
 );
-
 -- =========================================================================
 -- FASE 4: MARKETPLACE (PUBLICACIONES Y RESEÑAS)
 -- =========================================================================
@@ -113,6 +121,7 @@ CREATE TABLE PUBLICACION (
     id_comuna INT NOT NULL,
     ubicacion_publicacion VARCHAR(255) DEFAULT 'indefinido',
     descripcion_publicacion TEXT NOT NULL,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     cantidad_likes INT DEFAULT 0,
     CONSTRAINT fk_publi_autor FOREIGN KEY (id_autor) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
     CONSTRAINT fk_publi_region FOREIGN KEY (id_region) REFERENCES REGION(id_region),
@@ -132,30 +141,33 @@ CREATE TABLE RESENIA (
     id_usuario_reseniado INT NOT NULL,
     calificacion DECIMAL(3,2) NOT NULL,
     texto_resenia TEXT NOT NULL,
+	fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_resenia_autor FOREIGN KEY (id_autor) REFERENCES USUARIO(id_usuario),
     CONSTRAINT fk_resenia_destinatario FOREIGN KEY (id_usuario_reseniado) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
 );
 
 CREATE TABLE RESPUESTA_RESENIA (
     id_respuesta_resenia INT AUTO_INCREMENT PRIMARY KEY,
-    id_resenia INT NOT NULL UNIQUE, -- Unique porque suele ser 1 respuesta por reseña
+    id_resenia INT NOT NULL ,
     id_autor_res INT NOT NULL,
     texto_respuesta_resenia TEXT NOT NULL,
+	fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
     CONSTRAINT fk_resp_resenia FOREIGN KEY (id_resenia) REFERENCES RESENIA(id_resenia) ON DELETE CASCADE,
     CONSTRAINT fk_resp_autor FOREIGN KEY (id_autor_res) REFERENCES USUARIO(id_usuario)
 );
 
-CREATE TABLE CHAT_INBOX (
+CREATE TABLE CHAT (
     id_chat INT AUTO_INCREMENT PRIMARY KEY,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE PARTICIPANTES_CHAT (
     id_participantes_chat INT AUTO_INCREMENT PRIMARY KEY,
-    id_chat_inbox INT NOT NULL,
-    id_usuario_paticipante INT NOT NULL,
-    CONSTRAINT fk_participante_chat FOREIGN KEY (id_chat_inbox) REFERENCES CHAT_INBOX(id_chat) ON DELETE CASCADE,
-    CONSTRAINT fk_participante_usuario FOREIGN KEY (id_usuario_paticipante) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
+    id_chat INT NOT NULL,
+    id_usuario_participante INT NOT NULL, -- (Corregido: faltaba la 'r')
+    CONSTRAINT fk_participante_chat FOREIGN KEY (id_chat) REFERENCES CHAT(id_chat) ON DELETE CASCADE,
+    CONSTRAINT fk_participante_usuario FOREIGN KEY (id_usuario_participante) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
 );
 
 CREATE TABLE MENSAJES_CHAT (
@@ -164,17 +176,8 @@ CREATE TABLE MENSAJES_CHAT (
     id_autor_mensaje INT NOT NULL,
     mensaje_texto TEXT NOT NULL,
     fecha_hora_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_mensaje_chat FOREIGN KEY (id_chat) REFERENCES CHAT_INBOX(id_chat) ON DELETE CASCADE,
+    CONSTRAINT fk_mensaje_chat FOREIGN KEY (id_chat) REFERENCES CHAT(id_chat) ON DELETE CASCADE,
     CONSTRAINT fk_mensaje_autor FOREIGN KEY (id_autor_mensaje) REFERENCES USUARIO(id_usuario)
-);
-
-CREATE TABLE BLOQUEO_USUARIO (
-    id_bloqueo INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario_que_bloquea INT NOT NULL,
-    id_usuario_bloqueado INT NOT NULL,
-    fecha_bloqueo TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_bloqueador FOREIGN KEY (id_usuario_que_bloquea) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
-    CONSTRAINT fk_bloqueado FOREIGN KEY (id_usuario_bloqueado) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
 );
 
 CREATE TABLE DENUNCIAS (
@@ -201,6 +204,41 @@ CREATE TABLE DENUNCIAS (
     CONSTRAINT fk_denuncia_resp_target FOREIGN KEY (id_respuesta_denunciada) REFERENCES RESPUESTA_RESENIA(id_respuesta_resenia) ON DELETE CASCADE
 );
 
+CREATE TABLE USUARIOS_BLOQUEADOS (
+    id_bloqueo INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario_que_bloquea INT NOT NULL,
+    id_usuario_bloqueado INT NOT NULL,
+    habilitador BOOLEAN DEFAULT TRUE,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_bloqueo_autor FOREIGN KEY (id_usuario_que_bloquea) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
+    CONSTRAINT fk_bloqueo_destino FOREIGN KEY (id_usuario_bloqueado) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
+);
+
+-- =========================================================================
+-- FASE 5: HISTORIAL DE TRATOS / TRANSACCIONES
+-- =========================================================================
+
+
+-- Tabla transaccional central: El acuerdo firmado entre dos partes
+CREATE TABLE CONFIRMACION_TRANSACCION (
+    id_transaccion INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario_oferente INT NOT NULL,
+    id_usuario_cliente INT NOT NULL,
+    monto_servicio DECIMAL(10,2) NOT NULL,
+    id_medio_pago INT NOT NULL,
+    id_tipo_trabajo INT NOT NULL,
+    
+    -- CORREGIDO: Se quitó el 'NULL3' que causaba error de sintaxis
+    aceptado BOOLEAN DEFAULT NULL, 
+    
+    observaciones_trato TEXT, 
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    
+    CONSTRAINT fk_trans_oferente FOREIGN KEY (id_usuario_oferente) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
+    CONSTRAINT fk_trans_cliente FOREIGN KEY (id_usuario_cliente) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE,
+    CONSTRAINT fk_trans_medio_pago FOREIGN KEY (id_medio_pago) REFERENCES MEDIO_DE_PAGO(id_medio_pago),
+    CONSTRAINT fk_trans_tipo_trabajo FOREIGN KEY (id_tipo_trabajo) REFERENCES TIPO_DE_TRABAJO(id_tipo_trabajo)
+);
 -- =========================================================================
 -- ALTERACIONES POSTERIORES
 -- =========================================================================
@@ -208,3 +246,6 @@ CREATE TABLE DENUNCIAS (
 -- Alter para agregar el atributo de fecha de publicación solicitado
 ALTER TABLE PUBLICACION
 ADD COLUMN fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+
+

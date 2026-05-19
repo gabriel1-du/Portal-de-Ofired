@@ -54,6 +54,10 @@ public class PublicacionServiceImpl implements PublicacionService {
     public leerPublicacionesDTO crear(CrearPublicacionDTO publicacionDTO) {
         Publicacion publicacion = crearPublicacionMapper.crearPublicacionDTOtoPublicacion(publicacionDTO);
         publicacion.setCantidadLikes(0);
+        
+        // Asignamos la fecha automáticamente desde el backend
+        publicacion.setFechaPublicacion(LocalDateTime.now());
+        
         Publicacion publicacionGuardada = publicacionRepository.save(publicacion);
         return leerPublicacionesMapper.toDTO(publicacionGuardada);
     }

@@ -1,8 +1,10 @@
 package com.example.usuarioApi.ServiceImpl;
 
+
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTO;
+import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL1DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL2DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.eliminarUserDTO;
@@ -11,13 +13,19 @@ import com.example.usuarioApi.DTO.clasesUsuarioDTO.usuarioMapTo.UsuarioMapActual
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.usuarioMapTo.UsuarioMapCreate;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.usuarioMapTo.UsuarioMapLeer;
 import com.example.usuarioApi.Model.*; // Importar todos los modelos para las relaciones
-import com.example.usuarioApi.Repository.*; // Importar todos los repositorios necesarios
+import com.example.usuarioApi.Repository.ComunaRepository;
+import com.example.usuarioApi.Repository.OficioRepository;
+import com.example.usuarioApi.Repository.PerfilUsuarioRepository;
+import com.example.usuarioApi.Repository.RegionRepository;
+import com.example.usuarioApi.Repository.SexoUsuarioRepository;
+import com.example.usuarioApi.Repository.UsuarioRepository; // Importar todos los repositorios necesarios
 import org.springframework.stereotype.Service;
 
 import com.example.usuarioApi.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
+import java.util.Optional;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.stream.Collectors;
@@ -44,6 +52,20 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private PerfilUsuarioRepository PerfilUsuarioRepository;
+
+    @Autowired
+    private RegionRepository regionRepository;
+
+    @Autowired
+    private ComunaRepository comunaRepository;
+
+    @Autowired
+    private OficioRepository oficioRepository;
+
+    @Autowired
+    private SexoUsuarioRepository sexoRepository;
 
     @Override
     public leerUsuarioDTO crearUsuario(crearUsuarioDTO usuarioDTO) {
@@ -93,6 +115,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         return readMapper.mapUsuarioToLeerUsuarioDTO(nuevoUsuario);
     }
 
+    @Override
+    public leerUsuarioDTO crearUsuarioAdmin(crearUsuarioDTOAdmin usuarioDTO) {
+        Usuario usuario = createMapper.mapCrearUsuarioAdminDTOtoUsuario(usuarioDTO);
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        Usuario nuevoUsuario = usuarioRepository.save(usuario);
+        return readMapper.mapUsuarioToLeerUsuarioDTO(nuevoUsuario);
+    }
 
     @Override
     public leerUsuarioDTO leerUsuario(Integer id) {
@@ -114,10 +143,55 @@ public class UsuarioServiceImpl implements UsuarioService {
         // 2. Usar el mapper para aplicar los cambios del DTO a la entidad existente.
         updateMapper.mapActualizarDTOToUsuario(usuarioDTO, usuarioExistente);
 
-        // 3. Guardar la entidad que fue modificada.
+        // Si se proporcionó una nueva contraseña en el DTO, hashearla y actualizarla de forma segura.
+        if (usuarioDTO.getPassword() != null && !usuarioDTO.getPassword().trim().isEmpty()) {
+            usuarioExistente.setPassword(passwordEncoder.encode(usuarioDTO.getPassword()));
+        }
+
+        // --- SINCRONIZAR CON PERFIL_USUARIO (Si existe) ---
+        Optional<PerfilUsuario> perfilOpt = PerfilUsuarioRepository.findByUsuario_IdUsuario(id);
+        
+        if (perfilOpt.isPresent()) {
+            PerfilUsuario perfil = perfilOpt.get();
+            
+            // Actualizamos los datos del perfil que vienen del usuario
+            if (usuarioDTO.getPrimerNombre() != null) perfil.setPNombre(usuarioDTO.getPrimerNombre());
+            if (usuarioDTO.getSegundoNombre() != null) perfil.setSNombre(usuarioDTO.getSegundoNombre());
+            if (usuarioDTO.getPrimerApellido() != null) perfil.setPApellido(usuarioDTO.getPrimerApellido());
+            if (usuarioDTO.getSegundoApellido() != null) perfil.setSApellido(usuarioDTO.getSegundoApellido());
+            if (usuarioDTO.getNumeroTelef() != null) perfil.setNumeroTelefono(usuarioDTO.getNumeroTelef());
+            if (usuarioDTO.getFoto() != null) perfil.setFotoPerfil(usuarioDTO.getFoto());
+
+            // Para las relaciones, buscamos las entidades completas
+            if (usuarioDTO.getIdRegionUsu() != null) {
+                Region region = regionRepository.findById(usuarioDTO.getIdRegionUsu())
+                        .orElseThrow(() -> new RuntimeException("Región no encontrada con id: " + usuarioDTO.getIdRegionUsu()));
+                perfil.setRegion(region);
+            }
+            if (usuarioDTO.getIdComunaUsu() != null) {
+                Comuna comuna = comunaRepository.findById(usuarioDTO.getIdComunaUsu())
+                        .orElseThrow(() -> new RuntimeException("Comuna no encontrada con id: " + usuarioDTO.getIdComunaUsu()));
+                perfil.setComuna(comuna);
+            }
+            if (usuarioDTO.getIdOficio() != null) {
+                Oficio oficio = oficioRepository.findById(usuarioDTO.getIdOficio())
+                        .orElseThrow(() -> new RuntimeException("Oficio no encontrado con id: " + usuarioDTO.getIdOficio()));
+                perfil.setOficio(oficio);
+            }
+             if (usuarioDTO.getIdSexoUsu() != null) {
+                SexoUsuario sexo = sexoRepository.findById(usuarioDTO.getIdSexoUsu())
+                        .orElseThrow(() -> new RuntimeException("Sexo no encontrado con id: " + usuarioDTO.getIdSexoUsu()));
+                perfil.setSexoUsuario(sexo);
+            }
+            
+            // Guardamos el perfil actualizado
+            PerfilUsuarioRepository.save(perfil);
+        }
+
+        // 3. Guardar la entidad de usuario que fue modificada.
         Usuario usuarioGuardado = usuarioRepository.save(usuarioExistente);
 
-        // 4. Mapear la entidad ya guardada (con posibles cambios de la BD) al DTO de respuesta final.
+        // 4. Mapear la entidad ya guardada al DTO de respuesta final.
         return readMapper.mapUsuarioToLeerUsuarioDTO(usuarioGuardado);
     }
 

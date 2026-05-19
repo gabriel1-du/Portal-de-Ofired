@@ -1,0 +1,126 @@
+/* Contenedor principal para centrar la tarjeta en la pantalla */
+.cambiar-correo-contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Ocupa todo el alto de la pantalla */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0 20px;
+  position: relative;
+}
+
+/* Botón Volver Flotante (Se superpone al borde superior izquierdo de la tarjeta) */
+.btn-volver-flotante {
+  position: absolute;
+  top: 15%; /* Ajuste fino para que coincida con la posición del wireframe */
+  left: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: none;
+  background-color: #fff;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.btn-volver-flotante:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.05);
+}
+
+/* Tarjeta Principal (The big white box) */
+.correo-tarjeta {
+  background-color: #fff;
+  border-radius: 24px;
+  padding: 50px 40px;
+  box-shadow: 0 8px 30px rgb(0 0 0 / 8%);
+  border: 1px solid #f1f1f1;
+  width: 100%;
+  max-width: 500px; /* Ancho máximo para la tarjeta */
+  box-sizing: border-box;
+}
+
+.titulo-cambiar-correo {
+  font-size: 1.8rem;
+  color: #333;
+  margin: 0 0 35px;
+  font-weight: 800;
+  text-align: center; /* Centramos el título */
+}
+
+.form-correo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group-correo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Estilos para los textos de etiquetas */
+.label-correo {
+  font-size: 1rem;
+  color: #333;
+  font-weight: 700;
+}
+
+/* Estilos de los inputs (Grandes y redondeados) */
+.input-correo {
+  width: 100%;
+  padding: 18px;
+  border-radius: 14px;
+  background-color: #f8f9fa; /* Gris claro de fondo */
+  border: 2px solid #e0e0e0;
+  font-size: 1.1rem;
+  color: #333;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+/* El toque de tu proyecto: borde naranjo al hacer focus */
+.input-correo:focus {
+  outline: none;
+  border-color: #f3961c;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgb(243 150 28 / 15%);
+}
+
+/* Contenedor centrado para el botón principal */
+.boton-centrado-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+/* Botón "Cambiar" Principal (Azul Moderno) */
+.btn-cambiar-principal {
+  background-color: #03a9f4; /* Azul limpio y moderno */
+  color: #fff;
+  border: none;
+  padding: 16px 40px;
+  border-radius: 20px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  box-shadow: 0 4px 12px rgb(3 169 244 / 25%);
+}
+
+.btn-cambiar-principal:hover {
+  background-color: #0288d1; /* Azul más oscuro al pasar el mouse */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgb(3 169 244 / 35%);
+}

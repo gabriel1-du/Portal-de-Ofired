@@ -7,6 +7,7 @@ import com.example.usuarioApi.DTO.clasesUsuarioDTO.eliminarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUsuarioDTOAdmin;
+import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTOAdmin;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,6 +32,8 @@ public interface UsuarioService {
     leerUsuarioDTO crearUsuarioLVL1(crearUsuarioLVL1DTO usuarioDTO); // Método específico para crear usuarios de nivel 1 (Usuario no administrador/profesional)
 
     leerUsuarioDTO crearUsuarioLVL2(crearUsuarioLVL2DTO usuarioDTO); // Método específico para crear usuarios de nivel 1 (Usuario no administrador/profesional)
+
+    leerUsuarioDTO crearUsuarioAdmin(crearUsuarioDTOAdmin usuarioDTO);
 
     //Metodos para iniciar sesión
     leerUsuarioDTO iniciarSesion(String correoElec, String password); 

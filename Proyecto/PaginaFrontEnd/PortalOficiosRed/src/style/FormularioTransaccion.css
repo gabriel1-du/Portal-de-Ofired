@@ -1,0 +1,112 @@
+.formulario-transaccion-contenedor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: calc(100vh - 80px);
+  background-color: #f4f7f6; /* Fondo suave consistente con tu web */
+}
+
+.formulario-transaccion-tarjeta {
+  background-color: #ffffff;
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  position: relative;
+}
+
+.formulario-transaccion-tarjeta .btn-volver {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: none;
+  color: #03a9f4;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.formulario-transaccion-tarjeta .btn-volver:hover {
+  text-decoration: underline;
+}
+
+.formulario-transaccion-tarjeta h2 {
+  color: #333;
+  margin-top: 10px;
+  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+}
+
+.formulario-transaccion-tarjeta p {
+  color: #666;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.form-transaccion {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: left;
+}
+
+.form-group-transaccion {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group-transaccion label {
+  font-weight: 600;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.form-group-transaccion input,
+.form-group-transaccion select,
+.form-group-transaccion textarea {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fafafa;
+}
+
+.form-group-transaccion input:focus,
+.form-group-transaccion select:focus,
+.form-group-transaccion textarea:focus {
+  outline: none;
+  border-color: #03a9f4;
+  background-color: #ffffff;
+}
+
+.btn-enviar-transaccion {
+  background-color: #03a9f4;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.btn-enviar-transaccion:hover:not(:disabled) {
+  background-color: #0288d1;
+}
+
+.btn-enviar-transaccion:disabled {
+  background-color: #90caf9;
+  cursor: not-allowed;
+}

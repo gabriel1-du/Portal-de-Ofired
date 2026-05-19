@@ -15,6 +15,7 @@ public class actualizarUserDTO {
     private String segundoNombre;
     private String primerApellido;
     private String segundoApellido;
+    private String password;
     
     private Integer idSexoUsu;
     private String numeroTelef; 
@@ -23,7 +24,6 @@ public class actualizarUserDTO {
     private Integer idRegionUsu;
     private Integer idComunaUsu;
     private Integer idOficio;
-    
 
     private String foto;
 }

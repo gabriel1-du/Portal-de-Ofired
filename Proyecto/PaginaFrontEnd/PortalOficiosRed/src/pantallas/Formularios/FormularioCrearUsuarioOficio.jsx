@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { crearUsuarioOficio } from '../../servicios/usuariosService';
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FormularioContext } from '../../context/FormularioContext';
+// import { crearUsuarioOficio } from '../../servicios/usuariosService'; // Ya no se usa aquí
 import { getAllRegions } from '../../servicios/regionService';
 import { getAllComunas } from '../../servicios/comunasService';
 import { getAllOficios } from '../../servicios/oficioService';
@@ -8,22 +10,9 @@ import { validarRut } from '../../utils/verificaciones/verificacionRut';
 import '../../style/formulacioCreacionUsuario.css'; // Importa el CSS compartido
 
 function FormularioCrearUsuarioOficio() {
-  // Estado para los campos del formulario basados en crearUsuarioLVL2DTO
-  const [formData, setFormData] = useState({
-    primerNombre: '',
-    segundoNombre: '',
-    primerApellido: '',
-    segundoApellido: '',
-    idSexoUsu: '',
-    correoElec: '',
-    password: '',
-    rut: '',
-    numeroTelef: '',
-    foto: '',
-    idRegionUsu: '',
-    idComunaUsu: '',
-    idOficio: '',
-  });
+  // Usamos el contexto para gestionar los datos del formulario
+  const { formData, updateFormData } = useContext(FormularioContext);
+  const navigate = useNavigate();
 
   const [regiones, setRegiones] = useState([]);
   const [comunas, setComunas] = useState([]);
@@ -34,6 +23,9 @@ function FormularioCrearUsuarioOficio() {
   const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
+    // Al entrar a este formulario, nos aseguramos que el tipo de usuario sea 'Oficio' (2)
+    updateFormData({ idTipoUsu: 2 });
+
     const cargarDatos = async () => {
       try {
         const [regionesData, comunasData, oficiosData, sexosData] = await Promise.all([
@@ -59,7 +51,7 @@ function FormularioCrearUsuarioOficio() {
       }
     };
     cargarDatos();
-  }, []);
+  }, []); // El array vacío asegura que se ejecute solo una vez al montar
 
   // Efecto para filtrar comunas cuando se selecciona una región
   useEffect(() => {
@@ -75,17 +67,16 @@ function FormularioCrearUsuarioOficio() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     if (name === 'idRegionUsu') {
-      setFormData((prevData) => ({
-        ...prevData,
-        idRegionUsu: value,
-        idComunaUsu: '', // Resetea la comuna
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
+      updateFormData({
         [name]: value,
-      }));
+        idComunaUsu: '', // Resetea la comuna
+      });
+    } else {
+      updateFormData({
+        [name]: value,
+      });
     }
   };
 
@@ -109,49 +100,8 @@ function FormularioCrearUsuarioOficio() {
       return;
     }
 
-    // Parsear el RUT para enviar a la API
-    const rutLimpio = formData.rut.replace(/[^0-9kK]/g, '').toLowerCase();
-    const rutCuerpo = rutLimpio.slice(0, -1);
-    const rutDv = rutLimpio.slice(-1);
-
-    // Construye el objeto de datos para enviar a la API
-    const datosParaEnviar = {
-      primerNombre: formData.primerNombre,
-      segundoNombre: formData.segundoNombre || null,
-      primerApellido: formData.primerApellido,
-      segundoApellido: formData.segundoApellido || null,
-      idSexoUsu: parseInt(formData.idSexoUsu),
-      correoElec: formData.correoElec,
-      password: formData.password,
-      rut: rutCuerpo,
-      rutDv: rutDv,
-      numeroTelef: formData.numeroTelef,
-      idTipoUsu: 2, // Se asigna automáticamente el ID 2 para profesionales
-      foto: formData.foto || null,
-      valoracion: null, // La valoración inicial la gestiona el backend
-      idRegionUsu: formData.idRegionUsu ? parseInt(formData.idRegionUsu) : null,
-      idComunaUsu: formData.idComunaUsu ? parseInt(formData.idComunaUsu) : null,
-      idOficio: formData.idOficio ? parseInt(formData.idOficio) : null,
-    };
-
-    try {
-      const response = await crearUsuarioOficio(datosParaEnviar);
-      if (response) {
-        setMensaje('¡Usuario de oficio creado exitosamente!');
-        // Limpiar formulario (opcional)
-        setFormData({
-            primerNombre: '', segundoNombre: '', primerApellido: '', segundoApellido: '',
-            idSexoUsu: '', correoElec: '', password: '', rut: '',
-            numeroTelef: '', foto: '', idRegionUsu: '',
-            idComunaUsu: '', idOficio: '',
-        });
-      } else {
-        setMensaje('Error al crear el usuario. Revisa los datos e inténtalo de nuevo.');
-      }
-    } catch (error) {
-      console.error("Error en el envío del formulario de oficio:", error);
-      setMensaje('Ocurrió un error inesperado. Por favor, inténtalo más tarde.');
-    }
+    // Si las validaciones pasan, navegamos al siguiente paso.
+    navigate('/crear-perfil');
   };
 
   return (
@@ -195,10 +145,6 @@ function FormularioCrearUsuarioOficio() {
           <input id="numeroTelef" type="tel" name="numeroTelef" value={formData.numeroTelef} onChange={handleChange} required />
         </div>
         <div className="form-group">
-          <label htmlFor="foto">URL de la Foto:</label>
-          <input id="foto" type="text" name="foto" value={formData.foto} onChange={handleChange} placeholder="https://ejemplo.com/foto.jpg" />
-        </div>
-        <div className="form-group">
           <label htmlFor="idSexoUsu">Sexo:</label>
           <select id="idSexoUsu" name="idSexoUsu" value={formData.idSexoUsu} onChange={handleChange} required>
             <option value="">Selecciona un sexo</option>
@@ -221,8 +167,8 @@ function FormularioCrearUsuarioOficio() {
           </select>
         </div>
         <div className="form-group">
-          <label htmlFor="idRegionUsu">Región (Opcional):</label>
-          <select id="idRegionUsu" name="idRegionUsu" value={formData.idRegionUsu} onChange={handleChange}>
+          <label htmlFor="idRegionUsu">Región:</label>
+          <select id="idRegionUsu" name="idRegionUsu" value={formData.idRegionUsu} onChange={handleChange} required>
             <option value="">Selecciona una región</option>
             {regiones.map((region) => (
               <option key={region.idRegion} value={region.idRegion}>
@@ -232,7 +178,7 @@ function FormularioCrearUsuarioOficio() {
           </select>
         </div>
         <div className="form-group">
-          <label htmlFor="idComunaUsu">Comuna (Opcional):</label>
+          <label htmlFor="idComunaUsu">Comuna:</label>
           <select id="idComunaUsu" name="idComunaUsu" value={formData.idComunaUsu} onChange={handleChange} disabled={!formData.idRegionUsu}>
             <option value="">Selecciona una comuna</option>
             {comunasFiltradas.map((comuna) => (
@@ -242,7 +188,7 @@ function FormularioCrearUsuarioOficio() {
             ))}
           </select>
         </div>
-        <button type="submit" className="form-submit-button">Registrarse como Profesional</button>
+        <button type="submit" className="form-submit-button">Siguiente</button>
       </form>
     </div>
   );

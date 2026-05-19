@@ -7,6 +7,21 @@ import Login from './pantallas/Login'; // Importa tu componente de Login
 import FormularioCrearUsuarioCliente from './pantallas/Formularios/FormularioCrearUsuarioCliente'; // Importa el nuevo formulario
 import IniciarSesion from './pantallas/Formularios/IniciarSesion'; // Importa el nuevo formulario de inicio de sesión
 import FormularioCrearUsuarioOficio from './pantallas/Formularios/FormularioCrearUsuarioOficio';
+import FormularioCreacionDePerfilUsuario from './pantallas/Formularios/FormularioCreacionDePerfilUsuario';
+import ResultadosBusqueda from './pantallas/ResultadosBusqueda'; // Importamos la nueva página de resultados
+import PerfilPantalla from './pantallas/PerfilPantalla'; // Importamos la pantalla de perfil
+import ModificarPerfilUsuario from './pantallas/Formularios/ModificarPerfilUsuario';
+import ConfiguracionesPantalla from './pantallas/ConfiguracionesPantalla';
+import CambiarCorreoPantalla from './pantallas/FormulariosConfig/CambiarCorreoPantalla';
+import CambiarTelefonoPantalla from './pantallas/FormulariosConfig/CambiarTelefonoPantalla';
+import FormularioCambiarDatosUsuario from './pantallas/FormulariosConfig/FormularioCambiarDatosUsuario';
+import ValoracionesPantalla from './pantallas/ValoracionPantalla'; // Importamos la pantalla de valoraciones
+import FormularioCrearResenia from './pantallas/Formularios/FormularioCrearResenia'; // Importamos el nuevo form
+import ChatPantalla from './pantallas/ChatPantalla'; // Importamos la pantalla de chat
+import MisMensajesPantalla from './pantallas/MisMensajesPantalla'; // Importamos la lista de chats
+import FormularioTransaccion from './pantallas/Formularios/FormularioTransaccion'; // Importamos el formulario de transacciones
+import ListaTratos from './pantallas/ListaTratos'; // Importamos la lista de tratos
+import PantallaAdministradorUsuarios from './pantallas/SeccionAdministrador/PantallaAdministradorUsuarios'; // Importamos pantalla de administrador
 
 function App() {
   return (
@@ -14,10 +29,26 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/home" element={<PaginaHome />} /> {/* Nueva ruta para la Home */}
+          <Route path="/home" element={<PaginaHome />} /> {/* Nueva ruta para la Home */
+          }
           <Route path="/crear-cuenta" element={<FormularioCrearUsuarioCliente />} />
+          <Route path="/crear-perfil" element={<FormularioCreacionDePerfilUsuario />} />
           <Route path="/crear-cuentOfi" element={<FormularioCrearUsuarioOficio />} /> {/* Ruta para crear cuenta de oficio */}
           <Route path="/iniciar-sesion" element={<IniciarSesion />} /> {/* Nueva ruta para iniciar sesión */}
+          <Route path="/resultados" element={<ResultadosBusqueda />} /> {/* Ruta para la página de resultados */}
+          <Route path="/perfil/:idDelPerfil" element={<PerfilPantalla />} /> {/* Ruta para la pantalla de perfil */}
+          <Route path="/perfil/modificar" element={<ModificarPerfilUsuario />} />
+          <Route path="/configuracion" element={<ConfiguracionesPantalla />} />
+          <Route path="/configuracion/cambiar-correo" element={<CambiarCorreoPantalla />} />
+          <Route path="/configuracion/cambiar-telefono" element={<CambiarTelefonoPantalla />} />
+          <Route path="/configuracion/modificar-datos" element={<FormularioCambiarDatosUsuario />} />
+          <Route path="/valoraciones/:idUsuario" element={<ValoracionesPantalla />} /> {/* Nueva ruta para ver valoraciones */}
+          <Route path="/crear-resenia/:idUsuarioReseniado" element={<FormularioCrearResenia />} /> {/* Ruta para crear reseña */}
+          <Route path="/chat/:idChat" element={<ChatPantalla />} /> {/* Ruta para la interfaz de chat */}
+          <Route path="/mis-mensajes" element={<MisMensajesPantalla />} /> {/* Ruta de mis mensajes */}
+          <Route path="/crear-transaccion/:idCliente" element={<FormularioTransaccion />} /> {/* Ruta para crear transacciones */}
+          <Route path="/mis-tratos" element={<ListaTratos />} /> {/* Ruta para ver los tratos pendientes */}
+          <Route path="/admin/usuarios" element={<PantallaAdministradorUsuarios />} /> {/* Ruta administrador */}
         </Routes>
       </div>
     </Router>

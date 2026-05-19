@@ -20,8 +20,20 @@ import static com.gateway.redireccionApis.ApiUsuarios.Comuna.ComunaPublicRoutes.
 import static com.gateway.redireccionApis.ApiUsuarios.SexoUsuario.SexoUsuarioPublicRoutes.SEXO_USUARIO_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.Oficio.OficioPublicRoutes.OFICIO_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.Usuario.UsuarioPublicRoutes.USUARIO_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.Usuario.UsuarioPublicRoutes.USUARIO_PUBLIC_POST;
 import static com.gateway.redireccionApis.ApiUsuarios.TiposUsuarios.TiposUsuarioPublicRoutes.TIPOS_USUARIO_PUBLIC_GET;
 import static com.gateway.redireccionApis.publicacionesApis.publicacionPublicRoutes.PUBLICACION_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.PerfilesUsuarios.PerfilesPublicRoutes.PERFILES_PUBLIC_GET;
+import static com.gateway.redireccionApis.publicacionesApis.ReseniasPublicRoutes.RESENIAS_PUBLIC_GET;
+import static com.gateway.redireccionApis.publicacionesApis.RespuestasReseniasPublicRoutes.RESPUESTAS_RESENIAS_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.Chat.ChatPublicRoutes.CHAT_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.ParticipantesChat.ParticipantesChatPublicRoutes.PARTICIPANTES_CHAT_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.MensajesChat.MensajesChatPublicRoutes.MENSAJES_CHAT_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.WebSocket.WebSocketPublicRoutes.WEBSOCKET_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.BloqueoUsuarios.UsuariosBloqueadosPublicRoutes.USUARIOS_BLOQUEADOS_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.TiposDeTrabajo.TiposDeTrabajoPublicRoutes.TIPOS_DE_TRABAJO_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.MediosDePago.MediosDePagoPublicRoutes.MEDIOS_DE_PAGO_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.ConfirmacionTransacciones.ConfirmacionTransaccionesPublicRoutes.CONFIRMACION_TRANSACCIONES_PUBLIC_GET;
 import java.util.Arrays;
 
 
@@ -35,8 +47,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // <-- ESTO FALTA
-            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
 
                 // URL públicas JWT
@@ -45,7 +56,7 @@ public class SecurityConfig {
 
                 // URL públicas API Gestion
                 .requestMatchers(HttpMethod.GET, USUARIO_PUBLIC_GET).permitAll()   // lista pública api GESTION GET
-                .requestMatchers(HttpMethod.POST, "/api/proxy/usuariosApi/**").permitAll()
+                .requestMatchers(HttpMethod.POST, USUARIO_PUBLIC_POST).permitAll() // Permitir crear usuarios sin token
 
                 // URL públicas API Regiones
                 .requestMatchers(HttpMethod.GET, REGION_PUBLIC_GET).permitAll()
@@ -64,6 +75,40 @@ public class SecurityConfig {
 
                 // URL públicas API Publicaciones
                 .requestMatchers(HttpMethod.GET, PUBLICACION_PUBLIC_GET).permitAll()
+
+                  // URL públicas API Perfiles
+                .requestMatchers(HttpMethod.GET, PERFILES_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Reseñas
+                .requestMatchers(HttpMethod.GET, RESENIAS_PUBLIC_GET ).permitAll()
+                
+                // URL públicas API Respuestas Reseñas
+                .requestMatchers(HttpMethod.GET, RESPUESTAS_RESENIAS_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Chat
+                .requestMatchers(HttpMethod.GET, CHAT_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Participantes Chat
+                .requestMatchers(HttpMethod.GET, PARTICIPANTES_CHAT_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Mensajes Chat
+                .requestMatchers(HttpMethod.GET, MENSAJES_CHAT_PUBLIC_GET ).permitAll()
+
+                // URL públicas API WebSocket
+                .requestMatchers(HttpMethod.GET, WEBSOCKET_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Usuarios Bloqueados
+                .requestMatchers(HttpMethod.GET, USUARIOS_BLOQUEADOS_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Tipos Trabajo
+                .requestMatchers(HttpMethod.GET, TIPOS_DE_TRABAJO_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Medios Pago
+                .requestMatchers(HttpMethod.GET, MEDIOS_DE_PAGO_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Confirmacion Transacciones
+                .requestMatchers(HttpMethod.GET, CONFIRMACION_TRANSACCIONES_PUBLIC_GET ).permitAll()
+
 
                 // Otras URL Token obligatorio
                 .anyRequest().authenticated()

@@ -1,0 +1,66 @@
+/* TARJETA DE RESPUESTA */
+.tarjeta-respuesta {
+  background-color: #f0f2f5; /* Un tono gris claro/opaco para restarle protagonismo */
+  border-radius: 16px;
+  padding: 15px 20px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  width: 90%; /* Hace que sea menos ancha que la carta principal */
+  border: 1px solid #e1e4e8;
+  box-shadow: none; /* Quitamos la sombra para que se vea plana y tenue */
+}
+
+/* Lado Izquierdo: Perfil */
+.respuesta-perfil-columna {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.respuesta-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e1e4e8;
+  margin-bottom: 5px;
+}
+
+.respuesta-nombre-autor {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666; /* Texto un poco más gris */
+  text-align: center;
+}
+
+/* Lado Derecho: Contenido */
+.respuesta-contenido-columna {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.respuesta-texto {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.5;
+  margin: 0 0 8px 0;
+}
+
+.respuesta-fecha {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+/* Responsividad para móviles */
+@media (max-width: 600px) {
+  .tarjeta-respuesta {
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    gap: 10px;
+  }
+}

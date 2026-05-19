@@ -1,0 +1,201 @@
+/* Contenedor principal */
+.configuraciones-contenedor {
+  max-width: 1000px;
+  margin: 40px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0 20px;
+  position: relative;
+}
+
+/* Botón Volver Flotante (Arriba a la izquierda) */
+.btn-volver-flotante {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: none;
+  background-color: #fff;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  z-index: 10;
+}
+
+.btn-volver-flotante:hover {
+  background-color: #f0f0f0;
+}
+
+/* Layout Principal: Organiza Sidebar y Contenido lado a lado */
+.configuraciones-layout {
+  display: flex;
+  gap: 30px;
+  margin-top: 60px; /* Deja espacio para el botón de volver */
+  align-items: flex-start;
+}
+
+/* --- SIDEBAR (Menú Lateral) --- */
+.configuraciones-sidebar {
+  width: 280px;
+  background-color: #fff;
+  border-radius: 24px;
+  padding: 30px 20px;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 8%);
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0; /* Evita que el menú se aplaste */
+  min-height: 400px;
+}
+
+.sidebar-titulo {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0 0 25px 10px;
+  font-weight: 800;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.sidebar-btn {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.sidebar-btn:hover {
+  background-color: #f8f9fa;
+  color: #f3961c; /* Naranjo principal */
+}
+
+/* Estado Activo del Botón Lateral */
+.sidebar-btn.activo {
+  background-color: #fdf6ec;
+  color: #f3961c;
+  border-left: 4px solid #f3961c;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 2px solid #f5f5f5;
+}
+
+.btn-cerrar-sesion {
+  width: 100%;
+  color: #d32f2f; /* Rojo para alertas */
+}
+
+.btn-cerrar-sesion:hover {
+  background-color: #ffebee;
+  color: #b71c1c;
+}
+
+/* --- CONTENIDO PRINCIPAL (Panel Derecho) --- */
+.configuraciones-contenido {
+  flex: 1; /* Toma todo el espacio sobrante a la derecha */
+  background-color: #fff;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 8%);
+  border: 1px solid #e0e0e0;
+}
+
+.panel-titulo {
+  margin: 0 0 10px;
+  font-size: 1.8rem;
+  color: #333;
+  font-weight: 800;
+}
+
+.panel-descripcion {
+  color: #666;
+  font-size: 1.05rem;
+  margin-bottom: 30px;
+}
+
+.opciones-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Tarjetas Rectangulares de Opciones */
+.opcion-tarjeta {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  width: 100%;
+}
+
+.opcion-tarjeta:hover {
+  background-color: #fff;
+  border-color: #f3961c;
+  box-shadow: 0 4px 12px rgb(243 150 28 / 15%);
+  transform: translateY(-2px); /* Pequeño salto al pasar el mouse */
+}
+
+.opcion-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.opcion-icono {
+  font-size: 1.5rem;
+}
+
+.opcion-texto {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.opcion-flecha {
+  color: #aaa;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: color 0.2s;
+}
+
+.opcion-tarjeta:hover .opcion-flecha {
+  color: #f3961c;
+}
+
+/* Diseño Responsivo para Celulares */
+@media (max-width: 768px) {
+  .configuraciones-layout {
+    flex-direction: column;
+  }
+  .configuraciones-sidebar {
+    width: 100%;
+    min-height: auto;
+  }
+}

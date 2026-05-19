@@ -1,0 +1,30 @@
+.mis-mensajes-contenedor {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.titulo-mis-mensajes {
+  color: #333;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f3961c;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.lista-chats {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.mensaje-estado {
+  font-size: 1.1rem;
+  color: #666;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.mensaje-estado.error {
+  color: #d32f2f;
+}

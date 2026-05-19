@@ -1,0 +1,62 @@
+.cambiar-datos-contenedor {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cambiar-datos-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.cambiar-datos-header h1 {
+    font-size: 2rem;
+    color: #333;
+    font-weight: 800;
+}
+
+.cambiar-datos-header p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.form-container-datos {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.form-group-datos {
+    margin-bottom: 18px;
+}
+
+.form-group-datos label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    text-align: left;
+    color: #495057;
+}
+
+.form-group-datos input,
+.form-group-datos select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group-datos input:focus,
+.form-group-datos select:focus {
+    outline: none;
+    border-color: #f3961c;
+    box-shadow: 0 0 0 3px rgba(243, 150, 28, 0.15);
+}

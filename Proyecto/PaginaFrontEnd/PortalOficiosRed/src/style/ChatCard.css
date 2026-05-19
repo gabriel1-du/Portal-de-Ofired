@@ -1,0 +1,32 @@
+.chat-card-contenedor {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.chat-card-contenedor:hover {
+  background-color: #f9f9f9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.chat-card-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f3961c;
+}
+
+.chat-card-nombre {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}

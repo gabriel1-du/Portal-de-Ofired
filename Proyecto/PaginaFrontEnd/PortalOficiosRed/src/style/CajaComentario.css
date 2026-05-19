@@ -1,0 +1,78 @@
+.caja-comentario-card {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 10px;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.caja-comentario-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.caja-comentario-textarea:focus {
+  outline: none;
+  border-color: #f3961c;
+  box-shadow: 0 0 0 2px rgba(243, 150, 28, 0.2);
+}
+
+.caja-comentario-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-enviar-comentario,
+.btn-cancelar-comentario {
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-enviar-comentario {
+  background-color: #f3961c;
+  color: white;
+}
+
+.btn-enviar-comentario:hover {
+  background-color: #d88318;
+}
+
+.btn-cancelar-comentario {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.btn-cancelar-comentario:hover {
+  background-color: #ccc;
+}
+
+.btn-responder-resenia {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: #4caf50;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 5px 15px;
+  transition: color 0.2s ease;
+}
+
+.btn-responder-resenia:hover {
+  color: #388e3c;
+  text-decoration: underline;
+}

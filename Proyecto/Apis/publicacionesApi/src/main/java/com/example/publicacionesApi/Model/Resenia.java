@@ -2,6 +2,8 @@ package com.example.publicacionesApi.Model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "RESENIA")
 public class Resenia {
@@ -23,6 +25,9 @@ public class Resenia {
     @Column(name = "texto_resenia", nullable = false, columnDefinition = "TEXT")
     private String textoResenia;
 
+    @Column(name = "fecha_creacion", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime fechaCreacion;
+
     public Integer getIdResenia() { return idResenia; }
     public void setIdResenia(Integer idResenia) { this.idResenia = idResenia; }
 
@@ -37,4 +42,7 @@ public class Resenia {
 
     public String getTextoResenia() { return textoResenia; }
     public void setTextoResenia(String textoResenia) { this.textoResenia = textoResenia; }
+
+    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 }

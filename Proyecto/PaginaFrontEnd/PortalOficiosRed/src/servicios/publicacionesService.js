@@ -122,22 +122,31 @@ export const deletePublicacion = async (id) => {
   }
 };
 
+// --- FUNCIÓN MODIFICADA PARA EVITAR ERRORES CRÍTICOS (404) ---
 // Función para obtener las publicaciones por ID de autor
 export const getPublicacionesByAutor = async (idAutor) => {
   try {
     console.log("Llamando a la API de Publicaciones (GET by Autor):", `${API_URL_PUBLICACIONES}/autor/${idAutor}`);
+    
+    // NOTA: Si el backend usa /usuario/ en vez de /autor/, debes cambiar la ruta a:
+    // const response = await fetch(`${API_URL_PUBLICACIONES}/usuario/${idAutor}`);
+    
     const response = await fetch(`${API_URL_PUBLICACIONES}/autor/${idAutor}`);
+    
+    // Si la respuesta no es OK (ej. 404 No Found), devolvemos un array vacío pacíficamente
     if (!response.ok) {
-      console.error(`Error en la respuesta de la red (GET Publicaciones by Autor ${idAutor}):`, response.status, response.statusText);
-      throw new Error(`Error al obtener las publicaciones del autor con ID ${idAutor}.`);
+      console.warn(`Aviso: No se encontraron publicaciones para el autor con ID ${idAutor}. Status: ${response.status}`);
+      return []; // <-- Esto es clave para no romper el frontend
     }
+    
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error(`Error al intentar obtener las publicaciones del autor con ID ${idAutor}:`, error);
-    throw error;
+    console.error(`Error de red al intentar obtener las publicaciones del autor con ID ${idAutor}:`, error);
+    return []; // <-- También devolvemos vacío si hay error de red
   }
 };
+// -------------------------------------------------------------
 
 // Función para obtener las publicaciones filtradas por región
 export const getPublicacionesByRegion = async (idRegion) => {
@@ -190,8 +199,4 @@ export const darLikePublicacion = async (id) => {
     console.error(`Error al intentar dar like a la publicación con ID ${id}:`, error);
     throw error;
   }
-
-  
 };
-
-

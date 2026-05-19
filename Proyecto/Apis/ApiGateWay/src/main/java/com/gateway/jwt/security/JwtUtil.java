@@ -18,11 +18,12 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String username, String rol) {
+    public String generateToken(String username, String rol, Integer userId) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("username", username)
                 .claim("rol", rol)
+                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)

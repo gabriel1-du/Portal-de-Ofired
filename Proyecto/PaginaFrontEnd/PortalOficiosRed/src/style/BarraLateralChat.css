@@ -1,0 +1,26 @@
+/* Estilo base del botón de bloqueo */
+.btn-bloqueo {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 15px 20px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+/* Variantes de color y hover según el estado */
+.btn-bloqueo.bloquear {
+  color: #d32f2f;
+}
+.btn-bloqueo.bloquear:hover {
+  background-color: #ffebee;
+}
+.btn-bloqueo.desbloquear {
+  color: #388e3c;
+}
+.btn-bloqueo.desbloquear:hover {
+  background-color: #e8f5e9;
+}

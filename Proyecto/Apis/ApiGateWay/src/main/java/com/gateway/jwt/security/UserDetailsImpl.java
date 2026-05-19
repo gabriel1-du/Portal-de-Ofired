@@ -13,6 +13,10 @@ public class UserDetailsImpl implements UserDetails {
 
     private final Usuario usuario;
 
+    public Integer getId() {
+        return usuario.getId();
+    }
+
     // Ahora este método informa a Spring Security sobre el rol del usuario.
     // Esto es crucial para que el proceso de autenticación pueda continuar.
     @Override

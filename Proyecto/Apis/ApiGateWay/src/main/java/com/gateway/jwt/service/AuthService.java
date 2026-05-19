@@ -24,7 +24,7 @@ public class AuthService {
                 .orElseThrow();
 
         String rol = Boolean.TRUE.equals(usuario.getAdmin()) ? "admin" : "user";
-        String token = jwtUtil.generateToken(usuario.getEmail(), rol);
+        String token = jwtUtil.generateToken(usuario.getEmail(), rol, usuario.getId());
         return new AuthResponse(token);
     }
 }

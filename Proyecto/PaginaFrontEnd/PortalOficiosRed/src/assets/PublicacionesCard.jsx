@@ -1,35 +1,48 @@
 import React from 'react';
-import '../style/PulbicacioncCard.css'; // Importamos los estilos para la tarjeta
+import '../style/PublicacionCard.css'; 
 
-/**
- * Componente funcional para mostrar una publicación en formato de tarjeta.
- * @param {object} props - Las propiedades del componente.
- * @param {object} props.publicacion - El objeto con los datos de la publicación.
- */
 const PublicacionCard = ({ publicacion }) => {
-  // Desestructuramos los datos de la publicación para un uso más fácil
   const {
     tituloPublicacion,
     nombreRegion,
     nombreComuna,
     ubicacionPublicacion,
     descripcionPublicacion,
-    cantidadLikes
+    cantidadLikes,
+    // Podrías añadir estos campos si los tienes en tu base de datos:
+    imagenUrl, 
+    precioServicio 
   } = publicacion;
 
   return (
     <div className="publicacion-card">
-      <div className="publicacion-card-header">
-        <h3>{tituloPublicacion}</h3>
+      {/* Añadimos un contenedor de imagen para que se vea más atractivo */}
+      <div className="publicacion-card-image">
+        <img 
+          src={imagenUrl || 'https://via.placeholder.com/350x200?text=Servicio+Ofired'} 
+          alt={tituloPublicacion} 
+        />
+        {precioServicio && <span className="badge-precio">${precioServicio}</span>}
       </div>
-      <div className="publicacion-card-body">
-        <p className="ubicacion"><strong>Ubicación:</strong> {nombreRegion}, {nombreComuna}</p>
-        <p className="ubicacion-detalle">{ubicacionPublicacion}</p>
-        <p className="descripcion">{descripcionPublicacion}</p>
-      </div>
-      <div className="publicacion-card-footer">
-        <span>❤️ {cantidadLikes} Likes</span>
-        <button className="btn-contactar">Contactar</button>
+
+      <div className="publicacion-card-content">
+        <div className="publicacion-card-header">
+          <h3>{tituloPublicacion || "Servicio sin título"}</h3>
+        </div>
+        
+        <div className="publicacion-card-body">
+          <p className="ubicacion">
+            <i className="fas fa-map-marker-alt"></i> {nombreRegion}, {nombreComuna}
+          </p>
+          <p className="descripcion">{descripcionPublicacion}</p>
+        </div>
+
+        <div className="publicacion-card-footer">
+          <div className="likes-section">
+            <span>❤️ {cantidadLikes || 0}</span>
+          </div>
+          <button className="btn-ver-perfil">Ver Detalles</button>
+        </div>
       </div>
     </div>
   );

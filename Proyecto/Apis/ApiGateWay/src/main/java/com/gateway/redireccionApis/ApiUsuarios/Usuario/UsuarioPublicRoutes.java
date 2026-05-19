@@ -6,4 +6,8 @@ public class UsuarioPublicRoutes {
         "/api/proxy/usuariosApi/**"
     };
 
+    public static final String[] USUARIO_PUBLIC_POST = {
+        "/api/proxy/usuariosApi/**"
+    };
+
 }
