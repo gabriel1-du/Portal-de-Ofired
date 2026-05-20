@@ -16,6 +16,7 @@ const DetallePublicacionPantalla = () => {
     useEffect(() => {
         setCargandoPublicacion(true);
 
+        // 1. Traer la publicación (Funciona Correctamente)
         fetch(`${import.meta.env.VITE_PUBLICACIONES_API_URL}/${idPublicacion}`, {
             method: "GET",
             headers: {
@@ -23,20 +24,23 @@ const DetallePublicacionPantalla = () => {
                 "Authorization": `Bearer ${token}`
             }
         })
-        .then(res => {
-            if (!res.ok) throw new Error("No se pudo obtener la publicación");
-            return res.json();
-        })
-        .then(data => {
-            setPublicacion(data);
-            setCargandoPublicacion(false);
-        })
-        .catch(err => {
-            console.error("Error cargando detalle de publicación:", err);
-            setCargandoPublicacion(false);
-        });
+            .then(res => {
+                if (!res.ok) throw new Error("No se pudo obtener la publicación");
+                return res.json();
+            })
+            .then(data => {
+                setPublicacion(data);
+                setCargandoPublicacion(false);
+            })
+            .catch(err => {
+                console.error("Error cargando detalle de publicación:", err);
+                setCargandoPublicacion(false);
+            });
 
+        // 2. Traer comentarios - Ruta Sanitizada
         const urlGetComentarios = `http://localhost:8888/api/proxy/comentariosApi/idPublicacion=${idPublicacion}`;
+        console.log("Intentando GET comentarios a:", urlGetComentarios);
+
         fetch(urlGetComentarios, {
             method: "GET",
             headers: {
@@ -44,18 +48,18 @@ const DetallePublicacionPantalla = () => {
                 "Authorization": `Bearer ${token}`
             }
         })
-        .then(res => {
-            if (!res.ok) {
-                console.warn(`Respuesta GET comentarios no OK (Status: ${res.status})`);
-                return [];
-            }
-            return res.json();
-        })
-        .then(data => setComentarios(Array.isArray(data) ? data : []))
-        .catch(err => {
-            console.error("Error crítico cargando comentarios:", err);
-            setComentarios([]);
-        });
+            .then(res => {
+                if (!res.ok) {
+                    console.warn(`Respuesta GET comentarios no OK (Status: ${res.status})`);
+                    return [];
+                }
+                return res.json();
+            })
+            .then(data => setComentarios(Array.isArray(data) ? data : []))
+            .catch(err => {
+                console.error("Error crítico cargando comentarios:", err);
+                setComentarios([]); 
+            });
     }, [idPublicacion, token]); 
 
     const handleEnviarComentario = (e) => {
@@ -68,7 +72,10 @@ const DetallePublicacionPantalla = () => {
             contenido: nuevoComentario
         };
 
-        fetch(`http://localhost:8888/api/proxy/comentariosApi`, {
+        // 3. Guardar comentario - Ruta Sanitizada
+        const urlPostComentario = `http://localhost:8888/api/proxy/comentariosApi`;
+        console.log("Payload que se va al backend:", comentarioPayload);
+        fetch(urlPostComentario, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
@@ -77,7 +84,7 @@ const DetallePublicacionPantalla = () => {
             body: JSON.stringify(comentarioPayload)
         })
         .then(res => {
-            if (!res.ok) throw new Error(`Error en el servidor al guardar (Status: ${res.status})`);
+            if (!res.ok) throw new Error(`Payload que se va al backend: ${JSON.stringify(comentarioPayload)}`);
             return res.json();
         })
         .then(nuevoComit => {
