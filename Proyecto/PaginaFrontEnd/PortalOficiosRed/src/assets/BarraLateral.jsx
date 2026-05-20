@@ -35,6 +35,12 @@ const BarraLateral = ({ abierta, alCerrar }) => {
               <Link to={`/perfil/${usuario.idUsuario}`} onClick={alCerrar} className="sidebar-link">
                 Ver mi Perfil
               </Link>
+              
+              {/* ¡NUEVO ENLACE IMPLEMENTADO! */}
+              <Link to="/crear-publicacion" onClick={alCerrar} className="sidebar-link" style={{ fontWeight: 'bold', color: '#f09226' }}>
+                ➕ Crear Publicación
+              </Link>
+
               <Link to="/mis-mensajes" onClick={alCerrar} className="sidebar-link">
                 Ver mis mensajes
               </Link>

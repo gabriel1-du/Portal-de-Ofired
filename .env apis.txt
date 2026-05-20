@@ -1,0 +1,10 @@
+# URL de conexión a MySQL local (Workbench)
+DB_URL=jdbc:mysql://localhost:3306/gasfiteria_db
+
+# Credenciales de la Base de Datos
+DB_USER=root
+DB_PASSWORD=
+
+# Credenciales de Spring Security
+USER_NAME=root
+PASSWORD=

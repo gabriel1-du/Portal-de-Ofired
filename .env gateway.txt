@@ -15,33 +15,29 @@ jwt.secret=clave_super_segura_de_mas_de_64_bytes_de_longitud_esto_es_necesario_p
 services.usuarios.base-url=http://localhost:8080
 services.usuarios.base-path=/api/usuariosApi
 
-# Endpoint de la API de Gestión de Regiones
+#   Endpoint de la API de Gestión de Regiones
 services.regiones.base-url=http://localhost:8080
 services.regiones.base-path=/api/regionesApi
 
-# Endpoint de la API de Gestión de Comunas
+#   Endpoint de la API de Gestión de Comunas
 services.comunas.base-url=http://localhost:8080
 services.comunas.base-path=/api/comunasApi
 
-# Endpoint de la API de Gestión de SexoUsuario
+#   Endpoint de la API de Gestión de SexoUsuario
 services.sexousuario.base-url=http://localhost:8080
 services.sexousuario.base-path=/api/sexosApi
 
-# Endpoint de la API de Gestión de Oficio
+#   Endpoint de la API de Gestión de Oficio
 services.oficio.base-url=http://localhost:8080
 services.oficio.base-path=/api/oficiosApi
 
-# Endpoint de la API de Gestión de Tipos de Usuario
+#  Endpoint de la API de Gestión de Tipos de Usuario
 services.tiposusuario.base-url=http://localhost:8080
 services.tiposusuario.base-path=/api/tiposUsuarioApi
 
 # Endpoint de la API de Publicaciones
 services.publicaciones.base-url=http://localhost:8085
 services.publicaciones.base-path=/api/publicacionesApi
-
-# === NUEVO: Endpoint de la API de Comentarios (Añadido para solucionar el 404) ===
-services.comentarios.base-url=http://localhost:8085
-services.comentarios.base-path=/api/comentarios
 
 # Endpoint de la API de resenias
 services.resenias.base-url=http://localhost:8085
@@ -75,6 +71,7 @@ services.mensajes.websocket.base-path=/ws-chat
 services.general.websocket.base-url=http://localhost:8080
 services.general.websocket.base-path=/ws-api
 
+
 #Bloqueo Usuarios 
 services.usuarios.bloqueados.base-url=http://localhost:8080
 services.usuarios.bloqueados.base-path=/api/usuarios-bloqueadosApi
@@ -90,4 +87,5 @@ services.medios.pago.base-path=/api/medios-pagoApi
 #Confirmacion Transaccion
 services.confirmacion.lectura.base-url=http://localhost:8080
 services.confirmacion.lectura.base-path=/api/confirmacion-transaccionApi
+
 
