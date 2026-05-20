@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { login } from '../../servicios/authService'; // Importa la función de login
 import { AuthContext } from '../../context/AuthContext'; // Importa el contexto de autenticación
+import { jwtDecode } from 'jwt-decode'; // 1. Importamos la librería para decodificar el token
 import { useNavigate } from 'react-router-dom';
 import '../../style/inicioSesion.css'; // Importa el archivo CSS
 
@@ -21,30 +22,30 @@ function IniciarSesion() {
       const credenciales = { email, password };
       const data = await login(credenciales); // Llama a la función de login del servicio
 
-      // CORRECCIÓN: Ahora verificamos si el backend nos mandó el pase VIP (el token)
+      // Ahora, la respuesta solo contiene el token.
       if (data && data.token) {
-        
-        const tokenReal = data.token; // Guardamos el token real
+        // 2. Decodificamos el token para obtener el payload (los datos del usuario)
+        const decodedToken = jwtDecode(data.token);
 
-        // Armamos un perfil básico para el navegador usando tu correo
+        // Evaluamos si el claim "rol" indica que es administrador (soporta booleano true, texto 'true' o 'ADMIN')
+        const esAdministrador = decodedToken.rol === true || String(decodedToken.rol).toLowerCase() === 'true' || String(decodedToken.rol).toUpperCase() === 'ADMIN';
+
+        // 3. Creamos un objeto 'usuario' con los datos del token
         const usuarioParaContexto = {
-          email: email,
-          username: email.split('@')[0], // Saca tu nombre del correo (ej: diegotsimiranda)
-          rol: 'USER', 
-          habilitadorAdministrador: false
+          idUsuario: decodedToken.userId,
+          username: decodedToken.username,
+          rol: decodedToken.rol,
+          habilitadorAdministrador: esAdministrador
         };
 
-        // El sistema guarda el token automáticamente sin que tú hagas nada manual
-        iniciarSesion(tokenReal, usuarioParaContexto);
-        
+        // 4. Llamamos a iniciarSesion con el token y el objeto de usuario que acabamos de crear.
+        iniciarSesion(data.token, usuarioParaContexto);
         setMensaje('Inicio de sesión exitoso. Redirigiendo...');
-        
         setTimeout(() => {
           navigate('/home'); // Redirige a la página principal
-        }, 2000); 
-        
+        }, 2000); // Redirige después de 2 segundos
       } else {
-        setError('Respuesta de login inválida. No se reconocieron los datos del usuario.');
+        setError('Respuesta de login inválida. No se recibió un token.');
       }
     } catch (err) {
       console.error('Error al iniciar sesión:', err);

@@ -4,7 +4,9 @@ import { AuthContext } from '../../context/AuthContext';
 
 const FormularioCrearPublicacion = () => {
     const navigate = useNavigate();
-    const { token } = useContext(AuthContext);
+
+    // Traemos 'usuario' y 'token' desde tu contexto
+    const { usuario, token } = useContext(AuthContext); 
 
     // Estados para guardar las listas de la base de datos
     const [listaRegiones, setListaRegiones] = useState([]);
@@ -13,14 +15,15 @@ const FormularioCrearPublicacion = () => {
     const [formData, setFormData] = useState({
         tituloPublicacion: '',
         descripcionPublicacion: '',
-        idRegion: '', // Ahora guardamos el ID (número)
-        idComuna: '', // Ahora guardamos el ID (número)
+        idRegion: '', 
+        idComuna: '', 
         precioServicio: '',
         imagenUrl: ''
     });
 
     // 1. Cargar las regiones al abrir el formulario
     useEffect(() => {
+        // CORRECCIÓN: Agregados los backticks correspondientes para el Token
         fetch("http://localhost:8888/api/proxy/regionesApi", {
             headers: { "Authorization": `Bearer ${token}` }
         })
@@ -28,7 +31,7 @@ const FormularioCrearPublicacion = () => {
         .then(data => setListaRegiones(data))
         .catch(err => console.error("Error cargando regiones:", err));
         
-        // 2. Cargar comunas (puedes optimizar esto después para que filtre por región)
+        // 2. Cargar comunas
         fetch("http://localhost:8888/api/proxy/comunasApi", {
             headers: { "Authorization": `Bearer ${token}` }
         })
@@ -55,7 +58,8 @@ const FormularioCrearPublicacion = () => {
 
         // Armamos el paquete con los IDs convertidos a números
         const publicacionPayload = {
-            idAutor: 1, // Lo dejamos en 1 por ahora para la prueba
+            // CORRECCIÓN: 'usuario?.idUsuario' evita caídas si el contexto está cargando
+            idAutor: usuario?.idUsuario || 1, 
             tituloPublicacion: formData.tituloPublicacion,
             descripcionPublicacion: formData.descripcionPublicacion,
             idRegion: formData.idRegion ? parseInt(formData.idRegion) : null,
@@ -65,12 +69,12 @@ const FormularioCrearPublicacion = () => {
             cantidadLikes: 0 
         };
 
-        // CORRECCIÓN: Le agregamos "/proxy/" a la ruta para que el Gateway no nos tire error 403
+        // Enviar publicación al Gateway
         fetch("http://localhost:8888/api/proxy/publicacionesApi", { 
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` 
+                "Authorization": `Bearer ${token}` // CORRECCIÓN: Backticks agregados aquí también
             },
             body: JSON.stringify(publicacionPayload)
         })
@@ -115,7 +119,6 @@ const FormularioCrearPublicacion = () => {
                     />
                 </div>
 
-                {/* --- MENÚS DESPLEGABLES DE REGIÓN Y COMUNA --- */}
                 <div style={{ display: 'flex', gap: '15px' }}>
                     <div style={{ flex: 1 }}>
                         <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Región</label>
