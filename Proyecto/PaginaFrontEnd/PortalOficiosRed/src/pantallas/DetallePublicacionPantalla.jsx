@@ -10,15 +10,14 @@ const DetallePublicacionPantalla = () => {
     const [nuevoComentario, setNuevoComentario] = useState("");
     const [cargandoPublicacion, setCargandoPublicacion] = useState(true);
 
-    const { token } = useContext(AuthContext); 
-
-    const usuarioActivo = { idUsuario: 1, nombreUsuario: "Diego Alejandro" };
+    const { token, user } = useContext(AuthContext); 
+    const idUsuarioActual = user?.idUsuario || 1; 
 
     useEffect(() => {
         setCargandoPublicacion(true);
 
-        // 1. Fetch para traer la publicación
-        fetch(`http://localhost:8888/api/proxy/publicacionesApi/${idPublicacion}`, {
+        // 1. Traer la publicación (Funciona Correctamente)
+        fetch(`${import.meta.env.VITE_PUBLICACIONES_API_URL}/${idPublicacion}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -26,9 +25,7 @@ const DetallePublicacionPantalla = () => {
             }
         })
             .then(res => {
-                if (!res.ok) {
-                    throw new Error("No se pudo obtener la publicación");
-                }
+                if (!res.ok) throw new Error("No se pudo obtener la publicación");
                 return res.json();
             })
             .then(data => {
@@ -40,8 +37,11 @@ const DetallePublicacionPantalla = () => {
                 setCargandoPublicacion(false);
             });
 
-        // 2. CORRECCIÓN DEFINITIVA: Ruta combinada para listar comentarios del microservicio publicacionesApi
-        fetch(`http://localhost:8888/api/proxy/publicacionesApi/api/comentarios/publicacion/${idPublicacion}`, {
+        // 2. Traer comentarios - Ruta Sanitizada
+        const urlGetComentarios = `${import.meta.env.VITE_PUBLICACIONES_API_URL}/api/comentarios/publicacion/${idPublicacion}`;
+        console.log("Intentando GET comentarios a:", urlGetComentarios);
+
+        fetch(urlGetComentarios, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -49,12 +49,15 @@ const DetallePublicacionPantalla = () => {
             }
         })
             .then(res => {
-                if (!res.ok) return [];
+                if (!res.ok) {
+                    console.warn(`Respuesta GET comentarios no OK (Status: ${res.status})`);
+                    return [];
+                }
                 return res.json();
             })
             .then(data => setComentarios(Array.isArray(data) ? data : []))
             .catch(err => {
-                console.error("Error cargando comentarios:", err);
+                console.error("Error crítico cargando comentarios:", err);
                 setComentarios([]); 
             });
     }, [idPublicacion, token]); 
@@ -65,12 +68,15 @@ const DetallePublicacionPantalla = () => {
 
         const comentarioPayload = {
             idPublicacion: parseInt(idPublicacion),
-            idUsuario: usuarioActivo.idUsuario,
+            idUsuario: idUsuarioActual,
             contenido: nuevoComentario
         };
 
-        // 3. CORRECCIÓN DEFINITIVA: Ruta combinada para guardar comentarios mediante POST
-        fetch("http://localhost:8888/api/proxy/publicacionesApi/api/comentarios", {
+        // 3. Guardar comentario - Ruta Sanitizada
+        const urlPostComentario = `${import.meta.env.VITE_PUBLICACIONES_API_URL}/api/comentarios`;
+        console.log("Intentando POST comentario a:", urlPostComentario);
+
+        fetch(urlPostComentario, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
@@ -79,9 +85,7 @@ const DetallePublicacionPantalla = () => {
             body: JSON.stringify(comentarioPayload)
         })
         .then(res => {
-            if (!res.ok) {
-                throw new Error("Error al guardar el comentario");
-            }
+            if (!res.ok) throw new Error(`Error en el servidor al guardar (Status: ${res.status})`);
             return res.json();
         })
         .then(nuevoComit => {

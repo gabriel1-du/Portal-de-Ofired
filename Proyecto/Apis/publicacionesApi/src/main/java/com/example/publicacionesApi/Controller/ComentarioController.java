@@ -33,14 +33,15 @@ public class ComentarioController {
 
     // 2. Obtener todos los comentarios de una publicación específica
     @GetMapping("/publicacion/{idPublicacion}")
-    public ResponseEntity<List<Comentario>> listarComentariosPorPublicacion(@PathVariable Integer idPublicacion) { // Cambiado a Integer
+    public ResponseEntity<List<Comentario>> listarComentariosPorPublicacion(@PathVariable Integer idPublicacion) { 
         List<Comentario> comentarios = comentarioService.obtenerComentariosPorPublicacion(idPublicacion);
         return ResponseEntity.ok(comentarios);
     }
 
     // 3. Eliminar un comentario
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarComentario(@PathVariable Long id) {
+    // CORRECCIÓN: Se cambió Long a Integer para que coincida con el Service e Impl
+    public ResponseEntity<Void> eliminarComentario(@PathVariable Integer id) {
         comentarioService.eliminarComentario(id);
         return ResponseEntity.noContent().build();
     }
@@ -56,14 +57,15 @@ public class ComentarioController {
 
     // 5. Obtener todas las respuestas de un comentario padre
     @GetMapping("/respuesta/comentario/{idComentario}")
-    public ResponseEntity<List<RespuestaComentario>> listarRespuestasPorComentario(@PathVariable Integer idComentario) { // Cambiado a Integer
+    public ResponseEntity<List<RespuestaComentario>> listarRespuestasPorComentario(@PathVariable Integer idComentario) { 
         List<RespuestaComentario> respuestas = respuestaService.obtenerRespuestasPorComentario(idComentario);
         return ResponseEntity.ok(respuestas);
     }
 
     // 6. Eliminar una respuesta
     @DeleteMapping("/respuesta/{id}")
-    public ResponseEntity<Void> eliminarRespuesta(@PathVariable Long id) {
+    // CORRECCIÓN: Se cambió Long a Integer para que coincida con el Service e Impl
+    public ResponseEntity<Void> eliminarRespuesta(@PathVariable Integer id) {
         respuestaService.eliminarRespuesta(id);
         return ResponseEntity.noContent().build();
     }

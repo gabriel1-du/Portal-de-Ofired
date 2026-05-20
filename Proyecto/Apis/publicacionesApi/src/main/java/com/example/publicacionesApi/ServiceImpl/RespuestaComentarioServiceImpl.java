@@ -19,12 +19,13 @@ public class RespuestaComentarioServiceImpl implements RespuestaComentarioServic
     }
 
     @Override
-    public List<RespuestaComentario> obtenerRespuestasPorComentario(Integer idComentario) { // Cambiado a Integer para calzar con el Repository
+    public List<RespuestaComentario> obtenerRespuestasPorComentario(Integer idComentario) {
         return respuestaRepository.findByIdComentario(idComentario);
     }
 
     @Override
-    public void eliminarRespuesta(Long idRespuesta) {
+    // CORRECCIÓN: Se cambió Long a Integer para respetar la interfaz
+    public void eliminarRespuesta(Integer idRespuesta) {
         respuestaRepository.deleteById(idRespuesta);
     }
 }

@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
+// CORRECCIÓN: Se cambió Long por Integer para que coincida con el ID del Modelo
+public interface ComentarioRepository extends JpaRepository<Comentario, Integer> {
+    
     // Esto nos servirá para traer todos los comentarios de una publicación específica
     List<Comentario> findByIdPublicacion(Integer idPublicacion);
 }

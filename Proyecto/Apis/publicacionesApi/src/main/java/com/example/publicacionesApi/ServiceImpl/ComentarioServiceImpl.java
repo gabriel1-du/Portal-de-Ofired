@@ -19,12 +19,13 @@ public class ComentarioServiceImpl implements ComentarioService {
     }
 
     @Override
-    public List<Comentario> obtenerComentariosPorPublicacion(Integer idPublicacion) { // Cambiado a Integer para calzar con el Repository
+    public List<Comentario> obtenerComentariosPorPublicacion(Integer idPublicacion) {
         return comentarioRepository.findByIdPublicacion(idPublicacion);
     }
 
     @Override
-    public void eliminarComentario(Long idComentario) {
+    // CORRECCIÓN: Se cambió Long a Integer para respetar la interfaz
+    public void eliminarComentario(Integer idComentario) {
         comentarioRepository.deleteById(idComentario);
     }
 }

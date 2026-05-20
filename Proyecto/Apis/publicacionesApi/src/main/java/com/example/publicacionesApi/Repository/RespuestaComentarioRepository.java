@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RespuestaComentarioRepository extends JpaRepository<RespuestaComentario, Long> {
+// CORRECCIÓN: Se cambió Long por Integer para que coincida con el ID del Modelo
+public interface RespuestaComentarioRepository extends JpaRepository<RespuestaComentario, Integer> {
+    
     // Esto nos servirá para traer las respuestas asociadas a un comentario padre
     List<RespuestaComentario> findByIdComentario(Integer idComentario);
 }
