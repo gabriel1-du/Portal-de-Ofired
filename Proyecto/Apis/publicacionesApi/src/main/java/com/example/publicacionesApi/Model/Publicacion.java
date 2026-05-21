@@ -1,11 +1,17 @@
 package com.example.publicacionesApi.Model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "PUBLICACION")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Publicacion {
 
     @Id
@@ -19,13 +25,11 @@ public class Publicacion {
     @Column(name = "titulo_publicacion", nullable = false, length = 150)
     private String tituloPublicacion;
 
-    @ManyToOne
-    @JoinColumn(name = "id_region", nullable = false)
-    private Region region;
+    @Column(name = "id_region", nullable = false)
+    private Integer idRegion;// A travez de regionRestClient se setteara la region
 
-    @ManyToOne
-    @JoinColumn(name = "id_comuna", nullable = false)
-    private Comuna comuna;
+    @Column(name = "id_comuna", nullable = false)
+    private Integer idComuna; //A travez de comunaRestClient se setteara la comuna
 
     @Column(name = "ubicacion_publicacion", length = 255)
     private String ubicacionPublicacion;
@@ -39,30 +43,5 @@ public class Publicacion {
     @Column(name = "fecha_publicacion", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime fechaPublicacion;
 
-    public Integer getIdPublicacion() { return idPublicacion; }
-    public void setIdPublicacion(Integer idPublicacion) { this.idPublicacion = idPublicacion; }
-
-    public Integer getIdAutor() { return idAutor; }
-    public void setIdAutor(Integer idAutor) { this.idAutor = idAutor; }
-
-    public String getTituloPublicacion() { return tituloPublicacion; }
-    public void setTituloPublicacion(String tituloPublicacion) { this.tituloPublicacion = tituloPublicacion; }
-
-    public Region getRegion() { return region; }
-    public void setRegion(Region region) { this.region = region; }
-
-    public Comuna getComuna() { return comuna; }
-    public void setComuna(Comuna comuna) { this.comuna = comuna; }
-
-    public String getUbicacionPublicacion() { return ubicacionPublicacion; }
-    public void setUbicacionPublicacion(String ubicacionPublicacion) { this.ubicacionPublicacion = ubicacionPublicacion; }
-
-    public String getDescripcionPublicacion() { return descripcionPublicacion; }
-    public void setDescripcionPublicacion(String descripcionPublicacion) { this.descripcionPublicacion = descripcionPublicacion; }
-
-    public Integer getCantidadLikes() { return cantidadLikes; }
-    public void setCantidadLikes(Integer cantidadLikes) { this.cantidadLikes = cantidadLikes; }
-
-    public LocalDateTime getFechaPublicacion() { return fechaPublicacion; }
-    public void setFechaPublicacion(LocalDateTime fechaPublicacion) { this.fechaPublicacion = fechaPublicacion; }
+  
 }

@@ -2,11 +2,9 @@ package com.example.publicacionesApi.DTO.ClasesPublicacionesDTO.MapperPublicacio
 
 import com.example.publicacionesApi.DTO.ClasesPublicacionesDTO.CrearPublicacionDTO;
 
-import com.example.publicacionesApi.Model.Comuna;
 import com.example.publicacionesApi.Model.Publicacion;
-import com.example.publicacionesApi.Model.Region;
-import com.example.publicacionesApi.Repository.comunaRepository;
-import com.example.publicacionesApi.Repository.RegionRepository;
+import com.example.publicacionesApi.RestClient.ComunaRestClient;
+import com.example.publicacionesApi.RestClient.RegionRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
@@ -15,10 +13,10 @@ import java.time.LocalDateTime;
 public class CrearPublicacionMapper {
 
     @Autowired
-    private RegionRepository regionRepository;
+    private RegionRestClient regionRestClient;
 
     @Autowired
-    private comunaRepository comunaRepository;
+    private ComunaRestClient comunaRestClient;
 
     //Metodo que se usa para convertir un CrearPublicacionDTO a una entidad Publicacion, validando que la Región y Comuna existan en la base de datos
     public Publicacion crearPublicacionDTOtoPublicacion(CrearPublicacionDTO dto) {
@@ -36,16 +34,22 @@ public class CrearPublicacionMapper {
         
         // Buscar y setear la Región validando que exista en la base de datos
         if (dto.getIdRegion() != null) {
-            Region region = regionRepository.findById(dto.getIdRegion())
-                .orElseThrow(() -> new RuntimeException("Región no encontrada con id: " + dto.getIdRegion()));
-            publicacion.setRegion(region);
+            try {
+                regionRestClient.obtenerRegionPorId(dto.getIdRegion());
+                publicacion.setIdRegion(dto.getIdRegion());
+            } catch (Exception e) {
+                throw new RuntimeException("Región no encontrada con id: " + dto.getIdRegion());
+            }
         }
         
         // Buscar y setear la Comuna validando que exista en la base de datos
         if (dto.getIdComuna() != null) {
-            Comuna comuna = comunaRepository.findById(dto.getIdComuna())
-                .orElseThrow(() -> new RuntimeException("Comuna no encontrada con id: " + dto.getIdComuna()));
-            publicacion.setComuna(comuna);
+            try {
+                comunaRestClient.obtenerComunaPorId(dto.getIdComuna());
+                publicacion.setIdComuna(dto.getIdComuna());
+            } catch (Exception e) {
+                throw new RuntimeException("Comuna no encontrada con id: " + dto.getIdComuna());
+            }
         }
 
         return publicacion;

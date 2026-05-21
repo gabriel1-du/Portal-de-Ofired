@@ -4,12 +4,10 @@ import com.example.publicacionesApi.DTO.ClasesPublicacionesDTO.CrearPublicacionD
 import com.example.publicacionesApi.DTO.ClasesPublicacionesDTO.leerPublicacionesDTO;
 import com.example.publicacionesApi.DTO.ClasesPublicacionesDTO.MapperPublicacionesDTO.CrearPublicacionMapper;
 import com.example.publicacionesApi.DTO.ClasesPublicacionesDTO.MapperPublicacionesDTO.LeerPublicacionesMapper;
-import com.example.publicacionesApi.Model.Comuna;
 import com.example.publicacionesApi.Model.Publicacion;
-import com.example.publicacionesApi.Model.Region;
-import com.example.publicacionesApi.Repository.comunaRepository;
 import com.example.publicacionesApi.Repository.PublicacionRepository;
-import com.example.publicacionesApi.Repository.RegionRepository;
+import com.example.publicacionesApi.RestClient.ComunaRestClient;
+import com.example.publicacionesApi.RestClient.RegionRestClient;
 import com.example.publicacionesApi.Service.PublicacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,10 +29,10 @@ public class PublicacionServiceImpl implements PublicacionService {
     private LeerPublicacionesMapper leerPublicacionesMapper;
 
     @Autowired
-    private RegionRepository regionRepository;
+    private RegionRestClient regionRestClient;
 
     @Autowired
-    private comunaRepository comunaRepository;
+    private ComunaRestClient comunaRestClient;
 
     @Override
     public List<leerPublicacionesDTO> listarTodas() {
@@ -72,19 +70,25 @@ public class PublicacionServiceImpl implements PublicacionService {
         existente.setUbicacionPublicacion(publicacionDTO.getUbicacionPublicacion());
 
         if (publicacionDTO.getIdRegion() != null) {
-            Region region = regionRepository.findById(publicacionDTO.getIdRegion())
-                    .orElseThrow(() -> new RuntimeException("Región no encontrada con id: " + publicacionDTO.getIdRegion()));
-            existente.setRegion(region);
+            try {
+                regionRestClient.obtenerRegionPorId(publicacionDTO.getIdRegion());
+                existente.setIdRegion(publicacionDTO.getIdRegion());
+            } catch (Exception e) {
+                throw new RuntimeException("Región no encontrada con id: " + publicacionDTO.getIdRegion());
+            }
         } else {
-            existente.setRegion(null);
+            existente.setIdRegion(null);
         }
 
         if (publicacionDTO.getIdComuna() != null) {
-            Comuna comuna = comunaRepository.findById(publicacionDTO.getIdComuna())
-                    .orElseThrow(() -> new RuntimeException("Comuna no encontrada con id: " + publicacionDTO.getIdComuna()));
-            existente.setComuna(comuna);
+            try {
+                comunaRestClient.obtenerComunaPorId(publicacionDTO.getIdComuna());
+                existente.setIdComuna(publicacionDTO.getIdComuna());
+            } catch (Exception e) {
+                throw new RuntimeException("Comuna no encontrada con id: " + publicacionDTO.getIdComuna());
+            }
         } else {
-            existente.setComuna(null);
+            existente.setIdComuna(null);
         }
 
         Publicacion publicacionActualizada = publicacionRepository.save(existente);
@@ -109,14 +113,14 @@ public class PublicacionServiceImpl implements PublicacionService {
 
     @Override
     public List<leerPublicacionesDTO> listarPorRegion(Integer idRegion) {
-        return publicacionRepository.findByRegion_IdRegion(idRegion).stream()
+        return publicacionRepository.findByIdRegion(idRegion).stream()
                 .map(leerPublicacionesMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<leerPublicacionesDTO> listarPorComuna(Integer idComuna) {
-        return publicacionRepository.findByComuna_IdComuna(idComuna).stream()
+        return publicacionRepository.findByIdComuna(idComuna).stream()
                 .map(leerPublicacionesMapper::toDTO)
                 .collect(Collectors.toList());
     }

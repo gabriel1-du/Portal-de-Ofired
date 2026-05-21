@@ -13,13 +13,13 @@ import java.util.List;
 public interface PublicacionRepository extends JpaRepository<Publicacion, Integer> {
 
     List<Publicacion> findByIdAutor(Integer idAutor);
-    List<Publicacion> findByRegion_IdRegion(Integer idRegion);
-    List<Publicacion> findByComuna_IdComuna(Integer idComuna);
+    List<Publicacion> findByIdRegion(Integer idRegion);
+    List<Publicacion> findByIdComuna(Integer idComuna);
     List<Publicacion> findByTituloPublicacionContainingIgnoreCase(String tituloPublicacion);
 
     @Query("SELECT p FROM Publicacion p WHERE " +
-           "(:idRegion IS NULL OR p.region.idRegion = :idRegion) AND " +
-           "(:idComuna IS NULL OR p.comuna.idComuna = :idComuna) AND " +
+           "(:idRegion IS NULL OR p.idRegion = :idRegion) AND " +
+           "(:idComuna IS NULL OR p.idComuna = :idComuna) AND " +
            "(:fechaPublicacion IS NULL OR p.fechaPublicacion >= :fechaPublicacion)")
     List<Publicacion> findByFiltros(@Param("idRegion") Integer idRegion, @Param("idComuna") Integer idComuna, @Param("fechaPublicacion") LocalDateTime fechaPublicacion);
 }
