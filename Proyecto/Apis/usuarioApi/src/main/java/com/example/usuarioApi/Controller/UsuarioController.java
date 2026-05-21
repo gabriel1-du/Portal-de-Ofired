@@ -35,25 +35,25 @@ public class UsuarioController {
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
-    @PostMapping("/crearUsuarioLVL1")
+    @PostMapping("/crearUsuarioLVL1") //crear usuario sin oficio
     public ResponseEntity<leerUsuarioDTO> crearUsuarioLVL1(@RequestBody crearUsuarioLVL1DTO usuarioDTO) {
         leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioLVL1(usuarioDTO);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
-    @PostMapping("/crearUsuarioLVL2")
+    @PostMapping("/crearUsuarioLVL2") //crear usuario con oficio
     public ResponseEntity<leerUsuarioDTO> crearUsuarioLVL2(@RequestBody crearUsuarioLVL2DTO usuarioDTO) {
         leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioLVL2(usuarioDTO);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
-    @PostMapping("/admin/crear")
+    @PostMapping("/admin/crear") // Endpoint específico para que el admin cree un usuario con todos los campos, incluyendo rol y estado
     public ResponseEntity<leerUsuarioDTO> crearUsuarioPorAdmin(@RequestBody crearUsuarioDTOAdmin dto) {
         leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioAdmin(dto);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // Endpoint para leer un usuario específico por su ID
     public ResponseEntity<leerUsuarioDTO> leerUsuario(@PathVariable Integer id) {
         leerUsuarioDTO usuario = usuarioService.leerUsuario(id);
         return ResponseEntity.ok(usuario);

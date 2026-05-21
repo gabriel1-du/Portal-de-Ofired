@@ -5,8 +5,8 @@ import com.example.publicacionesApi.DTO.ClasesReseniasDTO.CrearReniaDTO;
 import com.example.publicacionesApi.DTO.ClasesReseniasDTO.LeerReseniaDTO;
 import com.example.publicacionesApi.DTO.ClasesReseniasDTO.LeerReseniaFrontDTO;
 import com.example.publicacionesApi.Model.Resenia;
-import com.example.publicacionesApi.Model.Usuario;
-import com.example.publicacionesApi.Repository.UsuarioRepository;
+import com.example.publicacionesApi.RestClient.UsuarioRestClient;
+import com.example.publicacionesApi.RestClientDTO.UsuarioExternoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class UsuarioMapperReseniaDTO {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioRestClient usuarioRestClient;
 
     /**
      * Convierte un CrearReniaDTO a una entidad Resenia.
@@ -63,17 +63,22 @@ public class UsuarioMapperReseniaDTO {
         dto.setReseniaId(resenia.getIdResenia());
 
         // Buscar el nombre del autor
-        Usuario autor = usuarioRepository.findById(resenia.getIdAutor()).orElse(null);
-        if (autor != null) {
-            dto.setNombreAutor(autor.getPNombre() + " " + autor.getPApellido());
+        try {
+            UsuarioExternoDTO autor = usuarioRestClient.obtenerUsuarioPorId(resenia.getIdAutor());
+            dto.setNombreAutor(autor.getPrimerNombre() + " " + autor.getPrimerApellido());
             dto.setFotoUsuarioAutor(autor.getFoto());
-        } else {
+        } catch (Exception e) {
             dto.setNombreAutor("Usuario no encontrado");
+            dto.setFotoUsuarioAutor(null);
         }
 
         // Buscar el nombre del usuario reseñado
-        Usuario usuarioReseniado = usuarioRepository.findById(resenia.getIdUsuarioReseniado()).orElse(null);
-        dto.setNombreUsuarioReseniado(usuarioReseniado != null ? usuarioReseniado.getPNombre() + " " + usuarioReseniado.getPApellido() : "Usuario no encontrado");
+        try {
+            UsuarioExternoDTO usuarioReseniado = usuarioRestClient.obtenerUsuarioPorId(resenia.getIdUsuarioReseniado());
+            dto.setNombreUsuarioReseniado(usuarioReseniado.getPrimerNombre() + " " + usuarioReseniado.getPrimerApellido());
+        } catch (Exception e) {
+            dto.setNombreUsuarioReseniado("Usuario no encontrado");
+        }
 
         dto.setCalificacion(resenia.getCalificacion());
         dto.setTextoResenia(resenia.getTextoResenia());

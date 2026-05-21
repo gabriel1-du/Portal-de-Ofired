@@ -3,8 +3,8 @@ package com.example.publicacionesApi.DTO.ClasesRespuestasReseniasDTO;
 import com.example.publicacionesApi.Model.RespuestaResenia;
 import com.example.publicacionesApi.Model.Resenia;
 import com.example.publicacionesApi.Repository.ReseniaRepository;
-import com.example.publicacionesApi.Model.Usuario;
-import com.example.publicacionesApi.Repository.UsuarioRepository;
+import com.example.publicacionesApi.RestClient.UsuarioRestClient;
+import com.example.publicacionesApi.RestClientDTO.UsuarioExternoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ public class RespuestaReseniaMapper {
     private ReseniaRepository reseniaRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioRestClient usuarioRestClient;
 
     public RespuestaResenia toEntity(crearRespuestaReseniaDTO dto) {
         if (dto == null) {
@@ -71,12 +71,13 @@ public class RespuestaReseniaMapper {
         }
         
         // Buscar el nombre y foto del autor de la respuesta
-        Usuario autor = usuarioRepository.findById(respuesta.getIdAutorRes()).orElse(null);
-        if (autor != null) {
-            dto.setNombreDelAutor(autor.getPNombre() + " " + autor.getPApellido());
+        try {
+            UsuarioExternoDTO autor = usuarioRestClient.obtenerUsuarioPorId(respuesta.getIdAutorRes());
+            dto.setNombreDelAutor(autor.getPrimerNombre() + " " + autor.getPrimerApellido());
             dto.setFotoAutor(autor.getFoto());
-        } else {
+        } catch (Exception e) {
             dto.setNombreDelAutor("Usuario no encontrado");
+            dto.setFotoAutor(null);
         }
         
         dto.setTextoRespuestaResenia(respuesta.getTextoRespuestaResenia());
