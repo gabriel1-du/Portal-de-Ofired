@@ -1,12 +1,12 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import PaginaHome from './pantallas/PaginaHome'; // Importa tu componente de la página
-import Home from './pantallas/Home'; // Importa el componente renombrado (antes Login)
-import FormularioCrearUsuarioCliente from './pantallas/Formularios/FormularioCrearUsuarioCliente'; // Importa el nuevo formulario
-import IniciarSesion from './pantallas/Formularios/IniciarSesion'; // Importa el nuevo formulario de inicio de sesión
-import FormularioCrearUsuarioOficio from './pantallas/Formularios/FormularioCrearUsuarioOficio';
-import FormularioCreacionDePerfilUsuario from './pantallas/Formularios/FormularioCreacionDePerfilUsuario';
+import PaginaHome from './pantallas/PaginaPrincipal'; // Importa tu componente de la página
+import Home from './pantallas/home'; // Importa el componente renombrado (antes Login)
+import FormularioCrearUsuarioCliente from './pantallas/Formularios/FomulariosHome/FormularioCrearUsuarioCliente'; // Importa el nuevo formulario
+import IniciarSesion from './pantallas/Formularios/FomulariosHome/IniciarSesion'; // Importa el nuevo formulario de inicio de sesión
+import FormularioCrearUsuarioOficio from './pantallas/Formularios/FomulariosHome/FormularioCrearUsuarioOficio';
+import FormularioCreacionDePerfilUsuario from './pantallas/FormularioCreacionDePerfilUsuario';
 import ResultadosBusqueda from './pantallas/ResultadosBusqueda'; // Importamos la nueva página de resultados
 import PerfilPantalla from './pantallas/PerfilPantalla'; // Importamos la pantalla de perfil
 import ModificarPerfilUsuario from './pantallas/Formularios/ModificarPerfilUsuario';

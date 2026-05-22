@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import '../style/home.css';
+import '../style/paginaPrincipal.css';
 import PublicacionCard from '../assets/PublicacionesCard.jsx'; 
 import BarraBusqueda from '../assets/barraBusqueda.jsx';
-import { AuthContext } from '../context/AuthContext'; // CORREGIDO: Subimos solo un nivel
+import { AuthContext } from '../context/AuthContext.jsx'; // CORREGIDO: Subimos solo un nivel
 
 function PaginaHome() {
   // Estado para guardar la lista de publicaciones que vengan del backend

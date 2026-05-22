@@ -3,7 +3,7 @@ import React, { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
-import '../style/login.css';
+import '../style/home.css';
 
 
 function Home() {
@@ -21,15 +21,17 @@ function Home() {
   if (token || usuario) return null;
   
   return (
-    <div className="login-container">
-      <h1>Bienvenido a Ofired</h1>
-      <p>Un espacio para que tecnicos y profesionales compartan sus servicios y conocimientos</p>
-      <div className="button-container">
-        <button className="button-style" onClick={() => navigate('/iniciar-sesion')}>Iniciar Sesión</button>
-        <button className="button-style" onClick={() => navigate('/crear-cuentOfi')}>Crear cuenta con Oficio</button>
-        <button className="button-style" onClick={() => navigate('/crear-cuenta')}>Crear cuenta como cliente</button>
+    <div className="home-container">
+      <h1 className="home-title">Bienvenido a Ofired</h1>
+      <p className="home-subtitle">Un espacio para que técnicos y profesionales compartan sus servicios y conocimientos</p>
+      
+      <div className="home-buttons-wrapper">
+        <button className="home-btn" onClick={() => navigate('/iniciar-sesion')}>Iniciar Sesión</button>
+        <button className="home-btn" onClick={() => navigate('/crear-cuentOfi')}>Crear cuenta con Oficio</button>
+        <button className="home-btn" onClick={() => navigate('/crear-cuenta')}>Crear cuenta como cliente</button>
       </div>
     </div>
+    
   );
 }
 

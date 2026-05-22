@@ -4,6 +4,8 @@ import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'; // Importa AuthProvider
 import { FormularioProvider } from './context/FormularioContext.jsx'; // 1. Importa el nuevo Provider
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
