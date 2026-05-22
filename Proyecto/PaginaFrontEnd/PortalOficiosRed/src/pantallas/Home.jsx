@@ -1,13 +1,24 @@
 
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { AuthContext } from '../context/AuthContext';
 
 import '../style/login.css';
 
 
-function Login() {
+function Home() {
   const navigate = useNavigate();
+  const { token, usuario } = useContext(AuthContext);
+
+  useEffect(() => {
+    // Si hay un token o datos de usuario, significa que ya tiene sesión iniciada.
+    if (token || usuario) {
+      navigate('/home'); // Lo redirigimos a PaginaHome.jsx
+    }
+  }, [token, usuario, navigate]);
+
+  // Evitamos renderizar la pantalla si el usuario ya está siendo redirigido
+  if (token || usuario) return null;
   
   return (
     <div className="login-container">
@@ -22,4 +33,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Home;

@@ -73,12 +73,12 @@ public class PerfilesProxyController {
                 return r;
             });
     
-            // POST y PUT requieren rol "user"
+            // POST y PUT requieren rol "user" o "admin"
             if (method == HttpMethod.POST || method == HttpMethod.PUT) {
-                if (!"user".equalsIgnoreCase(rol)) {
+                if (!"user".equalsIgnoreCase(rol) && !"admin".equalsIgnoreCase(rol)) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .body("{\"error\": \"Operación restringida a usuarios.\"}");
+                            .body("{\"error\": \"Operación restringida a usuarios o administradores.\"}");
                 }
             }
 

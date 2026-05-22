@@ -1,12 +1,13 @@
 import { createContext, useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    // Al iniciar, intentamos leer tanto el token como los datos del usuario desde localStorage.
-    const [token, setToken] = useState(localStorage.getItem('token') || null);
+    // Al iniciar, intentamos leer tanto el token como los datos del usuario desde las cookies.
+    const [token, setToken] = useState(Cookies.get('token') || null);
     const [usuario, setUsuario] = useState(() => {
-        const usuarioGuardado = localStorage.getItem('usuario');
+        const usuarioGuardado = Cookies.get('usuario');
         try {
             // Solución Defensiva: Solo parseamos si el dato guardado es válido y no es la cadena "undefined".
             if (usuarioGuardado && usuarioGuardado !== 'undefined') {
@@ -14,7 +15,7 @@ export const AuthProvider = ({ children }) => {
             }
             return null;
         } catch (error) {
-            console.error("Error al parsear datos de usuario desde localStorage", error);
+            console.error("Error al parsear datos de usuario desde las cookies", error);
             return null;
         }
     });
@@ -23,11 +24,11 @@ export const AuthProvider = ({ children }) => {
     const iniciarSesion = (nuevoToken, datosUsuario) => {
         setToken(nuevoToken);
         setUsuario(datosUsuario);
-        // Guardamos tanto el token como el objeto de usuario (convertido a string)
-        localStorage.setItem('token', nuevoToken);
-        // Solución Preventiva: Nos aseguramos de no guardar 'undefined' en localStorage.
+        // Guardamos tanto el token como el objeto de usuario en cookies, con expiración de 2 días
+        Cookies.set('token', nuevoToken, { expires: 2 });
+        // Solución Preventiva: Nos aseguramos de no guardar 'undefined' en las cookies.
         if (datosUsuario) {
-            localStorage.setItem('usuario', JSON.stringify(datosUsuario));
+            Cookies.set('usuario', JSON.stringify(datosUsuario), { expires: 2 });
         }
     };
 
@@ -35,9 +36,9 @@ export const AuthProvider = ({ children }) => {
     const cerrarSesion = () => {
         setToken(null);
         setUsuario(null);
-        // Limpiamos ambos datos del localStorage
-        localStorage.removeItem('token');
-        localStorage.removeItem('usuario');
+        // Limpiamos ambos datos de las cookies
+        Cookies.remove('token');
+        Cookies.remove('usuario');
     };
 
     return (

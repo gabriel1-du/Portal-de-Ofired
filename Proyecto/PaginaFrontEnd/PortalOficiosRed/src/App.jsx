@@ -2,7 +2,7 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import PaginaHome from './pantallas/PaginaHome'; // Importa tu componente de la página
-import Login from './pantallas/Login'; // Importa tu componente de Login
+import Home from './pantallas/Home'; // Importa el componente renombrado (antes Login)
 import FormularioCrearUsuarioCliente from './pantallas/Formularios/FormularioCrearUsuarioCliente'; // Importa el nuevo formulario
 import IniciarSesion from './pantallas/Formularios/IniciarSesion'; // Importa el nuevo formulario de inicio de sesión
 import FormularioCrearUsuarioOficio from './pantallas/Formularios/FormularioCrearUsuarioOficio';
@@ -33,7 +33,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Home />} />
           <Route path="/home" element={<PaginaHome />} />
           <Route path="/crear-cuenta" element={<FormularioCrearUsuarioCliente />} />
           <Route path="/crear-perfil" element={<FormularioCreacionDePerfilUsuario />} />
