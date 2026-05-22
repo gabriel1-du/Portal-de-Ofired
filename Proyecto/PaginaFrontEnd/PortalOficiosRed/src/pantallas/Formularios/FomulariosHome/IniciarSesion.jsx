@@ -3,7 +3,7 @@ import { login } from '../../../servicios/authService'; // Importa la función d
 import { AuthContext } from '../../../context/AuthContext'; // Importa el contexto de autenticación
 import { jwtDecode } from 'jwt-decode'; // 1. Importamos la librería para decodificar el token
 import { useNavigate } from 'react-router-dom';
-import '../../../style/formularios/fomulariosHome/inicioSesion.css'; // Reutilizamos el CSS del Home para mantener el mismo estilo visual
+import '../../../style/home.css'; // Reutilizamos el CSS del Home para mantener el mismo estilo visual
 
 function IniciarSesion() {
   const [email, setEmail] = useState('');

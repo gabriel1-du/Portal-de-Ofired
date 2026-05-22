@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import BarraBusqueda from '../assets/barraBusqueda.jsx';
 import UsuarioCard from '../assets/UsuarioCard.jsx';
 import PublicacionCard from '../assets/PublicacionesCard.jsx';
 import { buscarUsuariosConFiltros } from '../servicios/busquedaUsuarios.js';
 import { buscarPublicacionesConFiltros } from '../servicios/busquedaPublicaciones.js';
 import { getPublicacionesByNombre } from '../servicios/publicacionesService.js';
+import { buscarUsuariosPorNombre } from '../servicios/usuariosService.js';
 import '../style/ResultadosBusqueda.css';
 
 function ResultadosBusqueda() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [resultados, setResultados] = useState([]);
   const [tipoResultado, setTipoResultado] = useState('');
   const [cargando, setCargando] = useState(true);
@@ -24,15 +26,19 @@ function ResultadosBusqueda() {
       const tipo = searchParams.get('tipo');
       const query = searchParams.get('q');
       
-      // Determina el tipo de resultado a mostrar, por defecto 'usuario' si no se especifica.
-      setTipoResultado(tipo || 'usuario');
+      // Determina el tipo de resultado a mostrar, por defecto 'usuario'.
+      const tipoSeleccionado = tipo || 'usuario';
+      setTipoResultado(tipoSeleccionado);
 
       try {
         let data;
         // Si hay un parámetro 'q', es una búsqueda por texto.
         if (query) {
-          data = await getPublicacionesByNombre(query);
-          setTipoResultado('oficio'); // La búsqueda por texto es para oficios/publicaciones
+          if (tipoSeleccionado === 'usuario') {
+            data = await buscarUsuariosPorNombre(query);
+          } else {
+            data = await getPublicacionesByNombre(query);
+          }
         } else {
           // Si no, es una búsqueda por filtros.
           const filtros = {
@@ -43,9 +49,9 @@ function ResultadosBusqueda() {
           // Limpia los filtros que no tienen valor.
           Object.keys(filtros).forEach(key => (filtros[key] === null || filtros[key] === '') && delete filtros[key]);
 
-          if (tipo === 'usuario') {
+          if (tipoSeleccionado === 'usuario') {
             data = await buscarUsuariosConFiltros(filtros);
-          } else if (tipo === 'oficio') {
+          } else if (tipoSeleccionado === 'oficio') {
             data = await buscarPublicacionesConFiltros(filtros);
           } else {
             // Si no hay tipo, podríamos no buscar nada o tener un default.
@@ -70,6 +76,13 @@ function ResultadosBusqueda() {
     ejecutarBusqueda();
   }, [searchParams]); // El efecto se ejecuta cada vez que los parámetros de la URL cambian.
 
+  // Permite alternar entre buscar Usuarios y Publicaciones sin recargar la página entera
+  const cambiarTipo = (nuevoTipo) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('tipo', nuevoTipo);
+    navigate(`/resultados?${params.toString()}`);
+  };
+
   const renderResultados = () => {
     if (cargando) return <p>Buscando...</p>;
     if (error) return <p className="error-mensaje">Error: {error}</p>;
@@ -92,8 +105,8 @@ function ResultadosBusqueda() {
 
       <div className="container mt-4">
         <div className="botones-tipo-resultado">
-          <button className={`btn-tipo ${tipoResultado === 'usuario' ? 'activo' : ''}`}>Usuarios</button>
-          <button className={`btn-tipo ${tipoResultado === 'oficio' ? 'activo' : ''}`}>Publicaciones</button>
+          <button className={`btn-tipo ${tipoResultado === 'usuario' ? 'activo' : ''}`} onClick={() => cambiarTipo('usuario')}>Usuarios</button>
+          <button className={`btn-tipo ${tipoResultado === 'oficio' ? 'activo' : ''}`} onClick={() => cambiarTipo('oficio')}>Publicaciones</button>
         </div>
 
         <div className="resultados-contenedor">
@@ -105,4 +118,3 @@ function ResultadosBusqueda() {
 }
 
 export default ResultadosBusqueda;
-

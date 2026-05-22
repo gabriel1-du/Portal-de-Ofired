@@ -39,6 +39,24 @@ export const leerTodosLosUsuarios = async () => {
   }
 };
 
+// Función para buscar usuarios por nombre
+export const buscarUsuariosPorNombre = async (nombre) => {
+  try {
+    // Usamos encodeURIComponent para asegurar que caracteres especiales en el nombre no rompan la URL
+    const url = `${API_URL_USUARIOS}/buscar/por-nombre/${encodeURIComponent(nombre)}`;
+    console.log("Llamando a la API de Usuarios (GET por nombre):", url);
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.error(`Error en la respuesta de la red (GET por nombre ${nombre}):`, response.status, response.statusText);
+      throw new Error(`Error al buscar usuarios por nombre.`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error al buscar usuarios por nombre ${nombre}:`, error);
+    throw error;
+  }
+};
+
 //funcion para crear un nuevo usuario cliente en la base de datos a través de la API Gateway
 export const crearUsuarioCliente = async (datosUsuario) => {
   try {
