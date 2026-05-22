@@ -14,14 +14,20 @@ public class Comentario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_comentario")
-    // CORRECCIÓN: Lo pasamos a Integer para que no choque con las llaves foráneas en MySQL
     private Integer idComentario; 
 
     @Column(name = "id_publicacion", nullable = false)
     private Integer idPublicacion; 
 
+    // 👇 Esto lo dejamos tal cual para que el POST (guardar) no se rompa
     @Column(name = "id_usuario", nullable = false)
     private Integer idUsuario; 
+
+    // 🌟 EL TRUCO: Agregamos la relación de solo lectura para el GET
+    // (insertable y updatable en false evitan que choque con la variable de arriba)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_usuario", insertable = false, updatable = false)
+    private Usuario usuario; 
 
     @Column(name = "contenido", nullable = false, columnDefinition = "TEXT")
     private String contenido;
