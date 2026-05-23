@@ -1,0 +1,33 @@
+/* =========================================
+   ESTILOS DE LA BARRA DE BÚSQUEDA (NAVBAR)
+   ========================================= */
+
+/* Color de fondo para el contenedor principal de la barra de navegación */
+.navbar-principal {
+    background-color: #f3961c;
+}
+
+/* Estilo para el enlace del logo (hace que el cursor sea una manito indicando que es clickeable) */
+.navbar-logo-link {
+    cursor: pointer;
+}
+
+/* Tamaño y posicionamiento del menú desplegable flotante de filtros */
+.navbar-filtros-dropdown {
+    top: 100%;
+    left: 0;
+    width: 320px;
+    z-index: 1050;
+}
+
+/* Ancho máximo de la barra de búsqueda central para que no se estire demasiado en pantallas gigantes */
+.navbar-formulario-busqueda {
+    max-width: 800px;
+}
+
+/* Dimensiones exactas y tamaño de fuente del botón redondo del menú de usuario */
+.navbar-btn-usuario {
+    width: 55px;
+    height: 55px;
+    font-size: 1.5rem;
+}

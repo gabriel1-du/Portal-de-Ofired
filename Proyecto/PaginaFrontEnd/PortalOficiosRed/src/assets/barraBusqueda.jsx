@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../style/home.css';
+import '../style/assets/barraBusqueda.css'; // Importamos el CSS específico de la barra de búsqueda
 import { getAllRegions } from '../servicios/regionService';
 import { getAllComunas } from '../servicios/comunasService';
 import BarraLateral from './BarraLateral'; // 1. Importamos la nueva barra lateral
+import logoOfired from './imagenes/imagenIcono.png'; // Importamos el logo de la aplicación
 
 function BarraBusqueda() {
   const navigate = useNavigate();
@@ -95,110 +97,135 @@ function BarraBusqueda() {
   }, [regionSeleccionada, comunas]); // Se ejecuta si cambia la región o las comunas
 
   return (
-    <nav className="navbar-busqueda">
-      
-      {/* Lado Izquierdo: Botón de Filtros y Dropdown */}
-      <div className="contenedor-dropdown">
-        <button
-          className="btn-filtro"
-          type="button"
-          onClick={() => setFiltrosAbiertos(!filtrosAbiertos)}
-        >
-          <span className="filtro-icono">⚙️</span> Filtros
+    <nav 
+      /* La clase "py-3" (padding vertical) en la siguiente línea es la que define el mayor largo/alto del navbar */
+      className="navbar navbar-expand-md sticky-top shadow-sm px-3 py-3 navbar-principal" 
+    >
+      <div className="container-fluid">
+        
+        {/* Lado Izquierdo: LOGO Y NOMBRE */}
+        <a className="navbar-brand d-flex align-items-center navbar-logo-link" onClick={() => navigate('/home')}>
+          <img src={logoOfired} alt="Logo Ofired" width="45" height="45" className="me-2 rounded-circle shadow-sm bg-white p-1" />
+          <span className="fw-bold text-dark fs-4">Ofired</span>
+        </a>
+
+        {/* Botón Toggler para dispositivos móviles (Menú hamburguesa) */}
+        <button className="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContenido" aria-controls="navbarContenido" aria-expanded="false" aria-label="Alternar navegación">
+          <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Recuadro de Filtros - Solo se renderiza si filtrosAbiertos es true */}
-        {filtrosAbiertos && (
-          <div className="filtro-recuadro-flotante shadow">
-            <h6 className="titulo-filtro">Opciones de Filtro</h6>
-            <form>
-              <div className="grupo-input">
-                <label>Región</label>
-                <select className="input-estilo" value={regionSeleccionada} onChange={handleRegionChange}>
-                  <option value="">Selecciona una región</option>
-                  {regiones.map((region) => (
-                    <option key={region.idRegion} value={region.idRegion}>
-                      {region.nombreRegion}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              
-              <div className="grupo-input">
-                <label>Comuna</label>
-                <select 
-                  className="input-estilo" 
-                  value={comunaSeleccionada} 
-                  onChange={handleComunaChange}
-                  disabled={!regionSeleccionada}
-                >
-                  <option value="">Selecciona una comuna</option>
-                  {comunasFiltradas.map((comuna) => (
-                    <option key={comuna.idComuna} value={comuna.idComuna}>
-                      {comuna.nombreComuna}
-                    </option>
-                  ))}
-                </select>
-              </div>
+        <div className="collapse navbar-collapse" id="navbarContenido">
+          
+          {/* Contenedor centralizado para poner Filtros y Búsqueda juntos */}
+          <div className="d-flex flex-column flex-md-row justify-content-center align-items-center flex-grow-1 gap-2 mx-md-4 mt-3 mt-md-0">
+            
+            {/* Botón de Filtros y Dropdown */}
+            <div className="position-relative">
+              <button
+                className="btn btn-light rounded-pill shadow-sm fw-bold px-4 py-3 fs-5 d-flex align-items-center gap-2"
+                type="button"
+                onClick={() => setFiltrosAbiertos(!filtrosAbiertos)}
+              >
+              <span>⚙️</span> Filtros
+            </button>
 
-              <div className="grupo-input">
-                <label>Tipo de Contenido</label>
-                <select 
-                  className="input-estilo" 
-                  value={tipoContenido} 
-                  onChange={(e) => setTipoContenido(e.target.value)}
-                >
-                  <option value="">Selecciona el tipo</option>
-                  <option value="oficio">Oficio / Servicio</option>
-                  <option value="usuario">Usuario / Cliente</option>
-                </select>
-              </div>
+            {/* Recuadro de Filtros estilo Bootstrap */}
+            {filtrosAbiertos && (
+              <div className="position-absolute bg-white shadow-lg p-4 rounded-4 border mt-2 navbar-filtros-dropdown">
+                <h6 className="fw-bold mb-3 border-bottom pb-2">Opciones de Filtro</h6>
+                <form>
+                  <div className="mb-3 text-start">
+                    <label className="form-label text-dark fw-semibold small mb-1">Región</label>
+                    <select className="form-select shadow-sm" value={regionSeleccionada} onChange={handleRegionChange}>
+                      <option value="">Selecciona una región</option>
+                      {regiones.map((region) => (
+                        <option key={region.idRegion} value={region.idRegion}>
+                          {region.nombreRegion}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div className="mb-3 text-start">
+                    <label className="form-label text-dark fw-semibold small mb-1">Comuna</label>
+                    <select 
+                      className="form-select shadow-sm" 
+                      value={comunaSeleccionada} 
+                      onChange={handleComunaChange}
+                      disabled={!regionSeleccionada}
+                    >
+                      <option value="">Selecciona una comuna</option>
+                      {comunasFiltradas.map((comuna) => (
+                        <option key={comuna.idComuna} value={comuna.idComuna}>
+                          {comuna.nombreComuna}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="grupo-input">
-                <label>Desde (Fecha)</label>
-                <input 
-                  type="date" 
-                  className="input-estilo" 
-                  value={fechaDesde} 
-                  onChange={(e) => setFechaDesde(e.target.value)} 
-                />
+                  <div className="mb-3 text-start">
+                    <label className="form-label text-dark fw-semibold small mb-1">Tipo de Contenido</label>
+                    <select 
+                      className="form-select shadow-sm" 
+                      value={tipoContenido} 
+                      onChange={(e) => setTipoContenido(e.target.value)}
+                    >
+                      <option value="">Selecciona el tipo</option>
+                      <option value="oficio">Oficio / Servicio</option>
+                      <option value="usuario">Usuario / Cliente</option>
+                    </select>
+                  </div>
+
+                  <div className="mb-3 text-start">
+                    <label className="form-label text-dark fw-semibold small mb-1">Desde (Fecha)</label>
+                    <input 
+                      type="date" 
+                      className="form-control shadow-sm" 
+                      value={fechaDesde} 
+                      onChange={(e) => setFechaDesde(e.target.value)} 
+                    />
+                  </div>
+                  
+                  <button type="button" className="btn btn-primary w-100 shadow-sm mt-2 fw-bold" onClick={handleAplicarFiltros}>Aplicar Filtros</button>
+                </form>
               </div>
-              
-              <button type="button" className="btn-aplicar-filtros" onClick={handleAplicarFiltros}>Aplicar Filtros</button>
+            )}
+          </div>
+
+            {/* Barra de Búsqueda con Lupa */}
+            <form className="d-flex w-100 my-2 my-md-0 navbar-formulario-busqueda" onSubmit={manejarBusqueda}>
+              <div className="input-group input-group-lg shadow rounded-pill overflow-hidden border bg-white w-100">
+              <input
+                className="form-control border-0 px-4 py-3 shadow-none fs-5"
+                type="search"
+                placeholder="Buscar oficios, profesionales, servicios..."
+                aria-label="Buscar"
+                value={textoBusqueda}
+                onChange={(e) => setTextoBusqueda(e.target.value)}
+              />
+              <button className="btn btn-light border-0 px-4 bg-white text-secondary" type="submit" title="Buscar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+              </button>
+              </div>
             </form>
           </div>
-        )}
+
+          {/* Lado Derecho: Botón para abrir la barra lateral */}
+          <div className="d-flex ms-md-auto align-items-center mt-2 mt-md-0 pb-2 pb-md-0">
+            <button 
+              className="btn btn-light rounded-circle shadow d-flex justify-content-center align-items-center navbar-btn-usuario" 
+              onClick={() => setSidebarAbierto(true)}
+              title="Menú de usuario"
+            >
+              👤
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Centro/Derecha: Barra de Búsqueda con Lupa */}
-      <form className="contenedor-busqueda" onSubmit={manejarBusqueda}>
-        <input
-          className="input-busqueda"
-          type="search"
-          placeholder="Buscar oficios, profesionales, servicios..."
-          aria-label="Buscar"
-          value={textoBusqueda}
-          onChange={(e) => setTextoBusqueda(e.target.value)}
-        />
-        <button className="btn-lupa" type="submit" title="Buscar">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-          </svg>
-        </button>
-      </form>
-
-      {/* Lado Derecho: Botón para abrir la barra lateral */}
-      <div className="contenedor-usuario">
-        <button 
-          className="btn-usuario" 
-          onClick={() => setSidebarAbierto(true)}
-          title="Menú de usuario"
-        >
-          👤
-        </button>
-      </div>
-
-      {/* 3. El componente de la barra lateral que usa el Portal */}
+      {/* El componente de la barra lateral que usa el Portal */}
       <BarraLateral abierta={sidebarAbierto} alCerrar={() => setSidebarAbierto(false)} />
     </nav>
   );

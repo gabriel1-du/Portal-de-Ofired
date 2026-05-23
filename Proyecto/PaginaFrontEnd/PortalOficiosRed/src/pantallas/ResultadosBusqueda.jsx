@@ -33,7 +33,7 @@ function ResultadosBusqueda() {
       try {
         let data;
         // Si hay un parámetro 'q', es una búsqueda por texto.
-        if (query) {
+        if (query) { 
           if (tipoSeleccionado === 'usuario') {
             data = await buscarUsuariosPorNombre(query);
           } else {
@@ -63,7 +63,7 @@ function ResultadosBusqueda() {
         if (Array.isArray(data)) {
           setResultados(data);
         } else {
-          throw new Error('La búsqueda no devolvió un formato de resultados válido.');
+          throw new Error('Error en la busqueda');
         }
       } catch (err) {
         console.error("Error al ejecutar la búsqueda:", err);
@@ -85,7 +85,13 @@ function ResultadosBusqueda() {
 
   const renderResultados = () => {
     if (cargando) return <p>Buscando...</p>;
-    if (error) return <p className="error-mensaje">Error: {error}</p>;
+    if (error) return (
+      <div className="error-mensaje">
+        <h4>¡Ups! Algo salió mal con la búsqueda </h4>
+        <p>Por favor, intenta buscar con otros términos o recarga la página más tarde.</p>
+        <small>(Detalle técnico: {error})</small>
+      </div>
+    );
     if (resultados.length === 0) return <p>No se encontraron resultados para tu búsqueda.</p>;
 
     const resultadosAMostrar = resultados.slice(0, 5);
