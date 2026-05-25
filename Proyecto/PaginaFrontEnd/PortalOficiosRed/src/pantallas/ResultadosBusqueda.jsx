@@ -44,6 +44,7 @@ function ResultadosBusqueda() {
           const filtros = {
             idRegion: searchParams.get('idRegion'),
             idComuna: searchParams.get('idComuna'),
+            idOficio: searchParams.get('idOficio'), // Extraemos el nuevo filtro de oficio
             fecha: searchParams.get('fecha'),
           };
           // Limpia los filtros que no tienen valor.

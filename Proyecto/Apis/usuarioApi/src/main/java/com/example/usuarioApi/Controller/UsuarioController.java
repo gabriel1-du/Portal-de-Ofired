@@ -91,15 +91,18 @@ public class UsuarioController {
     }
    
     // --- Endpoint de Búsqueda con Filtros ---
-    // Permite filtrar por cualquier combinación de región, comuna y fecha de creación (desde la fecha indicada).
+    // Permite filtrar por cualquier combinación de región, comuna, oficio y fecha de creación (desde la fecha indicada).
     // Ejemplos de petición:
     // GET http://localhost:8080/api/usuariosApi/buscar/filtrado?idRegion=13
     // GET http://localhost:8080/api/usuariosApi/buscar/filtrado?idRegion=13&idComuna=101
+    // GET http://localhost:8080/api/usuariosApi/buscar/filtrado?idOficio=5
     // GET http://localhost:8080/api/usuariosApi/buscar/filtrado?fecha=2024-01-20 10:30:00
+    // GET http://localhost:8080/api/usuariosApi/buscar/filtrado?idRegion=13&idComuna=101&idOficio=5&fecha=2024-01-20 10:30:00
     @GetMapping("/buscar/filtrado")
     public ResponseEntity<List<leerUsuarioDTO>> buscarConFiltros(
             @RequestParam(required = false) Integer idRegion,
             @RequestParam(required = false) Integer idComuna,
+            @RequestParam(required = false) Integer idOficio,
             // 1. Recibes exactamente lo que manda React: "2026-03-13"
             @RequestParam(required = false) String fecha) {
 
@@ -111,7 +114,7 @@ public class UsuarioController {
             fechaParaServicio = Timestamp.valueOf(fechaConHora);
         }
 
-        List<leerUsuarioDTO> usuarios = usuarioService.buscarConFiltros(idRegion, idComuna, fechaParaServicio);
+        List<leerUsuarioDTO> usuarios = usuarioService.buscarConFiltros(idRegion, idComuna, idOficio, fechaParaServicio);
         
         return ResponseEntity.ok(usuarios);
     }

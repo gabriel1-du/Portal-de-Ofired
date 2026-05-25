@@ -325,8 +325,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<leerUsuarioDTO> buscarConFiltros(Integer idRegion, Integer idComuna, Timestamp fecha) {
-        List<Usuario> usuarios = usuarioRepository.findByFiltros(idRegion, idComuna, fecha);
+    public List<leerUsuarioDTO> buscarConFiltros(Integer idRegion, Integer idComuna, Integer idOficio, Timestamp fecha) {
+        List<Usuario> usuarios = usuarioRepository.findByFiltros(idRegion, idComuna, idOficio, fecha);
         return usuarios.stream()
                 .map(readMapper::mapUsuarioToLeerUsuarioDTO)
                 .collect(Collectors.toList());

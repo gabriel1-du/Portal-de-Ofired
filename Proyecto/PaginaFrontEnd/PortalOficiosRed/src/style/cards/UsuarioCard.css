@@ -1,94 +1,16 @@
 /* El "Ancla" de la carta: Aquí bloqueamos todo */
 .card-fixed-wrapper {
-  width: 350px;
-  height: 100px;
-  margin-bottom: 16px;
-  flex-shrink: 0; /* Prohibido encogerse */
-  flex-grow: 0;   /* Prohibido crecer */
+  width: 100%;
+  max-width: 600px; /* Un poco más ancha para evitar colisiones de texto */
+  min-height: 150px; /* Más alta para dar espacio a la nueva imagen */
+  margin: 0 auto; /* Asegura que la tarjeta se centre si el contenedor es muy grande */
 }
 
-.usuario-card {
-  display: flex;
-  align-items: center;
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 12px;
-  height: 100%;
-  box-sizing: border-box;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  overflow: hidden; /* Nada sale de aquí */
-}
-
-
-
-.usuario-card-img-container {
-  width: 65px;
-  height: 65px;
-  min-width: 65px; /* Bloqueo de ancho */
-  min-height: 65px; /* Bloqueo de alto */
-  flex-shrink: 0; /* Evita que flexbox lo aplaste */
-  border-radius: 50%;
-  border: 2px solid #f3961c;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Imagen redonda y con borde del proyecto */
+.usuario-card-img {
+  width: 110px; /* Imagen notablemente más grande */
+  height: 110px;
+  object-fit: cover;
+  border: 3px solid #f3961c; /* Borde sutilmente más grueso para acompañar el tamaño */
   background-color: #f0f0f0;
-}
-
-.usuario-card-img-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Recorta la foto para que siempre llene el círculo sin deformarse */
-}
-
-/* El Cuerpo: Aquí ocurre la magia del recorte */
-.usuario-card-body {
-  flex: 1;      /* Ocupa todo el espacio restante... */
-  min-width: 0; /* ...pero permite que el texto se corte */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* Clase utilitaria para cortar texto con "..." */
-.text-truncate {
-  display: block;
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 0;
-}
-
-.usuario-card-body h4 {
-  font-size: 1rem;
-  color: #333;
-  font-weight: 700;
-  margin-bottom: 2px;
-}
-
-.oficio {
-  font-size: 0.85rem;
-  color: #666;
-  margin-bottom: 4px;
-}
-
-.btn-ver-perfil {
-  align-self: flex-start; /* Alinea el botón a la izquierda del contenedor flex */
-  margin-top: 4px;
-  padding: 4px 12px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #f3961c; /* Naranja principal */
-  border: none;
-  border-radius: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-ver-perfil:hover {
-  background-color: #d88315; /* Naranja un poco más oscuro */
 }

@@ -4,6 +4,7 @@ import '../style/home.css';
 import '../style/assets/barraBusqueda.css'; // Importamos el CSS específico de la barra de búsqueda
 import { getAllRegions } from '../servicios/ApiUsuarios/TablasCategorias/regionService';
 import { getAllComunas } from '../servicios/ApiUsuarios/TablasCategorias/comunasService';
+import { getAllOficios } from '../servicios/ApiUsuarios/TablasCategorias/oficioService'; // Importamos el servicio de oficios
 import BarraLateral from './barrasLaterales/BarraLateral'; // 1. Importamos la nueva barra lateral
 import logoOfired from './imagenes/imagenIcono.png'; // Importamos el logo de la aplicación
 
@@ -21,10 +22,12 @@ function BarraBusqueda() {
   const [regiones, setRegiones] = useState([]);
   const [comunas, setComunas] = useState([]);
   const [comunasFiltradas, setComunasFiltradas] = useState([]);
+  const [oficios, setOficios] = useState([]); // Nuevo estado para los oficios
 
   // --- ESTADOS PARA LA SELECCIÓN DEL USUARIO ---
   const [regionSeleccionada, setRegionSeleccionada] = useState('');
   const [comunaSeleccionada, setComunaSeleccionada] = useState('');
+  const [oficioSeleccionado, setOficioSeleccionado] = useState(''); // Nuevo estado para la selección
   const [tipoContenido, setTipoContenido] = useState('');
   const [fechaDesde, setFechaDesde] = useState('');
 
@@ -59,6 +62,7 @@ function BarraBusqueda() {
     if (tipoContenido) params.append('tipo', tipoContenido);//Se añade el tipo de contenido seleccionado al url
     if (regionSeleccionada) params.append('idRegion', regionSeleccionada); //Se añade la región seleccionada al url
     if (comunaSeleccionada) params.append('idComuna', comunaSeleccionada); //Se añade la comuna seleccionada al url
+    if (oficioSeleccionado) params.append('idOficio', oficioSeleccionado); // Se añade el oficio al url
     if (fechaDesde) params.append('fecha', fechaDesde); //Se añade la fecha seleccionada al url
 
     // Navegamos a la página de resultados con los filtros como query params
@@ -70,13 +74,15 @@ function BarraBusqueda() {
   useEffect(() => {
     const cargarDatosFiltros = async () => {
       try {
-        // Peticiones en paralelo para eficiencia
-        const [regionesData, comunasData] = await Promise.all([
+        // Peticiones en paralelo (Regiones, Comunas y Oficios) para eficiencia
+        const [regionesData, comunasData, oficiosData] = await Promise.all([
           getAllRegions(),
-          getAllComunas()
+          getAllComunas(),
+          getAllOficios()
         ]);
         if (Array.isArray(regionesData)) setRegiones(regionesData);
         if (Array.isArray(comunasData)) setComunas(comunasData);
+        if (Array.isArray(oficiosData)) setOficios(oficiosData);
       } catch (error) {
         console.error("Error al cargar datos para filtros:", error);
       }
@@ -158,6 +164,22 @@ function BarraBusqueda() {
                       {comunasFiltradas.map((comuna) => (
                         <option key={comuna.idComuna} value={comuna.idComuna}>
                           {comuna.nombreComuna}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="mb-3 text-start">
+                    <label className="form-label text-dark fw-semibold small mb-1">Oficio</label>
+                    <select 
+                      className="form-select shadow-sm" 
+                      value={oficioSeleccionado} 
+                      onChange={(e) => setOficioSeleccionado(e.target.value)}
+                    >
+                      <option value="">Selecciona un oficio</option>
+                      {oficios.map((oficio) => (
+                        <option key={oficio.idOficio} value={oficio.idOficio}>
+                          {oficio.nombreOficio}
                         </option>
                       ))}
                     </select>

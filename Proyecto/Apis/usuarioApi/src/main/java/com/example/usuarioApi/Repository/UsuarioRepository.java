@@ -36,11 +36,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findByFechaCreacionLessThan(Timestamp fechaCreacion);
 
     //Metodo para busqueda con filtros
-    @Query("SELECT u FROM Usuario u WHERE " +
-           "(:idRegion IS NULL OR u.region.idRegion = :idRegion) AND " +
-           "(:idComuna IS NULL OR u.comuna.idComuna = :idComuna) AND " +
-           "(:fecha IS NULL OR u.fechaCreacion >= :fecha)")
-    List<Usuario> findByFiltros(@Param("idRegion") Integer idRegion,
-                                @Param("idComuna") Integer idComuna,
-                                @Param("fecha") Timestamp fecha);
+    @Query("SELECT u FROM Usuario u WHERE (:idRegion IS NULL OR u.region.idRegion = :idRegion) " +
+       "AND (:idComuna IS NULL OR u.comuna.idComuna = :idComuna) " +
+       "AND (:idOficio IS NULL OR u.oficio.idOficio = :idOficio) " +
+       "AND (:fecha IS NULL OR u.fechaCreacion >= :fecha)")
+       List<Usuario> findByFiltros(@Param("idRegion") Integer idRegion, 
+                                   @Param("idComuna") Integer idComuna, 
+                                   @Param("idOficio") Integer idOficio, 
+                                   @Param("fecha") Timestamp fecha);
 }

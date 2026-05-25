@@ -8,6 +8,7 @@ export const buscarUsuariosConFiltros = async (filtros) => {
   const params = new URLSearchParams();
   if (filtros.idRegion) params.append('idRegion', filtros.idRegion);
   if (filtros.idComuna) params.append('idComuna', filtros.idComuna);
+  if (filtros.idOficio) params.append('idOficio', filtros.idOficio); // Se agrega el oficio a la petición
   if (filtros.fecha) params.append('fecha', filtros.fecha);
   const queryString = params.toString();
 
