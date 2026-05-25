@@ -1,5 +1,5 @@
 import React from 'react';
-import '../style/TratoCard.css';
+import '../../style/cards/TratoCard.css';
 
 const TratoCard = ({ trato, usuarioLogueado, onActualizarEstado }) => {
   // NOTA: Aquí se valida que el Cliente es quien puede Aceptar/Rechazar. 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import '../style/paginaPrincipal.css';
-import PublicacionCard from '../assets/PublicacionesCard.jsx'; 
+import '../style/home.css';
+import PublicacionCard from '../assets/cards/PublicacionesCard.jsx'; 
 import BarraBusqueda from '../assets/barraBusqueda.jsx';
 import { AuthContext } from '../context/AuthContext.jsx'; // CORREGIDO: Subimos solo un nivel
 

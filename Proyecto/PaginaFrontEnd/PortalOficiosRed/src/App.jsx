@@ -16,10 +16,10 @@ import CambiarTelefonoPantalla from './pantallas/FormulariosConfig/CambiarTelefo
 import FormularioCambiarDatosUsuario from './pantallas/FormulariosConfig/FormularioCambiarDatosUsuario';
 import ValoracionesPantalla from './pantallas/ValoracionPantalla'; // Importamos la pantalla de valoraciones
 import FormularioCrearResenia from './pantallas/Formularios/FormularioCrearResenia'; // Importamos el nuevo form
-import ChatPantalla from './pantallas/ChatPantalla'; // Importamos la pantalla de chat
-import MisMensajesPantalla from './pantallas/MisMensajesPantalla'; // Importamos la lista de chats
+import ChatPantalla from './pantallas/PantallasMensajes/ChatPantalla'; // Importamos la pantalla de chat
+import MisMensajesPantalla from './pantallas/PantallasMensajes/MisMensajesPantalla'; // Importamos la lista de chats
 import FormularioTransaccion from './pantallas/Formularios/FormularioTransaccion'; // Importamos el formulario de transacciones
-import ListaTratos from './pantallas/ListaTratos'; // Importamos la lista de tratos
+import ListaTratos from './pantallas/PantallasMensajes/ListaTratos'; // Importamos la lista de tratos
 import PantallaAdministradorUsuarios from './pantallas/SeccionAdministrador/PantallaAdministradorUsuarios'; // Importamos pantalla de administrador
 
 // IMPORTAMOS LA PANTALLA DE COMENTARIOS

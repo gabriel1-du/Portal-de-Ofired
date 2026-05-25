@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { leerTodosLosMediosDePago } from '../../servicios/medioDePagoService';
-import { leerTodosLosTiposDeTrabajo } from '../../servicios/tipoDeTrabajoService';
-import { crearTransaccion } from '../../servicios/confirmacionTransaccionService';
+import { leerTodosLosMediosDePago } from '../../servicios/ApiUsuarios/TablasCategorias/medioDePagoService';
+import { leerTodosLosTiposDeTrabajo } from '../../servicios/ApiUsuarios/TablasCategorias/tipoDeTrabajoService';
+import { crearTransaccion } from '../../servicios/ApiUsuarios/SeccionChats/confirmacionTransaccionService';
 // Puedes crear este CSS luego para darle estilos o usar uno genérico tuyo
-import '../../style/FormularioTransaccion.css';
+import '../../style/formularios/FormularioTransaccion.css';
 
 const FormularioTransaccion = () => {
   const { idCliente } = useParams(); // Se extrae de la URL (lo mandamos desde el chat)

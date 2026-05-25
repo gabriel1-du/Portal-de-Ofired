@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import '../style/configPantalla.css';
+import '../style/seccionPantallas/configPantalla.css';
 
 const ConfiguracionesPantalla = () => {
   const navigate = useNavigate();

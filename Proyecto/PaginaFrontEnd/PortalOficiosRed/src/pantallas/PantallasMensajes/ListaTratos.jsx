@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { buscarTransaccionesPorUsuario, actualizarEstadoTransaccion } from '../servicios/confirmacionTransaccionService';
-import TratoCard from '../assets/TratoCard';
-import '../style/ListaTratos.css';
+import { AuthContext } from '../../context/AuthContext';
+import { buscarTransaccionesPorUsuario, actualizarEstadoTransaccion } from '../../servicios/ApiUsuarios/SeccionChats/confirmacionTransaccionService';
+import TratoCard from '../../assets/cards/TratoCard';
+import '../../style/seccionMensajes/ListaTratos.css';
 
 const ListaTratos = () => {
   const { usuario, token } = useContext(AuthContext);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import PublicacionCard from '../assets/PublicacionesCard'; 
+import PublicacionCard from '../assets/cards/PublicacionesCard'; 
 import { AuthContext } from '../context/AuthContext'; 
 
 const DetallePublicacionPantalla = () => {

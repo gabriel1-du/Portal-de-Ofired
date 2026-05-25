@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../style/home.css';
 import '../style/assets/barraBusqueda.css'; // Importamos el CSS específico de la barra de búsqueda
-import { getAllRegions } from '../servicios/regionService';
-import { getAllComunas } from '../servicios/comunasService';
-import BarraLateral from './BarraLateral'; // 1. Importamos la nueva barra lateral
+import { getAllRegions } from '../servicios/ApiUsuarios/TablasCategorias/regionService';
+import { getAllComunas } from '../servicios/ApiUsuarios/TablasCategorias/comunasService';
+import BarraLateral from './barrasLaterales/BarraLateral'; // 1. Importamos la nueva barra lateral
 import logoOfired from './imagenes/imagenIcono.png'; // Importamos el logo de la aplicación
 
 function BarraBusqueda() {

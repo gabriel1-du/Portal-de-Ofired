@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../style/ChatCard.css';
+import '../../style/cards/ChatCard.css';
 
 const ChatCard = ({ chat, miId }) => {
   const navigate = useNavigate();

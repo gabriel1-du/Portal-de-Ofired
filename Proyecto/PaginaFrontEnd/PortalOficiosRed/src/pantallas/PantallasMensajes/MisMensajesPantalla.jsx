@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { buscarChatPorUsuario } from '../servicios/chatService';
-import ChatCard from '../assets/ChatCard';
-import '../style/MisMensajesPantalla.css';
+import { AuthContext } from '../../context/AuthContext';
+import { buscarChatPorUsuario } from '../../servicios/ApiUsuarios/SeccionChats/chatService';
+import ChatCard from '../../assets/cards/ChatCard';
+import '../../style/seccionMensajes/MisMensajesPantalla.css';
 
 const MisMensajesPantalla = () => {
   const { usuario, token } = useContext(AuthContext);

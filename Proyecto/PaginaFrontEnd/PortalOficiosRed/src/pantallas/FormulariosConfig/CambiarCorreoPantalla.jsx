@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext'; // Importar AuthContext
 import { updateUsuario } from '../../servicios/usuariosService'; // Importar el servicio para actualizar usuario
-import '../../style/cambiarCorreoPantalla.css';
+import '../../style/formularios/cambiarCorreoPantalla.css';
 
 const CambiarCorreoPantalla = () => {
   const navigate = useNavigate();

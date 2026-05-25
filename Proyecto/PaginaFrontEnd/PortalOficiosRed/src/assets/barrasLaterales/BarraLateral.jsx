@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import '../style/BarraLateral.css';
+import { AuthContext } from '../../context/AuthContext';
+import '../../style/barrasLaterales/BarraLateral.css';
 
 const BarraLateral = ({ abierta, alCerrar }) => {
   const { usuario, cerrarSesion } = useContext(AuthContext);

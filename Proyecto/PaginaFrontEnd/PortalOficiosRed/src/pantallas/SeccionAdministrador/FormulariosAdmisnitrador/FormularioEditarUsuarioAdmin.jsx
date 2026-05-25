@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../../context/AuthContext';
 import { actualizarUsuarioAdmin, getUsuarioById } from '../../../servicios/usuariosService';
-import { getAllRegions } from '../../../servicios/regionService';
-import { getAllComunas } from '../../../servicios/comunasService';
-import { getAllOficios } from '../../../servicios/oficioService';
-import { getAllSexos } from '../../../servicios/sexoService';
+import { getAllRegions } from '../../../servicios/ApiUsuarios/TablasCategorias/regionService';
+import { getAllComunas } from '../../../servicios/ApiUsuarios/TablasCategorias/comunasService';
+import { getAllOficios } from '../../../servicios/ApiUsuarios/TablasCategorias/oficioService';
+import { getAllSexos } from '../../../servicios/ApiUsuarios/TablasCategorias/sexoService';
 import '../../../style/styleAdmin/formularioEditarUsuarioAdmin.css';
 
 const FormularioEditarUsuarioAdmin = ({ usuarioEdicionId, onClose, onRefresh }) => {

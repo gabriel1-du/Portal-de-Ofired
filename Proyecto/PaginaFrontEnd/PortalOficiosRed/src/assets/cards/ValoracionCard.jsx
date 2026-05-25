@@ -1,5 +1,5 @@
 import React from 'react';
-import '../style/ValoracionCard.css';
+import '../../style/cards/ValoracionCard.css';
 
 // El componente recibe por "props" la información de una sola valoración
 const ValoracionCard = ({ autor, foto, calificacion, texto, fecha, usuarioReseniado }) => {

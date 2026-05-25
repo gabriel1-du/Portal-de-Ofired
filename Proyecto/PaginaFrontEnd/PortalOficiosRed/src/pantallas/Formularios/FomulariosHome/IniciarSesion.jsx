@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { login } from '../../../servicios/authService'; // Importa la función de login
+import { login } from '../../../servicios/ApiGateWay/authService'; // Importa la función de login
 import { AuthContext } from '../../../context/AuthContext'; // Importa el contexto de autenticación
 import { jwtDecode } from 'jwt-decode'; // 1. Importamos la librería para decodificar el token
 import { useNavigate } from 'react-router-dom';

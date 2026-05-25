@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom'; // Para navegar al siguiente paso
 import { FormularioContext } from '../../../context/FormularioContext'; // Importa el contexto del formulario
-import { getAllRegions } from '../../../servicios/regionService'; // Importa la función para obtener regiones
-import { getAllComunas } from '../../../servicios/comunasService'; // Importa la función para obtener comunas
-import { getAllSexos } from '../../../servicios/sexoService'; // Importa la función para obtener sexos
+import { getAllRegions } from '../../../servicios/ApiUsuarios/TablasCategorias/regionService'; // Importa la función para obtener regiones
+import { getAllComunas } from '../../../servicios/ApiUsuarios/TablasCategorias/comunasService'; // Importa la función para obtener comunas
+import { getAllSexos } from '../../../servicios/ApiUsuarios/TablasCategorias/sexoService'; // Importa la función para obtener sexos
 
 import '../../../style/home.css'; // Reutilizamos el CSS del Home para mantener el estilo visual
 

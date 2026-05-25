@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../../context/AuthContext';
 import { crearUsuarioPorAdmin } from '../../../servicios/usuariosService';
-import { getAllRegions } from '../../../servicios/regionService';
-import { getAllComunas } from '../../../servicios/comunasService';
-import { getAllSexos } from '../../../servicios/sexoService';
-import { getAllOficios } from '../../../servicios/oficioService';
+import { getAllRegions } from '../../../servicios/ApiUsuarios/TablasCategorias/regionService';
+import { getAllComunas } from '../../../servicios/ApiUsuarios/TablasCategorias/comunasService';
+import { getAllSexos } from '../../../servicios/ApiUsuarios/TablasCategorias/sexoService';
+import { getAllOficios } from '../../../servicios/ApiUsuarios/TablasCategorias/oficioService';
 
 const FormularioCrearUsuarioAdmin = ({ onClose, onRefresh }) => {
   const { token } = useContext(AuthContext);

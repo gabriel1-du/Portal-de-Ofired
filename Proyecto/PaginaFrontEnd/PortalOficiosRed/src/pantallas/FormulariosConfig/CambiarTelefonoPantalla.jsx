@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext'; 
 import { updateUsuario } from '../../servicios/usuariosService'; 
-import '../../style/cambiarTelefonoPantalla.css';
+import '../../style/formularios/cambiarTelefonoPantalla.css';
 
 const CambiarTelefonoPantalla = () => {
   const navigate = useNavigate();

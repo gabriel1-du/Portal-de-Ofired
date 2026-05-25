@@ -1,5 +1,5 @@
 import React from 'react';
-import '../style/RespuestaValoracionCard.css';
+import '../../style/cards/RespuestaValoracionCard.css';
 
 const RespuestaValoracionCard = ({ nombreDelAutor, fotoAutor, textoRespuestaResenia, fechaCreacion }) => {
   

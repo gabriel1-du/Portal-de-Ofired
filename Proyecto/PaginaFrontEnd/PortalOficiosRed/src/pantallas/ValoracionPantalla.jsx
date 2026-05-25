@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import ValoracionCard from '../assets/ValoracionCard'; // Ruta corregida según tu proyecto
-import RespuestaValoracionCard from '../assets/RespuestaValoracionCard'; // Ajusta la ruta
-import { listarReseniasPorUsuario } from '../servicios/reseniasService';
-import { getRespuestasPorReseniaFront, createRespuestaResenia } from '../servicios/respuestasReseniasService';
+import ValoracionCard from '../assets/cards/ValoracionCard'; // Ruta corregida según tu proyecto
+import RespuestaValoracionCard from '../assets/cards/RespuestaValoracionCard'; // Ajusta la ruta
+import { listarReseniasPorUsuario } from '../servicios/ApiPublicaciones/SeccionResenias/reseniasService';
+import { getRespuestasPorReseniaFront, createRespuestaResenia } from '../servicios/ApiPublicaciones/SeccionResenias/respuestasReseniasService';
 import { AuthContext } from '../context/AuthContext';
-import '../style/ValoracionPantalla.css'; // Asegúrate de tener este archivo CSS para los estilos
-import '../style/CajaComentario.css'; // Estilos para la caja de comentarios
+import '../style/seccionPantallas/ValoracionPantalla.css'; // Asegúrate de tener este archivo CSS para los estilos
+import '../style/cards/CajaComentario.css'; // Estilos para la caja de comentarios
 
 const ValoracionesPantalla = () => {
   const navigate = useNavigate();

@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import '../style/BarraLateral.css'; // Heredamos los estilos de fondo y estructura de tu barra original
-import '../style/BarraLateralChat.css'; // Estilos específicos para los botones del chat
+import '../../style/barrasLaterales/BarraLateral.css'; // Heredamos los estilos de fondo y estructura de tu barra original
+import '../../style/barrasLaterales/BarraLateralChat.css'; // Estilos específicos para los botones del chat
 
 const BarraLateralChat = ({ abierta, alCerrar, otroNombre, yoLoBloquee, onToggleBloqueo, onCrearTransaccion }) => {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // 1. Importamos la herramienta de navegación de react-router-dom
-import '../style/PublicacionCard.css'; 
+import '../../style/cards/PublicacionCard.css'
 
 const PublicacionCard = ({ publicacion }) => {
   const navigate = useNavigate(); // 2. Inicializamos la función para poder cambiar de pantalla

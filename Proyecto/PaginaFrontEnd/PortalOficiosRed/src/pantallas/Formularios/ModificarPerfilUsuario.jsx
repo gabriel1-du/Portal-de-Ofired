@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { getPerfilFrontByUsuarioId, updatePerfilUsuario } from '../../servicios/perfilesUsuarioService';
+import { getPerfilFrontByUsuarioId, updatePerfilUsuario } from '../../servicios/ApiUsuarios/perfilesUsuarioService';
 import { updateUsuario } from '../../servicios/usuariosService';
-import '../../style/modificarPerfilUsuario.css';
+import '../../style/formularios/modificarPerfilUsuario.css';
 
 const ModificarPerfilUsuario = () => {
   const { usuario, token } = useContext(AuthContext);

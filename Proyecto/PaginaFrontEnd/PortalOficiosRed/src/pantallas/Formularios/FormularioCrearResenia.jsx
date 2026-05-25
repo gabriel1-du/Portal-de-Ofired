@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { createResenia } from '../../servicios/reseniasService';
-import '../../style/formularioCrearResenia.css';
+import { createResenia } from '../../servicios/ApiPublicaciones/SeccionResenias/reseniasService';
+import '../../style/formularios/formularioCrearResenia.css';
 
 function FormularioCrearResenia() {
   const navigate = useNavigate();

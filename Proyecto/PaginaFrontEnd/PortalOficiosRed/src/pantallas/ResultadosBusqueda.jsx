@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import BarraBusqueda from '../assets/barraBusqueda.jsx';
-import UsuarioCard from '../assets/UsuarioCard.jsx';
-import PublicacionCard from '../assets/PublicacionesCard.jsx';
-import { buscarUsuariosConFiltros } from '../servicios/busquedaUsuarios.js';
-import { buscarPublicacionesConFiltros } from '../servicios/busquedaPublicaciones.js';
-import { getPublicacionesByNombre } from '../servicios/publicacionesService.js';
+import UsuarioCard from '../assets/cards/UsuarioCard.jsx';
+import PublicacionCard from '../assets/cards/PublicacionesCard.jsx';
+import { buscarUsuariosConFiltros } from '../servicios/Assets/BarraBusqueda/busquedaUsuarios.js';
+import { buscarPublicacionesConFiltros } from '../servicios/Assets/BarraBusqueda/busquedaPublicaciones.js';
+import { getPublicacionesByNombre } from '../servicios/ApiPublicaciones/publicacionesService.js';
 import { buscarUsuariosPorNombre } from '../servicios/usuariosService.js';
 import '../style/ResultadosBusqueda.css';
 

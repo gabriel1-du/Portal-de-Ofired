@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { leerMensajesPorChat } from '../servicios/mensajesChatService';
-import { leerTodosLosParticipantesFront } from '../servicios/participantesChatService';
-import { webSocketService } from '../servicios/webSocketService';
-import { buscarRelacionSimultanea, crearBloqueo, actualizarBloqueo } from '../servicios/usuariosBloqueadosService';
-import { conectarBloqueosWebSocket, desconectarBloqueosWebSocket } from '../servicios/bloqueosWebSocketService';
-import MensajeCard from '../assets/MensajeCard';
-import BarraLateralChat from '../assets/BarraLateralChat';
-import '../style/ChatPantalla.css';
+import { AuthContext } from '../../context/AuthContext';
+import { leerMensajesPorChat } from '../../servicios/ApiUsuarios/SeccionChats/mensajesChatService';
+import { leerTodosLosParticipantesFront } from '../../servicios/ApiUsuarios/SeccionChats/participantesChatService';
+import { webSocketService } from '../../servicios/ApiUsuarios/SeccionChats/webSocketService';
+import { buscarRelacionSimultanea, crearBloqueo, actualizarBloqueo } from '../../servicios/ApiUsuarios/SeccionChats/usuariosBloqueadosService';
+import { conectarBloqueosWebSocket, desconectarBloqueosWebSocket } from '../../servicios/ApiUsuarios/SeccionChats/bloqueosWebSocketService';
+import MensajeCard from '../../assets/cards/MensajeCard';
+import BarraLateralChat from '../../assets/barrasLaterales/BarraLateralChat';
+import '../../style/seccionMensajes/ChatPantalla.css';
 
 const ChatPantalla = () => {
   const { idChat } = useParams();

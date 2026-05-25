@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'; 
 import { AuthContext } from '../context/AuthContext'; 
-import { getPerfilFrontByUsuarioId } from '../servicios/perfilesUsuarioService'; 
-import { listarReseniasPorUsuario } from '../servicios/reseniasService'; 
+import { getPerfilFrontByUsuarioId } from '../servicios/ApiUsuarios/perfilesUsuarioService'; 
+import { listarReseniasPorUsuario } from '../servicios/ApiPublicaciones/SeccionResenias/reseniasService'; 
 // --- AÑADIDO: Importamos el servicio y el componente de la tarjeta ---
-import { getPublicacionesByAutor } from '../servicios/publicacionesService';
-import PublicacionCard from '../assets/PublicacionesCard'; 
-import { crearChat } from '../servicios/chatService';
-import { leerTodosLosParticipantesFront } from '../servicios/participantesChatService';
-import '../style/PerfilPantalla.css';
-import ValoracionCard from '../assets/ValoracionCard'; 
+import { getPublicacionesByAutor } from '../servicios/ApiPublicaciones/publicacionesService';
+import PublicacionCard from '../assets/cards/PublicacionesCard'; 
+import { crearChat } from '../servicios/ApiUsuarios/SeccionChats/chatService';
+import { leerTodosLosParticipantesFront } from '../servicios/ApiUsuarios/SeccionChats/participantesChatService';
+import '../style/seccionPantallas/PerfilPantalla.css';
+import ValoracionCard from '../assets/cards/ValoracionCard'; 
 
 const PerfilPantalla = () => {
   const { idDelPerfil } = useParams(); 

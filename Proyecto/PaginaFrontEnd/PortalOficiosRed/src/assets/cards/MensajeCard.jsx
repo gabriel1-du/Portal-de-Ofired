@@ -1,5 +1,5 @@
 import React from 'react';
-import '../style/MensajeCard.css';
+import '../../style/cards/MensajeCard.css';
 
 const MensajeCard = ({ mensaje, esMio }) => {
   // Función para formatear la fecha
