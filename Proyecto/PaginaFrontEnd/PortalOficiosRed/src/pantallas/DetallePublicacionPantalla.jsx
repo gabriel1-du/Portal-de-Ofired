@@ -10,8 +10,9 @@ const DetallePublicacionPantalla = () => {
     const [nuevoComentario, setNuevoComentario] = useState("");
     const [cargandoPublicacion, setCargandoPublicacion] = useState(true);
 
-    const { token, user } = useContext(AuthContext); 
-    const idUsuarioActual = user?.idUsuario || 1; 
+    const { token, usuario: user } = useContext(AuthContext);
+    
+    const idUsuarioActual = user?.idUsuario || user?.id_usuario || user?.userId || user?.id || 1; 
 
     useEffect(() => {
         setCargandoPublicacion(true);
@@ -37,9 +38,7 @@ const DetallePublicacionPantalla = () => {
                 setCargandoPublicacion(false);
             });
 
-        // 2. Traer comentarios - Ruta Sanitizada
-        const urlGetComentarios = `http://localhost:8888/api/proxy/comentariosApi/idPublicacion=${idPublicacion}`;
-        console.log("Intentando GET comentarios a:", urlGetComentarios);
+        const urlGetComentarios = `http://localhost:8888/api/proxy/comentariosApi/publicacion/${idPublicacion}`;
 
         fetch(urlGetComentarios, {
             method: "GET",
@@ -48,22 +47,24 @@ const DetallePublicacionPantalla = () => {
                 "Authorization": `Bearer ${token}`
             }
         })
-            .then(res => {
-                if (!res.ok) {
-                    console.warn(`Respuesta GET comentarios no OK (Status: ${res.status})`);
-                    return [];
-                }
-                return res.json();
-            })
-            .then(data => setComentarios(Array.isArray(data) ? data : []))
-            .catch(err => {
-                console.error("Error crítico cargando comentarios:", err);
-                setComentarios([]); 
-            });
+        .then(res => {
+            if (!res.ok) {
+                console.warn(`Respuesta GET comentarios no OK (Status: ${res.status})`);
+                return [];
+            }
+            return res.json();
+        })
+        .then(data => {
+            setComentarios(Array.isArray(data) ? data : []);
+        })
+        .catch(err => {
+            console.error("Error crítico cargando comentarios:", err);
+            setComentarios([]);
+        });
     }, [idPublicacion, token]); 
 
     const handleEnviarComentario = (e) => {
-        e.preventDefault();
+        e.preventDefault(); 
         if (!nuevoComentario.trim()) return;
 
         const comentarioPayload = {
@@ -128,14 +129,28 @@ const DetallePublicacionPantalla = () => {
                     {comentarios.length === 0 ? (
                         <p style={{ color: '#777', fontStyle: 'italic' }}>No hay comentarios aún. ¡Sé el primero en preguntar!</p>
                     ) : (
-                        comentarios.map((com, index) => (
-                            <div key={com.idComentario || index} style={{ backgroundColor: '#f9f9f9', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #007bff' }}>
-                                <p style={{ margin: '0 0 5px 0', fontSize: '14px', color: '#555' }}>
-                                    <strong>Usuario #{com.idUsuario}</strong>
-                                </p>
-                                <p style={{ margin: 0, color: '#333' }}>{com.contenido}</p>
-                            </div>
-                        ))
+                        comentarios.map((com, index) => {
+                            // 1. Extraer el ID de forma segura
+                            const idReal = com.usuario?.idUsuario || com.usuario?.id_usuario || com.idUsuario || com.id_usuario || 'Desconocido';
+                            
+                            // 2. Extraer el Nombre (revisando camelCase de Java 'pNombre' y variantes)
+                            let nombreMostrar = com.usuario?.pNombre || com.usuario?.p_nombre || com.usuario?.pnombre;
+                            let apellidoMostrar = com.usuario?.pApellido || com.usuario?.p_apellido || com.usuario?.papellido || "";
+
+                            // 3. Plan de respaldo limpio sin trucos: Si no hay nombre, usa el ID
+                            if (!nombreMostrar) {
+                                nombreMostrar = `Usuario #${idReal}`;
+                            }
+
+                            return (
+                                <div key={com.idComentario || index} style={{ backgroundColor: '#f9f9f9', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #007bff' }}>
+                                    <p style={{ margin: '0 0 5px 0', fontSize: '14px', color: '#555' }}>
+                                        <strong style={{ textTransform: 'capitalize' }}>{nombreMostrar} {apellidoMostrar}</strong>
+                                    </p>
+                                    <p style={{ margin: 0, color: '#333' }}>{com.contenido}</p>
+                                </div>
+                            );
+                        })
                     )}
                 </div>
             </div>
