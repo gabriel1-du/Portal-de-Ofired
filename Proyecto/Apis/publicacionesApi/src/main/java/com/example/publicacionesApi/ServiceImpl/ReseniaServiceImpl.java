@@ -8,6 +8,8 @@ import com.example.publicacionesApi.DTO.ClasesReseniasDTO.calificacionReseniaDTO
 import com.example.publicacionesApi.DTO.ClasesReseniasDTO.MapperRenia.UsuarioMapperReseniaDTO;
 import com.example.publicacionesApi.Model.Resenia;
 import com.example.publicacionesApi.Repository.ReseniaRepository;
+import com.example.publicacionesApi.RestClient.UsuarioRestClient;
+import com.example.publicacionesApi.RestClientDTO.actualizarUserDTO;
 import com.example.publicacionesApi.Service.ReseniaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,9 @@ public class ReseniaServiceImpl implements ReseniaService {
 
     @Autowired
     private UsuarioMapperReseniaDTO reseniaMapper;
+
+    @Autowired
+    private UsuarioRestClient usuarioRestClient;
 
     @Override
     public List<LeerReseniaDTO> listarTodas() {
@@ -53,6 +58,20 @@ public class ReseniaServiceImpl implements ReseniaService {
         resenia.setFechaCreacion(LocalDateTime.now());
         
         Resenia reseniaGuardada = reseniaRepository.save(resenia);
+
+        // 1. Obtener el ID del usuario reseñado
+        Integer idUsuarioReseniado = reseniaDTO.getIdUsuarioReseniado();
+        
+        // 2. Calcular el nuevo promedio de calificación
+        calificacionReseniaDTO promedioDTO = promedioCalificacionPorUsuario(idUsuarioReseniado);
+        
+        // 3. Crear el DTO de actualización con solo la calificación
+        actualizarUserDTO usuarioUpdate = new actualizarUserDTO();
+        usuarioUpdate.setCalificacion(promedioDTO.getPromedioCalificacion());
+        
+        // 4. Hacer la actualización mediante el RestClient
+        usuarioRestClient.actualizarUsuario(idUsuarioReseniado, usuarioUpdate);
+
         return reseniaMapper.toLeerReseniaDTO(reseniaGuardada);
     }
 

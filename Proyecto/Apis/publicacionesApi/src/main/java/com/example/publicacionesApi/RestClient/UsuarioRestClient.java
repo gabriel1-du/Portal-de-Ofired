@@ -1,5 +1,6 @@
 package com.example.publicacionesApi.RestClient;
 
+import com.example.publicacionesApi.RestClientDTO.actualizarUserDTO;
 import com.example.publicacionesApi.RestClientDTO.UsuarioExternoDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
@@ -32,5 +33,19 @@ public class UsuarioRestClient {
                     throw new RuntimeException("Error 5xx: Fallo interno en la API de Usuarios.");
                 })
                 .body(UsuarioExternoDTO.class);
+    }
+
+    public void actualizarUsuario(Integer id, actualizarUserDTO usuarioDTO) {
+        restClient.put()
+                .uri("/{id}", id)
+                .body(usuarioDTO)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                    throw new RuntimeException("Error 4xx: Usuario con ID " + id + " no encontrado o petición inválida al actualizar.");
+                })
+                .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
+                    throw new RuntimeException("Error 5xx: Fallo interno en la API de Usuarios al actualizar.");
+                })
+                .toBodilessEntity();
     }
 }

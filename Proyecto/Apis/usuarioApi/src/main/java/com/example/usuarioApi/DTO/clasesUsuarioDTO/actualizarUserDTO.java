@@ -26,4 +26,6 @@ public class actualizarUserDTO {
     private Integer idOficio;
 
     private String foto;
+    
+    private Double calificacion;
 }

@@ -65,6 +65,9 @@ public class UsuarioMapActualizar {
         if (dto.getFoto() != null) {
             usuario.setFoto(dto.getFoto());
         }
+        if (dto.getCalificacion() != null) {
+            usuario.setValoracion(java.math.BigDecimal.valueOf(dto.getCalificacion()));
+        }
 
         // Mapeo de relaciones (IDs a Entidades).
         if (dto.getIdSexoUsu() != null) {
