@@ -107,6 +107,11 @@ public class PerfilUsuarioMapper {
             // o si solo aplicas el cambio. Lo estándar es aplicar lo que mande el JSON.
             entidad.setDescripcion(dto.getDescripcion());
         }
+        
+        // --- NUEVO: Actualización de la calificación ---
+        if (dto.getCalificacion() != null) {
+            entidad.setCalificacionPUsuario(dto.getCalificacion());
+        }
     }
     
 

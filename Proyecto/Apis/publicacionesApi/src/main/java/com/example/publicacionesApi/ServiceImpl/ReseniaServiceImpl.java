@@ -8,12 +8,16 @@ import com.example.publicacionesApi.DTO.ClasesReseniasDTO.calificacionReseniaDTO
 import com.example.publicacionesApi.DTO.ClasesReseniasDTO.MapperRenia.UsuarioMapperReseniaDTO;
 import com.example.publicacionesApi.Model.Resenia;
 import com.example.publicacionesApi.Repository.ReseniaRepository;
+import com.example.publicacionesApi.RestClient.PerfilRestClient;
 import com.example.publicacionesApi.RestClient.UsuarioRestClient;
+import com.example.publicacionesApi.RestClientDTO.PerfilExternoDTO;
+import com.example.publicacionesApi.RestClientDTO.actualizarPerfilDTO;
 import com.example.publicacionesApi.RestClientDTO.actualizarUserDTO;
 import com.example.publicacionesApi.Service.ReseniaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +32,9 @@ public class ReseniaServiceImpl implements ReseniaService {
 
     @Autowired
     private UsuarioRestClient usuarioRestClient;
+
+    @Autowired
+    private PerfilRestClient perfilRestClient;
 
     @Override
     public List<LeerReseniaDTO> listarTodas() {
@@ -67,11 +74,28 @@ public class ReseniaServiceImpl implements ReseniaService {
         
         // 3. Crear el DTO de actualización con solo la calificación
         actualizarUserDTO usuarioUpdate = new actualizarUserDTO();
-        usuarioUpdate.setCalificacion(promedioDTO.getPromedioCalificacion());
+        
+        usuarioUpdate.setCalificacion(BigDecimal.valueOf(promedioDTO.getPromedioCalificacion()));
         
         // 4. Hacer la actualización mediante el RestClient
         usuarioRestClient.actualizarUsuario(idUsuarioReseniado, usuarioUpdate);
 
+        // 5. Obtener el Perfil usando el ID del usuario, y actualizar si existe
+        try {
+            PerfilExternoDTO perfil = perfilRestClient.obtenerPerfilPorUsuario(idUsuarioReseniado);
+            
+            if (perfil != null && perfil.getIdPerfilUsuario() != null) {
+                actualizarPerfilDTO perfilUpdate = new actualizarPerfilDTO();
+                perfilUpdate.setCalificacion(BigDecimal.valueOf(promedioDTO.getPromedioCalificacion()));
+                
+                // 6. Hacer la actualización del Perfil usando el ID DEL PERFIL real
+                perfilRestClient.actualizarPerfil(perfil.getIdPerfilUsuario(), perfilUpdate);
+            }
+        } catch (Exception e) {
+            // Ignoramos el error si el usuario no tiene un perfil creado u ocurre un fallo en la API externa
+            System.err.println("Aviso: No se pudo actualizar el perfil. " + e.getMessage());
+        }
+        
         return reseniaMapper.toLeerReseniaDTO(reseniaGuardada);
     }
 

@@ -1,11 +1,11 @@
 package com.example.publicacionesApi.RestClientDTO;
 
+import lombok.Data;
 import java.math.BigDecimal;
 
-import lombok.Data;
-
 @Data
-public class actualizarUserDTO {
+public class actualizarPerfilDTO {
 
     private BigDecimal calificacion;
+    
 }

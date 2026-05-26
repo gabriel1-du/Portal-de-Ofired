@@ -125,11 +125,16 @@ const PerfilPantalla = () => {
     nombreComuna,
     nombreOficio,
     nombreSexo,
+    valoracion,
     calificacion,
+    usuario,
     fechaCreacion
   } = perfil;
 
   const nombreCompleto = `${primerNombre} ${segundoNombre || ''} ${primerApellido} ${segundoApellido || ''}`.trim();
+
+  // Buscamos el valor donde sea que venga para evitar el "undefined"
+  const ratingMostrar = valoracion ?? calificacion ?? usuario?.valoracion ?? usuario?.calificacion;
 
   return (
     <div className="perfil-pantalla-contenedor">
@@ -196,7 +201,7 @@ const PerfilPantalla = () => {
           <div className="info-item">
             <span className="info-label">Calificación:</span>
             <span className="info-valor estrellas">
-              {calificacion > 0 ? `⭐ ${calificacion}` : 'Sin calificación'}
+              {ratingMostrar !== undefined && ratingMostrar !== null && ratingMostrar > 0 ? `⭐ ${ratingMostrar}` : 'Sin calificación'}
             </span>
           </div>
         </div>
