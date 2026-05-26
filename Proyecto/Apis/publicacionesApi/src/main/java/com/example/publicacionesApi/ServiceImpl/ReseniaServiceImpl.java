@@ -4,6 +4,7 @@ import com.example.publicacionesApi.DTO.ClasesReseniasDTO.ActualizarReseniaDTO;
 import com.example.publicacionesApi.DTO.ClasesReseniasDTO.CrearReniaDTO;
 import com.example.publicacionesApi.DTO.ClasesReseniasDTO.LeerReseniaDTO;
 import com.example.publicacionesApi.DTO.ClasesReseniasDTO.LeerReseniaFrontDTO;
+import com.example.publicacionesApi.DTO.ClasesReseniasDTO.calificacionReseniaDTO;
 import com.example.publicacionesApi.DTO.ClasesReseniasDTO.MapperRenia.UsuarioMapperReseniaDTO;
 import com.example.publicacionesApi.Model.Resenia;
 import com.example.publicacionesApi.Repository.ReseniaRepository;
@@ -86,5 +87,31 @@ public class ReseniaServiceImpl implements ReseniaService {
         return reseniaRepository.findByIdUsuarioReseniado(idUsuarioReseniado).stream()
                 .map(reseniaMapper::toLeerReseniaFrontDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public calificacionReseniaDTO promedioCalificacionPorUsuario(Integer idUsuario) {
+        List<LeerReseniaFrontDTO> resenias = listarPorUsuarioReseniado(idUsuario);
+        
+        double sumaCalificaciones = 0.0;
+        int cantidadResenias = 0;
+        
+        for (LeerReseniaFrontDTO resenia : resenias) {
+            if (resenia.getCalificacion() != null) {
+                sumaCalificaciones += resenia.getCalificacion();
+                cantidadResenias++;
+            }
+        }
+        
+        double promedio = 0.0;
+        if (cantidadResenias > 0) {
+            promedio = Math.floor(sumaCalificaciones / cantidadResenias);
+        }
+        
+        calificacionReseniaDTO dto = new calificacionReseniaDTO();
+        dto.setIdUsuario(idUsuario);
+        dto.setPromedioCalificacion(promedio);
+        
+        return dto;
     }
 }

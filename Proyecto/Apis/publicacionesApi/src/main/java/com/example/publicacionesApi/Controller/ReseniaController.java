@@ -4,6 +4,7 @@ import com.example.publicacionesApi.DTO.ClasesReseniasDTO.ActualizarReseniaDTO;
 import com.example.publicacionesApi.DTO.ClasesReseniasDTO.CrearReniaDTO;
 import com.example.publicacionesApi.DTO.ClasesReseniasDTO.LeerReseniaDTO;
 import com.example.publicacionesApi.DTO.ClasesReseniasDTO.LeerReseniaFrontDTO;
+import com.example.publicacionesApi.DTO.ClasesReseniasDTO.calificacionReseniaDTO;
 import com.example.publicacionesApi.Service.ReseniaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +58,10 @@ public class ReseniaController {
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<List<LeerReseniaFrontDTO>> listarPorUsuarioReseniado(@PathVariable Integer idUsuario) {
         return ResponseEntity.ok(reseniaService.listarPorUsuarioReseniado(idUsuario));
+    }
+
+    @GetMapping("/calificacionPromedio/{idUsuario}")
+    public ResponseEntity<calificacionReseniaDTO> promedioCalificacionPorUsuario(@PathVariable Integer idUsuario) {
+        return ResponseEntity.ok(reseniaService.promedioCalificacionPorUsuario(idUsuario));
     }
 }
