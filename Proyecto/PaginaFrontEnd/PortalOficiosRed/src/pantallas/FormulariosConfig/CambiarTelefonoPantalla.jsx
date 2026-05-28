@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext'; 
 import { updateUsuario } from '../../servicios/usuariosService'; 
-import '../../style/formularios/cambiarTelefonoPantalla.css';
+import '../../style/seccionPantallas/configPantalla.css'; 
 
 const CambiarTelefonoPantalla = () => {
   const navigate = useNavigate();
@@ -54,32 +54,31 @@ const CambiarTelefonoPantalla = () => {
   };
 
   return (
-    <div className="cambiar-telefono-contenedor">
-      {/* Botón Volver Flotante */}
-      <button
-        className="btn-volver-flotante"
-        onClick={() => navigate(-1)}
-        aria-label="Volver"
-      >
-        &#10094;
-      </button>
+    <div className="container-fluid bg-light min-vh-100 d-flex align-items-center justify-content-center py-5">
+      <main className="card shadow-sm border-0 rounded-4 p-4 p-md-5 w-100 position-relative bg-white tarjeta-config-media">
+        
+        {/* Botón Volver */}
+        <button
+          className="btn btn-link text-decoration-none fw-bold p-0 position-absolute btn-volver-texto"
+          onClick={() => navigate(-1)}
+          aria-label="Volver"
+        >
+          &#10094; Volver
+        </button>
 
-      {/* Tarjeta Principal Centrada */}
-      <main className="telefono-tarjeta">
-        <h1 className="titulo-cambiar-telefono">Cambiar Teléfono</h1>
-        {error && <p className="error-message-telefono">{error}</p>}
+        <div className="text-center mt-4 mb-4">
+          <h1 className="fw-bolder text-dark fs-3 mb-2">Cambiar Teléfono</h1>
+        </div>
+        
+        {error && <div className="alert alert-danger shadow-sm text-center">{error}</div>}
 
-        <form className="form-telefono" onSubmit={handleCambiar}>
-          {/* 1. Ingrese nuevo teléfono */}
-          <div className="form-group-telefono">
-            <label htmlFor="nuevoTelefono" className="label-telefono">
-              Ingrese nuevo teléfono
-            </label>
+        <form onSubmit={handleCambiar}>
+          <div className="mb-4">
+            <label htmlFor="nuevoTelefono" className="form-label fw-bold text-dark">Ingrese nuevo teléfono</label>
             <input
               type="tel"
               id="nuevoTelefono"
-              name="nuevoTelefono"
-              className="input-telefono"
+              className="form-control form-control-lg bg-light shadow-sm border-0"
               value={nuevoTelefono}
               onChange={(e) => setNuevoTelefono(e.target.value)}
               required
@@ -87,16 +86,12 @@ const CambiarTelefonoPantalla = () => {
             />
           </div>
 
-          {/* 2. Ingrese nuevamente */}
-          <div className="form-group-telefono">
-            <label htmlFor="confirmarTelefono" className="label-telefono">
-              Ingrese nuevamente
-            </label>
+          <div className="mb-4">
+            <label htmlFor="confirmarTelefono" className="form-label fw-bold text-dark">Ingrese nuevamente</label>
             <input
               type="tel"
               id="confirmarTelefono"
-              name="confirmarTelefono"
-              className="input-telefono"
+              className="form-control form-control-lg bg-light shadow-sm border-0"
               value={confirmarTelefono}
               onChange={(e) => setConfirmarTelefono(e.target.value)}
               required
@@ -104,16 +99,13 @@ const CambiarTelefonoPantalla = () => {
             />
           </div>
 
-          {/* 3. Botón Cambiar */}
-          <div className="boton-centrado-container">
-            <button
-              type="submit"
-              className="btn-cambiar-principal"
-              disabled={cargando}
-            >
-              {cargando ? 'Cambiando...' : 'Cambiar'}
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="btn btn-naranja-config w-100 rounded-pill py-3 fw-bold fs-5 shadow-sm mt-3"
+            disabled={cargando}
+          >
+            {cargando ? 'Cambiando...' : 'Cambiar Teléfono'}
+          </button>
         </form>
       </main>
     </div>

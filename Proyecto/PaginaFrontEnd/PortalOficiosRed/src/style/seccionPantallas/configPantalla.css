@@ -1,17 +1,8 @@
-/* Contenedor principal */
-.configuraciones-contenedor {
-  max-width: 1000px;
-  margin: 40px auto;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 0 20px;
-  position: relative;
-}
-
 /* Botón Volver Flotante (Arriba a la izquierda) */
 .btn-volver-flotante {
   position: absolute;
   top: 0;
-  left: 20px;
+  left: 15px;
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -33,42 +24,7 @@
   background-color: #f0f0f0;
 }
 
-/* Layout Principal: Organiza Sidebar y Contenido lado a lado */
-.configuraciones-layout {
-  display: flex;
-  gap: 30px;
-  margin-top: 60px; /* Deja espacio para el botón de volver */
-  align-items: flex-start;
-}
-
-/* --- SIDEBAR (Menú Lateral) --- */
-.configuraciones-sidebar {
-  width: 280px;
-  background-color: #fff;
-  border-radius: 24px;
-  padding: 30px 20px;
-  box-shadow: 0 4px 20px rgb(0 0 0 / 8%);
-  border: 1px solid #e0e0e0;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0; /* Evita que el menú se aplaste */
-  min-height: 400px;
-}
-
-.sidebar-titulo {
-  font-size: 1.5rem;
-  color: #333;
-  margin: 0 0 25px 10px;
-  font-weight: 800;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 1;
-}
-
+/* Botones de navegación lateral */
 .sidebar-btn {
   background: none;
   border: none;
@@ -90,15 +46,10 @@
 
 /* Estado Activo del Botón Lateral */
 .sidebar-btn.activo {
-  background-color: #fdf6ec;
+  background-color: #fff;
   color: #f3961c;
   border-left: 4px solid #f3961c;
-}
-
-.sidebar-footer {
-  margin-top: auto;
-  padding-top: 20px;
-  border-top: 2px solid #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
 .btn-cerrar-sesion {
@@ -111,38 +62,9 @@
   color: #b71c1c;
 }
 
-/* --- CONTENIDO PRINCIPAL (Panel Derecho) --- */
-.configuraciones-contenido {
-  flex: 1; /* Toma todo el espacio sobrante a la derecha */
-  background-color: #fff;
-  border-radius: 24px;
-  padding: 40px;
-  box-shadow: 0 4px 20px rgb(0 0 0 / 8%);
-  border: 1px solid #e0e0e0;
-}
-
-.panel-titulo {
-  margin: 0 0 10px;
-  font-size: 1.8rem;
-  color: #333;
-  font-weight: 800;
-}
-
-.panel-descripcion {
-  color: #666;
-  font-size: 1.05rem;
-  margin-bottom: 30px;
-}
-
-.opciones-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
 /* Tarjetas Rectangulares de Opciones */
 .opcion-tarjeta {
-  background-color: #f8f9fa;
+  background-color: #fff; /* Blanco sobre el fondo gris queda mucho mejor */
   border: 1px solid #e0e0e0;
   border-radius: 16px;
   padding: 20px 25px;
@@ -189,13 +111,45 @@
   color: #f3961c;
 }
 
-/* Diseño Responsivo para Celulares */
-@media (max-width: 768px) {
-  .configuraciones-layout {
-    flex-direction: column;
-  }
-  .configuraciones-sidebar {
-    width: 100%;
-    min-height: auto;
-  }
+/* --- CLASES PARA LOS FORMULARIOS DE CONFIGURACIÓN --- */
+
+/* Control de ancho para las tarjetas */
+.tarjeta-config-media {
+  max-width: 500px;
+}
+
+.tarjeta-config-amplia {
+  max-width: 800px;
+}
+
+/* Botón de volver integrado en los formularios */
+.btn-volver-texto {
+  top: 25px;
+  left: 25px;
+  color: #f3961c !important; /* Color naranja principal */
+  transition: color 0.2s ease;
+}
+
+.btn-volver-texto:hover {
+  color: #e08919 !important; /* Naranjo oscuro al pasar el mouse */
+}
+
+/* Botón de acción principal naranjo */
+.btn-naranja-config {
+  background-color: #f3961c;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.btn-naranja-config:hover:not(:disabled) {
+  background-color: #e08919;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(243, 150, 28, 0.3) !important;
+}
+
+.btn-naranja-config:disabled {
+  background-color: #f9c784;
+  color: #ffffff;
+  cursor: not-allowed;
 }

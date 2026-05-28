@@ -78,44 +78,56 @@ const FormularioTransaccion = () => {
     }
   };
 
-  if (cargando) return <div>Cargando formulario...</div>;
+  if (cargando) return <div className="text-center mt-5 text-muted fst-italic">Cargando formulario...</div>;
 
   return (
-    <div className="formulario-transaccion-contenedor">
-      <div className="formulario-transaccion-tarjeta">
-        <button className="btn-volver" onClick={() => navigate(-1)}>&#10094; Volver al chat</button>
-        <h2>Generar Trato / Transacción</h2>
-        <p>Registra el acuerdo para mayor seguridad con tu cliente.</p>
+    <div className="container-fluid bg-light min-vh-100 d-flex align-items-center justify-content-center py-5">
+      <div className="card shadow-sm border-0 rounded-4 p-4 p-md-5 w-100 formulario-transaccion-tarjeta" style={{ maxWidth: '550px' }}>
         
-        <form onSubmit={handleSubmit} className="form-transaccion">
+        <button 
+          className="btn btn-link text-decoration-none text-info fw-bold p-0 position-absolute" 
+          style={{ top: '25px', left: '25px' }} 
+          onClick={() => navigate(-1)}
+        >
+          &#10094; Volver al chat
+        </button>
+        
+        <div className="text-center mt-4 mb-4">
+          <h2 className="fw-bolder text-dark mb-2 fs-3">Generar Trato / Transacción</h2>
+          <p className="text-muted">Registra el acuerdo para mayor seguridad con tu cliente.</p>
+        </div>
+        
+        <form onSubmit={handleSubmit}>
           
-          <div className="form-group-transaccion">
-            <label>Monto del Servicio ($):</label>
-            <input type="number" min="0" step="0.01" value={montoServicio} onChange={(e) => setMontoServicio(e.target.value)} required />
+          <div className="mb-3">
+            <label className="form-label fw-bold text-dark">Monto del Servicio ($):</label>
+            <input type="number" min="0" step="0.01" className="form-control form-control-lg shadow-sm input-transaccion" value={montoServicio} onChange={(e) => setMontoServicio(e.target.value)} required />
           </div>
 
-          <div className="form-group-transaccion">
-            <label>Medio de Pago:</label>
-            <select value={idMedioPago} onChange={(e) => setIdMedioPago(e.target.value)} required>
+          <div className="mb-3">
+            <label className="form-label fw-bold text-dark">Medio de Pago:</label>
+            <select className="form-select form-control-lg shadow-sm input-transaccion" value={idMedioPago} onChange={(e) => setIdMedioPago(e.target.value)} required>
               <option value="">Selecciona un medio de pago</option>
               {mediosPago.map(mp => ( <option key={mp.idMedioPago || mp.id} value={mp.idMedioPago || mp.id}>{mp.nombreMedioPago || mp.nombre || `Medio de pago ${mp.idMedioPago || mp.id}`}</option> ))}
             </select>
           </div>
 
-          <div className="form-group-transaccion">
-            <label>Tipo de Trabajo:</label>
-            <select value={idTipoTrabajo} onChange={(e) => setIdTipoTrabajo(e.target.value)} required>
+          <div className="mb-3">
+            <label className="form-label fw-bold text-dark">Tipo de Trabajo:</label>
+            <select className="form-select form-control-lg shadow-sm input-transaccion" value={idTipoTrabajo} onChange={(e) => setIdTipoTrabajo(e.target.value)} required>
               <option value="">Selecciona un tipo de trabajo</option>
               {tiposTrabajo.map(tt => ( <option key={tt.idTipoTrabajo || tt.id} value={tt.idTipoTrabajo || tt.id}>{tt.nombreTipoTrabajo || tt.nombre || `Tipo de trabajo ${tt.idTipoTrabajo || tt.id}`}</option> ))}
             </select>
           </div>
 
-          <div className="form-group-transaccion">
-            <label>Observaciones (opcional):</label>
-            <textarea value={observacionesTrato} onChange={(e) => setObservacionesTrato(e.target.value)} rows="4" placeholder="Especifica los detalles del trabajo aquí..." />
+          <div className="mb-4">
+            <label className="form-label fw-bold text-dark">Observaciones (opcional):</label>
+            <textarea className="form-control shadow-sm input-transaccion" value={observacionesTrato} onChange={(e) => setObservacionesTrato(e.target.value)} rows="4" placeholder="Especifica los detalles del trabajo aquí..." />
           </div>
 
-          <button type="submit" disabled={enviando} className="btn-enviar-transaccion"> {enviando ? 'Enviando...' : 'Confirmar Transacción'} </button>
+          <button type="submit" disabled={enviando} className="btn btn-transaccion w-100 rounded-pill py-3 fw-bold fs-5 shadow-sm"> 
+            {enviando ? 'Enviando...' : 'Confirmar Transacción'} 
+          </button>
         </form>
       </div>
     </div>
