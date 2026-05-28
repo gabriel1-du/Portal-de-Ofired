@@ -137,44 +137,49 @@ const PerfilPantalla = () => {
   const ratingMostrar = valoracion ?? calificacion ?? usuario?.valoracion ?? usuario?.calificacion;
 
   return (
-    <div className="perfil-pantalla-contenedor">
+    //primera seccion de la pantalla, el banner, la foto, los nombres y los botones
+    <div className="container my-5 perfil-pantalla-contenedor p-0">
       
-      {/* 1. SECCIÓN BANNER */}
-      <div className="perfil-banner">
+      {/* --- CAJA PRINCIPAL DEL PERFIL (Fondo oscuro/gris para destacar) --- */}
+      <div className="bg-light rounded-4 shadow-sm border overflow-hidden mb-5">
+        
+        {/* 1. SECCIÓN BANNER */}
+        <div className="perfil-banner w-100 bg-light" style={{ height: '280px' }}>
         <img 
           src={fotografiaBanner || 'https://via.placeholder.com/1200x300?text=Banner'} 
           alt="Banner del usuario" 
+          className="w-100 h-100 object-fit-cover"
         />
       </div>
 
       {/* 2. CABECERA (Foto, Nombres y Botones) */}
-      <div className="perfil-cabecera">
-        <div className="perfil-foto-wrapper">
+      <div className="d-flex flex-wrap align-items-end px-4 pb-3 border-bottom position-relative">
+        <div className="perfil-foto-wrapper bg-white border border-5 border-white rounded-circle shadow-sm flex-shrink-0 overflow-hidden" style={{ width: '130px', height: '130px', marginTop: '-65px' }}>
           <img 
             src={foto || 'https://via.placeholder.com/150'} 
             alt={`Foto de ${nombreApodo}`} 
+            className="w-100 h-100 object-fit-cover"
           />
         </div>
         
-        <div className="perfil-nombres">
-          <h1 className="apodo-texto">{nombreApodo}</h1>
-          <p className="nombre-real-texto">{nombreCompleto}</p>
+        <div className="ms-3 pb-1">
+          <h1 className="fw-bolder text-dark m-0 fs-3">{nombreApodo}</h1>
+          <p className="text-secondary m-0 mt-1">{nombreCompleto}</p>
         </div>
 
-        <div className="perfil-acciones">
+        <div className="ms-auto d-flex gap-2 pb-2 mt-3 mt-md-0 w-100 w-md-auto justify-content-end">
           {!esMiPerfil && (
             <>
-              {/* Icono / Botón de mensaje, estilizado levemente en línea para no romper tus CSS base */}
-              <button className="btn-maqueta btn-mensaje" onClick={handleMensajeClick} disabled={iniciandoChat} style={{ marginRight: '10px', backgroundColor: '#03a9f4', color: 'white', borderColor: '#03a9f4' }}>
+              <button className="btn btn-info text-white rounded-pill fw-bold px-4 shadow-sm" onClick={handleMensajeClick} disabled={iniciandoChat} style={{ backgroundColor: '#03a9f4', borderColor: '#03a9f4' }}>
                 {iniciandoChat ? 'Cargando...' : 'Mensaje 💬'}
               </button>
-              <button className="btn-maqueta btn-reportar">
+              <button className="btn btn-light text-danger border rounded-pill fw-bold px-4 shadow-sm">
                  Reportar 🚨
               </button>
             </>
           )}
           {esMiPerfil && (
-            <button className="btn-maqueta btn-configurar" onClick={() => navigate('/perfil/modificar')}>
+            <button className="btn text-white rounded-pill fw-bold px-4 shadow-sm" onClick={() => navigate('/perfil/modificar')} style={{ backgroundColor: '#f3961c' }}>
                Configurar ⚙️
             </button>
           )}
@@ -182,42 +187,49 @@ const PerfilPantalla = () => {
       </div>
 
       {/* 3. CONTENIDO INFERIOR (Cajas de Info y Descripción) */}
-      <div className="perfil-contenido-inferior">
+      <div className="row g-4 px-4 py-4 m-0">
         
-        {/* Caja Izquierda: Info Gris Claro */}
-        <div className="caja-info-basica">
-          <div className="info-item">
-            <span className="info-label">Oficio:</span>
-            <span className="info-valor destacado">{nombreOficio}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Comuna:</span>
-            <span className="info-valor">{nombreComuna}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Región:</span>
-            <span className="info-valor">{nombreRegion}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Calificación:</span>
-            <span className="info-valor estrellas">
-              {ratingMostrar !== undefined && ratingMostrar !== null && ratingMostrar > 0 ? `⭐ ${ratingMostrar}` : 'Sin calificación'}
-            </span>
+        {/* Caja Izquierda: Info Blanca para contrastar */}
+        <div className="col-12 col-md-5">
+          <div className="card bg-white border shadow-sm rounded-4 p-4 h-100 d-flex flex-column gap-3">
+            <div>
+              <span className="text-uppercase text-secondary fw-semibold d-block" style={{ fontSize: '0.85rem', letterSpacing: '0.5px' }}>Oficio:</span>
+              <span className="fw-bold fs-5" style={{ color: '#f3961c' }}>{nombreOficio}</span>
+            </div>
+            <div>
+              <span className="text-uppercase text-secondary fw-semibold d-block" style={{ fontSize: '0.85rem', letterSpacing: '0.5px' }}>Comuna:</span>
+              <span className="fw-medium fs-6 text-dark">{nombreComuna}</span>
+            </div>
+            <div>
+              <span className="text-uppercase text-secondary fw-semibold d-block" style={{ fontSize: '0.85rem', letterSpacing: '0.5px' }}>Región:</span>
+              <span className="fw-medium fs-6 text-dark">{nombreRegion}</span>
+            </div>
+            <div>
+              <span className="text-uppercase text-secondary fw-semibold d-block" style={{ fontSize: '0.85rem', letterSpacing: '0.5px' }}>Calificación:</span>
+              <span className="fw-bold fs-5" style={{ color: '#f3961c' }}>
+                {ratingMostrar !== undefined && ratingMostrar !== null && ratingMostrar > 0 ? `⭐ ${ratingMostrar}` : 'Sin calificación'}
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Caja Derecha: Descripción (Vertical) */}
-        <div className="caja-descripcion">
-          <h3>Descripción</h3>
-          <div className="descripcion-texto">
-            <p>{descripcion || 'Sin descripción disponible por el momento. Aquí irá el texto sobre la experiencia y habilidades del profesional.'}</p>
+        <div className="col-12 col-md-7">
+          <div className="card border shadow-sm rounded-4 p-4 h-100 bg-white">
+            <h3 className="fs-5 text-dark fw-bold border-bottom pb-2 mb-3 d-inline-block" style={{ borderBottomColor: '#f3961c !important' }}>Descripción</h3>
+            <div className="text-secondary" style={{ lineHeight: '1.6' }}>
+              <p className="mb-0">{descripcion || 'Sin descripción disponible por el momento. Aquí irá el texto sobre la experiencia y habilidades del profesional.'}</p>
+            </div>
           </div>
         </div>
 
       </div>
+      
+      </div>
+      {/* --- FIN CAJA PRINCIPAL --- */}
 
       {/* 4. SECCIÓN VALORACIONES (Maqueta) */}
-      <div className="perfil-seccion-valoraciones">
+      <div className="perfil-seccion-valoraciones px-4 pb-4">
         <h3>Valoraciones y Reseñas</h3>
         <div className="lista-valoraciones">
           {reseñas.length > 0 ? (
