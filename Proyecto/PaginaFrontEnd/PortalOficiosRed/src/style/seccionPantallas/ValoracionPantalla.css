@@ -78,3 +78,16 @@
   background-color: #d88318;
   transform: translateY(-2px);
 }
+
+/* Contenedor para alinear los botones de acciones debajo de la tarjeta */
+.valoracion-acciones-contenedor {
+  display: flex;
+  align-items: center;
+}
+
+/* Mensajes de estado al cargar o no encontrar respuestas anidadas */
+.valoracion-mensaje-estado {
+  font-size: 0.9rem;
+  color: #666;
+  margin-left: 10px;
+}

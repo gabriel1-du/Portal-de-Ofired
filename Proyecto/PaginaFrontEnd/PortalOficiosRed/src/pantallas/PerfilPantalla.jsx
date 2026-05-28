@@ -10,6 +10,8 @@ import { crearChat } from '../servicios/ApiUsuarios/SeccionChats/chatService';
 import { leerTodosLosParticipantesFront } from '../servicios/ApiUsuarios/SeccionChats/participantesChatService';
 import '../style/seccionPantallas/PerfilPantalla.css';
 import ValoracionCard from '../assets/cards/ValoracionCard'; 
+import BarraBusqueda from '../assets/barraBusqueda.jsx';
+
 
 const PerfilPantalla = () => {
   const { idDelPerfil } = useParams(); 
@@ -137,7 +139,10 @@ const PerfilPantalla = () => {
   const ratingMostrar = valoracion ?? calificacion ?? usuario?.valoracion ?? usuario?.calificacion;
 
   return (
-    //primera seccion de la pantalla, el banner, la foto, los nombres y los botones
+    <>
+      <BarraBusqueda />
+      
+      {/* primera seccion de la pantalla, el banner, la foto, los nombres y los botones */}
     <div className="container my-5 perfil-pantalla-contenedor p-0">
       
       {/* --- CAJA PRINCIPAL DEL PERFIL (Fondo oscuro/gris para destacar) --- */}
@@ -225,39 +230,46 @@ const PerfilPantalla = () => {
 
       </div>
       
-      </div>
-      {/* --- FIN CAJA PRINCIPAL --- */}
 
-      {/* 4. SECCIÓN VALORACIONES (Maqueta) */}
-      <div className="perfil-seccion-valoraciones px-4 pb-4">
-        <h3>Valoraciones y Reseñas</h3>
-        <div className="lista-valoraciones">
-          {reseñas.length > 0 ? (
-            reseñas.map((reseña) => (
-              <ValoracionCard
-                key={reseña.reseniaId}
-                autor={reseña.nombreAutor}
-                foto={reseña.fotoUsuarioAutor}
-                calificacion={reseña.calificacion}
-                texto={reseña.textoResenia}
-              />
-            ))
-          ) : (
-            <p className="sin-reseñas-texto">Este usuario aún no tiene reseñas.</p>
+      </div>
+      {/* --- SECCION VALORACIONES --- */}
+
+    
+      {/* 4. SECCIÓN VALORACIONES (Bootstrap) */}
+      <div className="rounded-4 shadow-sm border overflow-hidden mb-5" style={{ backgroundColor: '#2c3e50' }}>
+        <div className="px-4 py-4 m-0">
+          <h3 className="fs-5 text-white fw-bold border-bottom pb-3 mb-4" style={{ borderColor: '#34495e !important' }}>Valoraciones y Reseñas</h3>
+          
+          <div className="d-flex flex-column gap-3">
+            {reseñas.length > 0 ? (
+              // Usamos slice(0, 3) para limitar el ciclo a solo 3 elementos máximo
+              reseñas.slice(0, 3).map((reseña) => (
+                <ValoracionCard
+                  key={reseña.reseniaId}
+                  autor={reseña.nombreAutor}
+                  foto={reseña.fotoUsuarioAutor}
+                  calificacion={reseña.calificacion}
+                  texto={reseña.textoResenia}
+                />
+              ))
+            ) : (
+              <p className="text-center fst-italic py-3 mb-0" style={{ color: '#bdc3c7' }}>Este usuario aún no tiene reseñas.</p>
+            )}
+          </div>
+
+          {/* Mostramos el botón solo si hay reseñas */}
+          {reseñas.length > 0 && (
+            <div className="text-center mt-4">
+              <button 
+                className="btn text-white rounded-pill px-4 py-2 fw-bold shadow-sm" 
+                onClick={() => navigate(`/valoraciones/${idDelPerfil}`)}
+                style={{ backgroundColor: '#f3961c' }}
+              >
+                Ver más reseñas
+              </button>
+            </div>
           )}
         </div>
-
-        {/* Mostramos el botón solo si hay reseñas */}
-        {reseñas.length > 0 && (
-          <div className="contenedor-boton-ver-mas">
-            <button 
-              className="btn-ver-mas" 
-              onClick={() => navigate(`/valoraciones/${idDelPerfil}`)}
-            >
-              Ver más reseñas
-            </button>
-          </div>
-        )}
       </div>
 
       {/* --- INSERCIÓN SOLICITADA: MIS TRABAJOS --- */}
@@ -277,6 +289,7 @@ const PerfilPantalla = () => {
       {/* --- FIN DE LA INSERCIÓN --- */}
 
     </div> 
+    </>
   );
 };
 

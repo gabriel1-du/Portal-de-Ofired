@@ -1,95 +1,43 @@
-/* LA TARJETA PRINCIPAL (El Card) */
-.tarjeta-valoracion {
-  background-color: #fff;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 6px 20px rgb(0 0 0 / 6%);
-  border: 1px solid #f1f1f1;
-  display: flex;
-  gap: 30px;
-  align-items: center;
+/* Efecto hover elegante para la tarjeta Bootstrap */
+.valoracion-tarjeta-moderna {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  width: 100%;
-  box-sizing: border-box; /* Asegura que el padding no desborde el contenedor padre */
 }
 
-.tarjeta-valoracion:hover {
+.valoracion-tarjeta-moderna:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgb(0 0 0 / 10%);
+  box-shadow: 0 10px 25px rgb(0 0 0 / 10%) !important;
 }
 
-/* Lado Izquierdo: Perfil */
-.valoracion-perfil-columna {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 120px;
-}
-
-.valoracion-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #f8f9fa;
-  box-shadow: 0 4px 10px rgb(0 0 0 / 10%);
-  margin-bottom: 10px;
-}
-
-.valoracion-nombre-autor {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #555;
-  text-align: center;
-}
-
-/* Lado Derecho: Contenido y Estrellas */
-.valoracion-contenido-columna {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.valoracion-texto-resena {
-  font-size: 1.05rem;
-  color: #444;
-  line-height: 1.6;
-  margin: 0 0 15px 0;
-  font-style: italic;
+/* Avatar del Autor */
+.valoracion-avatar-moderno {
+  width: 85px;
+  height: 85px;
+  border: 2px solid #fff;
 }
 
 /* Estrellas */
-.valoracion-estrellas-contenedor {
-  display: flex;
-  gap: 5px;
+.valoracion-estrella {
+  font-size: 1.3rem;
 }
 
-.estrella {
-  font-size: 1.8rem;
-}
-
-.estrella.activa {
+.valoracion-estrella.activa {
   color: #f3961c; /* Naranjo de tu proyecto */
 }
 
-.estrella.inactiva {
+.valoracion-estrella.inactiva {
   color: #e0e0e0; /* Gris claro */
 }
 
-/* Responsividad para móviles */
-@media (max-width: 600px) {
-  .tarjeta-valoracion {
-    flex-direction: column;
-    text-align: center;
-    gap: 15px;
-    padding: 25px 20px;
-  }
+/* Destacado de a quién va dirigida ("Para: ...") */
+.valoracion-destacado {
+  color: #f3961c;
+}
 
-  .valoracion-estrellas-contenedor {
-    justify-content: center;
-  }
+/* Texto principal de la reseña */
+.valoracion-texto-moderno {
+  font-size: 1rem;
+  line-height: 1.6;
+  font-style: italic;
 }
 
 /* --- CONTENEDOR DE LA LISTA DE VALORACIONES --- */

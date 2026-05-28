@@ -7,6 +7,7 @@ import { getRespuestasPorReseniaFront, createRespuestaResenia } from '../servici
 import { AuthContext } from '../context/AuthContext';
 import '../style/seccionPantallas/ValoracionPantalla.css'; // Asegúrate de tener este archivo CSS para los estilos
 import '../style/cards/CajaComentario.css'; // Estilos para la caja de comentarios
+import BarraBusqueda from '../assets/barraBusqueda.jsx';
 
 const ValoracionesPantalla = () => {
   const navigate = useNavigate();
@@ -134,24 +135,28 @@ const ValoracionesPantalla = () => {
   };
 
   return (
-    <div className="valoraciones-contenedor">
-      <button className="btn-volver-flotante" onClick={() => navigate(-1)}>&#10094;</button>
-      <div className="encabezado-valoraciones">
-        <h1 className="titulo-pantalla-valoraciones">Todas las Reseñas</h1>
-        <button className="btn-crear-resenia" onClick={handleCrearResenia}>Crear Reseña</button>
-      </div>
+    <>
+      <BarraBusqueda />
+      <div className="container my-5 valoraciones-contenedor position-relative">
+        <button className="btn-volver-flotante" onClick={() => navigate(-1)}>&#10094;</button>
+        <div className="encabezado-valoraciones">
+          <h1 className="titulo-pantalla-valoraciones fw-bold text-dark m-0 fs-3">Todas las Reseñas</h1>
+          <button className="btn-crear-resenia shadow-sm" onClick={handleCrearResenia}>Crear Reseña</button>
+        </div>
 
-      {cargando && <p>Cargando valoraciones...</p>}
-      {error && <p className="error-mensaje">{error}</p>}
-      {!cargando && !error && reseniasOrdenadas.length === 0 && <p>Este usuario no tiene valoraciones aún.</p>}
+        {/* Contenedor gris para diferenciar las tarjetas del fondo */}
+        <div className="bg-light rounded-4 shadow-sm border p-4 p-md-5 mt-4 mb-5 mx-auto" style={{ maxWidth: '800px' }}>
+          {cargando && <p className="text-center text-muted fst-italic">Cargando valoraciones...</p>}
+          {error && <p className="text-center text-danger fw-bold">{error}</p>}
+          {!cargando && !error && reseniasOrdenadas.length === 0 && <p className="text-center text-muted fst-italic">Este usuario no tiene valoraciones aún.</p>}
 
-      <div className="lista-tarjetas-valoraciones">
-        {reseniasOrdenadas.map((resenia) => {
-          
-          const estaExpandido = respuestasExpandidas[resenia.reseniaId];
-          const isLoadingResp = cargandoRespuestas[resenia.reseniaId];
-          const respuestasDeEstaResenia = respuestasPorResenia[resenia.reseniaId] || [];
-          const estaRespondiendo = respondiendoResenia[resenia.reseniaId];
+          <div className="lista-tarjetas-valoraciones">
+            {reseniasOrdenadas.map((resenia) => {
+              
+              const estaExpandido = respuestasExpandidas[resenia.reseniaId];
+              const isLoadingResp = cargandoRespuestas[resenia.reseniaId];
+              const respuestasDeEstaResenia = respuestasPorResenia[resenia.reseniaId] || [];
+              const estaRespondiendo = respondiendoResenia[resenia.reseniaId];
 
           return (
             <div key={resenia.reseniaId} className="hilo-valoracion-contenedor">
@@ -166,7 +171,7 @@ const ValoracionesPantalla = () => {
               />
 
               {/* Contenedor de botones de acción */}
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div className="valoracion-acciones-contenedor">
                 {/* Botón de despliegue */}
                 <button 
                   className="btn-desplegar-respuestas"
@@ -206,7 +211,7 @@ const ValoracionesPantalla = () => {
               {estaExpandido && (
                 <div className="respuestas-anidadas-contenedor">
                   {isLoadingResp ? (
-                    <p style={{ fontSize: '0.9rem', color: '#666', marginLeft: '10px' }}>Cargando respuestas...</p>
+                    <p className="valoracion-mensaje-estado">Cargando respuestas...</p>
                   ) : respuestasDeEstaResenia.length > 0 ? (
                     respuestasDeEstaResenia.map((respuesta) => (
                       <RespuestaValoracionCard 
@@ -218,7 +223,7 @@ const ValoracionesPantalla = () => {
                       />
                     ))
                   ) : (
-                    <p style={{ fontSize: '0.9rem', color: '#666', marginLeft: '10px' }}>No hay respuestas para esta reseña.</p>
+                    <p className="valoracion-mensaje-estado">No hay respuestas para esta reseña.</p>
                   )}
                 </div>
               )}
@@ -226,7 +231,9 @@ const ValoracionesPantalla = () => {
           );
         })}
       </div>
-    </div>
+          </div>
+       </div>
+    </>
   );
 };
 
