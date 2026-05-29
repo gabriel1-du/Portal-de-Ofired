@@ -20,8 +20,9 @@ import ChatPantalla from './pantallas/PantallasMensajes/ChatPantalla'; // Import
 import MisMensajesPantalla from './pantallas/PantallasMensajes/MisMensajesPantalla'; // Importamos la lista de chats
 import FormularioTransaccion from './pantallas/Formularios/FormularioTransaccion'; // Importamos el formulario de transacciones
 import ListaTratos from './pantallas/PantallasMensajes/ListaTratos'; // Importamos la lista de tratos
+//Seccion de administradores
 import PantallaAdministradorUsuarios from './pantallas/SeccionAdministrador/PantallaAdministradorUsuarios'; // Importamos pantalla de administrador
-
+import PantallaAdministradorRegiones from './pantallas/SeccionAdministrador/PantallaAdministradorRegiones'; // Importamos pantalla de administrador regiones
 // IMPORTAMOS LA PANTALLA DE COMENTARIOS
 import DetallePublicacionPantalla from './pantallas/DetallePublicacionPantalla'; 
 
@@ -52,13 +53,19 @@ function App() {
           <Route path="/mis-mensajes" element={<MisMensajesPantalla />} />
           <Route path="/crear-transaccion/:idCliente" element={<FormularioTransaccion />} />
           <Route path="/mis-tratos" element={<ListaTratos />} />
+
+          {/* RUTA PARA EL PANEL DE ADMINISTRACIÓN */}
           <Route path="/admin/usuarios" element={<PantallaAdministradorUsuarios />} />
+    
+          <Route path="/admin/regiones" element={<PantallaAdministradorRegiones />} />
 
           {/* RUTA DINÁMICA PARA EL DETALLE Y COMENTARIOS DE LA PUBLICACIÓN */}
           <Route path="/publicacion/:idPublicacion" element={<DetallePublicacionPantalla />} />
 
           {/* IMPLEMENTACIÓN: NUEVA RUTA PARA EL FORMULARIO DE CREACIÓN */}
           <Route path="/crear-publicacion" element={<FormularioCrearPublicacion />} />
+
+          
         </Routes>
       </div>
     </Router>

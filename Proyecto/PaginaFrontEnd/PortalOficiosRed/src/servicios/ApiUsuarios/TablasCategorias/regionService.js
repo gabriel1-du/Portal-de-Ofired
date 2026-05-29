@@ -35,13 +35,14 @@ export const getRegionById = async (id) => {
 };
 
 // Función para crear una nueva región
-export const createRegion = async (regionData) => {
+export const createRegion = async (regionData, token) => {
   try {
     console.log("Llamando a la API de Regiones (POST):", `${API_URL_REGIONES}`);
     const response = await fetch(`${API_URL_REGIONES}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(regionData),
     });
@@ -61,13 +62,14 @@ export const createRegion = async (regionData) => {
 };
 
 // Función para actualizar una región existente por su ID
-export const updateRegion = async (id, regionData) => {
+export const updateRegion = async (id, regionData, token) => {
   try {
     console.log("Llamando a la API de Regiones (PUT):", `${API_URL_REGIONES}/${id}`);
     const response = await fetch(`${API_URL_REGIONES}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(regionData),
     });
@@ -86,6 +88,31 @@ export const updateRegion = async (id, regionData) => {
     }
   } catch (error) {
     console.error(`Algo falló en la petición para actualizar la región con ID ${id}:`, error);
+    throw error;
+  }
+};
+
+// Función para eliminar una región por su ID
+export const deleteRegion = async (id, token) => {
+  try {
+    console.log("Llamando a la API de Regiones (DELETE):", `${API_URL_REGIONES}/${id}`);
+    const response = await fetch(`${API_URL_REGIONES}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      console.log(`Región con ID ${id} eliminada exitosamente.`);
+      return { message: `Región con ID ${id} eliminada.` };
+    } else {
+      const errorText = await response.text();
+      console.error(`Error al eliminar la región con ID ${id}. Respuesta del servidor:`, errorText);
+      throw new Error(`Error al eliminar la región: ${errorText}`);
+    }
+  } catch (error) {
+    console.error(`Algo falló en la petición para eliminar la región con ID ${id}:`, error);
     throw error;
   }
 };
