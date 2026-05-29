@@ -20,6 +20,18 @@ const BarraLateralAdmin = ({ menuActivo }) => {
         >
           📍 Entidad: Regiones
         </button>
+        <button 
+          className={`admin-menu-btn ${menuActivo === 'comunas' ? 'activo' : ''}`}
+          onClick={() => navigate('/admin/comunas')}
+        >
+          🏙️ Entidad: Comunas
+        </button>
+        <button 
+          className={`admin-menu-btn ${menuActivo === 'oficios' ? 'activo' : ''}`}
+          onClick={() => navigate('/admin/oficios')}
+        >
+          💼 Entidad: Oficios
+        </button>
       </nav>
     </aside>
   );

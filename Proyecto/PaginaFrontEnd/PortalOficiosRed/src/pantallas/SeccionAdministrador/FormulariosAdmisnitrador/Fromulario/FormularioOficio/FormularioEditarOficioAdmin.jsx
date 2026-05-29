@@ -1,47 +1,47 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../../../../context/AuthContext';
-import { getRegionById, updateRegion } from '../../../../../servicios/ApiUsuarios/TablasCategorias/regionService';
+import { getOficioById, updateOficio } from '../../../../../servicios/ApiUsuarios/TablasCategorias/oficioService';
 import '../../../../../style/styleAdmin/formulariosAdmin.css';
 
-const FormularioEditarRegionAdmin = ({ regionEdicionId, onClose, onRefresh }) => {
+const FormularioEditarOficioAdmin = ({ oficioEdicionId, onClose, onRefresh }) => {
   const { token } = useContext(AuthContext);
-  const [nombreRegion, setNombreRegion] = useState('');
+  const [nombreOficio, setNombreOficio] = useState('');
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(true);
   const [enviando, setEnviando] = useState(false);
 
   useEffect(() => {
-    const cargarRegion = async () => {
+    const cargarOficio = async () => {
       try {
-        const data = await getRegionById(regionEdicionId);
-        setNombreRegion(data.nombreRegion || '');
+        const data = await getOficioById(oficioEdicionId);
+        setNombreOficio(data.nombreOficio || '');
       } catch (err) {
-        setError('No se pudo cargar la información de la región.');
+        setError('No se pudo cargar la información del oficio.');
         console.error(err);
       } finally {
         setCargando(false);
       }
     };
-    cargarRegion();
-  }, [regionEdicionId]);
+    cargarOficio();
+  }, [oficioEdicionId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!nombreRegion.trim()) {
-      setError('El nombre de la región no puede estar vacío.');
+    if (!nombreOficio.trim()) {
+      setError('El nombre del oficio no puede estar vacío.');
       return;
     }
     setError('');
     setEnviando(true);
 
     try {
-      await updateRegion(regionEdicionId, { nombreRegion }, token);
-      alert('Región actualizada con éxito.');
+      await updateOficio(oficioEdicionId, { nombreOficio }, token);
+      alert('Oficio actualizado con éxito.');
       onRefresh();
       onClose();
     } catch (err) {
-      console.error("Error al actualizar la región:", err);
-      setError(err.message || 'Ocurrió un error al actualizar la región.');
+      console.error("Error al actualizar el oficio:", err);
+      setError(err.message || 'Ocurrió un error al actualizar el oficio.');
     } finally {
       setEnviando(false);
     }
@@ -51,21 +51,15 @@ const FormularioEditarRegionAdmin = ({ regionEdicionId, onClose, onRefresh }) =>
     <div className="admin-modal-overlay">
       <div className="admin-modal-content">
         <button className="admin-modal-close" onClick={onClose}>&times;</button>
-        <h2>Editar Región (ID: {regionEdicionId})</h2>
+        <h2>Editar Oficio (ID: {oficioEdicionId})</h2>
         {cargando ? (
-          <p>Cargando...</p>
+          <p className="text-center">Cargando...</p>
         ) : (
           <form onSubmit={handleSubmit}>
             {error && <p className="admin-form-error">{error}</p>}
             <div className="admin-form-group">
-              <label htmlFor="nombreRegion">Nombre de la Región:</label>
-              <input
-                type="text"
-                id="nombreRegion"
-                value={nombreRegion}
-                onChange={(e) => setNombreRegion(e.target.value)}
-                required
-              />
+              <label htmlFor="nombreOficio">Nombre del Oficio:</label>
+              <input type="text" id="nombreOficio" value={nombreOficio} onChange={(e) => setNombreOficio(e.target.value)} required />
             </div>
             <div className="admin-form-actions">
               <button type="button" className="admin-btn-cancelar" onClick={onClose}>Cancelar</button>
@@ -80,4 +74,4 @@ const FormularioEditarRegionAdmin = ({ regionEdicionId, onClose, onRefresh }) =>
   );
 };
 
-export default FormularioEditarRegionAdmin;
+export default FormularioEditarOficioAdmin;

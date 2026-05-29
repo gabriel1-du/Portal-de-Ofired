@@ -23,6 +23,8 @@ import ListaTratos from './pantallas/PantallasMensajes/ListaTratos'; // Importam
 //Seccion de administradores
 import PantallaAdministradorUsuarios from './pantallas/SeccionAdministrador/PantallaAdministradorUsuarios'; // Importamos pantalla de administrador
 import PantallaAdministradorRegiones from './pantallas/SeccionAdministrador/PantallaAdministradorRegiones'; // Importamos pantalla de administrador regiones
+import PantallaAdministradorComunas from './pantallas/SeccionAdministrador/PantallaAdministradorComunas'; // Importamos pantalla de administrador comunas
+import PantallaAdministradorOficios from './pantallas/SeccionAdministrador/PantallaAdministradorOficios'; // Importamos pantalla de administrador oficios
 // IMPORTAMOS LA PANTALLA DE COMENTARIOS
 import DetallePublicacionPantalla from './pantallas/DetallePublicacionPantalla'; 
 
@@ -58,6 +60,8 @@ function App() {
           <Route path="/admin/usuarios" element={<PantallaAdministradorUsuarios />} />
     
           <Route path="/admin/regiones" element={<PantallaAdministradorRegiones />} />
+          <Route path="/admin/comunas" element={<PantallaAdministradorComunas />} />
+          <Route path="/admin/oficios" element={<PantallaAdministradorOficios />} />
 
           {/* RUTA DINÁMICA PARA EL DETALLE Y COMENTARIOS DE LA PUBLICACIÓN */}
           <Route path="/publicacion/:idPublicacion" element={<DetallePublicacionPantalla />} />

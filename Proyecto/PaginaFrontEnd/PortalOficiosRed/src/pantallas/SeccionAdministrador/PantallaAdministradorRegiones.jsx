@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { getAllRegions, deleteRegion } from '../../servicios/ApiUsuarios/TablasCategorias/regionService'; 
-import FormularioEditarRegionAdmin from './FormulariosAdmisnitrador/FormularioEditarRegionAdmin'; 
+import FormularioEditarRegionAdmin from './FormulariosAdmisnitrador/Fromulario/FormularioRegion/FormularioEditarRegionAdmin'; 
 import FormularioCrearRegionAdmin from './FormulariosAdmisnitrador/Fromulario/FormularioRegion/FormularioCrearRegionAdmin'; 
 import BarraLateralAdmin from '../../assets/barrasLaterales/BarraLateralAdmin';
-import '../../style/styleAdmin/pantallaAdminUsuarios.css';
+import '../../style/styleAdmin/formularioEditarUsuarioAdmin.css';
 
 const PantallaAdministradorRegiones = () => {
   const navigate = useNavigate();
