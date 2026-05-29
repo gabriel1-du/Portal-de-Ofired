@@ -35,13 +35,14 @@ export const getSexoById = async (id) => {
 };
 
 // Función para crear un nuevo sexo
-export const createSexo = async (sexoData) => {
+export const createSexo = async (sexoData, token) => {
   try {
     console.log("Llamando a la API de Sexos (POST):", `${API_URL_SEXOS}`);
     const response = await fetch(`${API_URL_SEXOS}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(sexoData),
     });
@@ -61,13 +62,14 @@ export const createSexo = async (sexoData) => {
 };
 
 // Función para actualizar un sexo existente por su ID
-export const updateSexo = async (id, sexoData) => {
+export const updateSexo = async (id, sexoData, token) => {
   try {
     console.log("Llamando a la API de Sexos (PUT):", `${API_URL_SEXOS}/${id}`);
     const response = await fetch(`${API_URL_SEXOS}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(sexoData),
     });
@@ -83,6 +85,31 @@ export const updateSexo = async (id, sexoData) => {
     }
   } catch (error) {
     console.error(`Algo falló en la petición para actualizar el sexo con ID ${id}:`, error);
+    throw error;
+  }
+};
+
+// Función para eliminar un sexo por su ID
+export const deleteSexo = async (id, token) => {
+  try {
+    console.log("Llamando a la API de Sexos (DELETE):", `${API_URL_SEXOS}/${id}`);
+    const response = await fetch(`${API_URL_SEXOS}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      console.log(`Sexo con ID ${id} eliminado exitosamente.`);
+      return { message: `Sexo con ID ${id} eliminado.` };
+    } else {
+      const errorText = await response.text();
+      console.error(`Error al eliminar el sexo con ID ${id}. Respuesta del servidor:`, errorText);
+      throw new Error(`Error al eliminar el sexo: ${errorText}`);
+    }
+  } catch (error) {
+    console.error(`Algo falló en la petición para eliminar el sexo con ID ${id}:`, error);
     throw error;
   }
 };

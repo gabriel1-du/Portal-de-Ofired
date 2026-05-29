@@ -1,47 +1,47 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../../../../context/AuthContext';
-import { getOficioById, updateOficio } from '../../../../../servicios/ApiUsuarios/TablasCategorias/oficioService';
+import { getSexoById, updateSexo } from '../../../../../servicios/ApiUsuarios/TablasCategorias/sexoService';
 import '../../../../../style/styleAdmin/formulariosAdmin.css';
 
-const FormularioEditarOficioAdmin = ({ oficioEdicionId, onClose, onRefresh }) => {
+const FormularioEditarSexoAdmin = ({ sexoEdicionId, onClose, onRefresh }) => {
   const { token } = useContext(AuthContext);
-  const [nombreOficio, setNombreOficio] = useState('');
+  const [nombreSexo, setNombreSexo] = useState('');
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(true);
   const [enviando, setEnviando] = useState(false);
 
   useEffect(() => {
-    const cargarOficio = async () => {
+    const cargarData = async () => {
       try {
-        const data = await getOficioById(oficioEdicionId);
-        setNombreOficio(data.nombreOficio || '');
+        const data = await getSexoById(sexoEdicionId);
+        setNombreSexo(data.nombreSexo || '');
       } catch (err) {
-        setError('No se pudo cargar la información del oficio.');
+        setError('No se pudo cargar la información.');
         console.error(err);
       } finally {
         setCargando(false);
       }
     };
-    cargarOficio();
-  }, [oficioEdicionId]);
+    cargarData();
+  }, [sexoEdicionId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!nombreOficio.trim()) {
-      setError('El nombre del oficio no puede estar vacío.');
+    if (!nombreSexo.trim()) {
+      setError('El nombre no puede estar vacío.');
       return;
     }
     setError('');
     setEnviando(true);
 
     try {
-      await updateOficio(oficioEdicionId, { nombreOficio }, token);
-      alert('Oficio actualizado con éxito.');
+      await updateSexo(sexoEdicionId, { nombreSexo }, token);
+      alert('Registro actualizado con éxito.');
       onRefresh();
       onClose();
     } catch (err) {
-      console.error("Error al actualizar el oficio:", err);
-      setError(err.message || 'Ocurrió un error al actualizar el oficio.');
+      console.error("Error al actualizar:", err);
+      setError(err.message || 'Ocurrió un error al actualizar.');
     } finally {
       setEnviando(false);
     }
@@ -51,15 +51,15 @@ const FormularioEditarOficioAdmin = ({ oficioEdicionId, onClose, onRefresh }) =>
     <div className="admin-modal-overlay">
       <div className="admin-modal-content">
         <button className="admin-modal-close" onClick={onClose}>&times;</button>
-        <h2>Editar Oficio (ID: {oficioEdicionId})</h2>
+        <h2>Editar Sexo (ID: {sexoEdicionId})</h2>
         {cargando ? (
           <p className="text-center">Cargando...</p>
         ) : (
           <form onSubmit={handleSubmit}>
             {error && <p className="admin-form-error">{error}</p>}
             <div className="admin-form-group">
-              <label htmlFor="nombreOficio">Nombre del Oficio:</label>
-              <input type="text" id="nombreOficio" value={nombreOficio} onChange={(e) => setNombreOficio(e.target.value)} required />
+              <label htmlFor="nombreSexo">Nombre del Sexo/Género:</label>
+              <input type="text" id="nombreSexo" value={nombreSexo} onChange={(e) => setNombreSexo(e.target.value)} required />
             </div>
             <div className="admin-form-actions">
               <button type="button" className="admin-btn-cancelar" onClick={onClose}>Cancelar</button>
@@ -74,4 +74,4 @@ const FormularioEditarOficioAdmin = ({ oficioEdicionId, onClose, onRefresh }) =>
   );
 };
 
-export default FormularioEditarOficioAdmin;
+export default FormularioEditarSexoAdmin;

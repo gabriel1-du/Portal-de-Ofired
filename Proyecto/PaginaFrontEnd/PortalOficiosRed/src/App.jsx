@@ -25,6 +25,8 @@ import PantallaAdministradorUsuarios from './pantallas/SeccionAdministrador/Pant
 import PantallaAdministradorRegiones from './pantallas/SeccionAdministrador/PantallaAdministradorRegiones'; // Importamos pantalla de administrador regiones
 import PantallaAdministradorComunas from './pantallas/SeccionAdministrador/PantallaAdministradorComunas'; // Importamos pantalla de administrador comunas
 import PantallaAdministradorOficios from './pantallas/SeccionAdministrador/PantallaAdministradorOficios'; // Importamos pantalla de administrador oficios
+import PantallaAdministradorSexos from './pantallas/SeccionAdministrador/PantallaAdministradorSexos';
+import PantallaAdministradorMediosDePago from './pantallas/SeccionAdministrador/PantallaAdministradorMediosDePago';
 // IMPORTAMOS LA PANTALLA DE COMENTARIOS
 import DetallePublicacionPantalla from './pantallas/DetallePublicacionPantalla'; 
 
@@ -62,6 +64,8 @@ function App() {
           <Route path="/admin/regiones" element={<PantallaAdministradorRegiones />} />
           <Route path="/admin/comunas" element={<PantallaAdministradorComunas />} />
           <Route path="/admin/oficios" element={<PantallaAdministradorOficios />} />
+          <Route path="/admin/sexos" element={<PantallaAdministradorSexos />} />
+          <Route path="/admin/medios-pago" element={<PantallaAdministradorMediosDePago />} />
 
           {/* RUTA DINÁMICA PARA EL DETALLE Y COMENTARIOS DE LA PUBLICACIÓN */}
           <Route path="/publicacion/:idPublicacion" element={<DetallePublicacionPantalla />} />

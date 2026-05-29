@@ -32,6 +32,18 @@ const BarraLateralAdmin = ({ menuActivo }) => {
         >
           💼 Entidad: Oficios
         </button>
+        <button 
+          className={`admin-menu-btn ${menuActivo === 'sexos' ? 'activo' : ''}`}
+          onClick={() => navigate('/admin/sexos')}
+        >
+          🚻 Entidad: Sexos
+        </button>
+        <button 
+          className={`admin-menu-btn ${menuActivo === 'medios-pago' ? 'activo' : ''}`}
+          onClick={() => navigate('/admin/medios-pago')}
+        >
+          💳 Entidad: Medios de Pago
+        </button>
       </nav>
     </aside>
   );
