@@ -124,8 +124,9 @@ CREATE TABLE publicacion (
     cantidad_likes INT DEFAULT 0,
     CONSTRAINT fk_publi_autor FOREIGN KEY (id_autor) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
     CONSTRAINT fk_publi_region FOREIGN KEY (id_region) REFERENCES region(id_region),
-    CONSTRAINT fk_publi_comuna KEY (id_comuna) REFERENCES comuna(id_comuna)
+    CONSTRAINT fk_publi_comuna foreign key (id_comuna) REFERENCES comuna(id_comuna)
 );
+
 
 CREATE TABLE fotos_publi (
     id_foto_publi INT AUTO_INCREMENT PRIMARY KEY,

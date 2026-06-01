@@ -1,5 +1,5 @@
 # URL de conexión a MySQL local (Workbench)
-DB_URL=jdbc:mysql://localhost:3306/gasfiteria_db
+DB_URL=jdbc: 
 
 # Credenciales de la Base de Datos
 DB_USER=root

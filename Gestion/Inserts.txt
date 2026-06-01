@@ -39,3 +39,7 @@ INSERT INTO TIPO_DE_TRABAJO (nombre_tipo_trabajo) VALUES
 ('Reparación'),
 ('Instalación Nueva'),
 ('Mantenimiento Preventivo');
+
+INSERT INTO oficio (nombre_oficio) VALUES ('Gasfitería');
+INSERT INTO oficio (nombre_oficio) VALUES ('Electricidad');
+INSERT INTO oficio (nombre_oficio) VALUES ('Climatización y Aire Acondicionado');
