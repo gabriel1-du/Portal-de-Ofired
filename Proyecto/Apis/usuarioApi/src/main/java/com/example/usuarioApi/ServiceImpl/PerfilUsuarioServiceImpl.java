@@ -1,5 +1,6 @@
 package com.example.usuarioApi.ServiceImpl;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,12 +8,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.usuarioApi.DTO.PerfilUsuarioDTO.PerfilUsuarioActualizarDTO;
 import com.example.usuarioApi.DTO.PerfilUsuarioDTO.PerfilUsuarioCrearDTO;
 import com.example.usuarioApi.DTO.PerfilUsuarioDTO.PerfilUsuarioLeerDTO;
 import com.example.usuarioApi.DTO.PerfilUsuarioDTO.PerfilUsuarioLeerFrontDTO;
 import com.example.usuarioApi.DTO.PerfilUsuarioDTO.MapToPerfilUsuarioDTO.PerfilUsuarioMapper;
+import com.example.usuarioApi.Minio.MinioStorageService;
 import com.example.usuarioApi.Model.PerfilUsuario;
 import com.example.usuarioApi.Model.Usuario;
 import com.example.usuarioApi.Repository.PerfilUsuarioRepository;
@@ -24,7 +27,7 @@ import com.example.usuarioApi.Service.PerfilUsuarioService;
 
 @Service
 public class PerfilUsuarioServiceImpl implements PerfilUsuarioService {
-@Autowired
+    @Autowired
     private PerfilUsuarioRepository perfilRepository;
 
     @Autowired
@@ -33,27 +36,44 @@ public class PerfilUsuarioServiceImpl implements PerfilUsuarioService {
     @Autowired
     private PerfilUsuarioMapper mapper;
 
+    @Autowired
+    private MinioStorageService minioStorageService;
+
     @Override
-    @Transactional
-    public PerfilUsuarioLeerDTO crearPerfil(PerfilUsuarioCrearDTO dto) {
-        // 1. Buscamos al usuario base. Si no existe, lanzamos excepción.
+    @Transactional //-----METODO PARA CREAR------
+    public PerfilUsuarioLeerDTO crearPerfil(PerfilUsuarioCrearDTO dto, MultipartFile archivoBanner) {
+        // 1. Buscamos al usuario base
         Usuario usuario = usuarioRepository.findById(dto.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Error: El usuario con ID " + dto.getIdUsuario() + " no existe."));
 
-        // 2. Validación de seguridad: Evitar que un usuario tenga dos perfiles (Relación 1 a 1)
+        // 2. Validación de seguridad 1 a 1
         if (perfilRepository.findByUsuario_IdUsuario(dto.getIdUsuario()).isPresent()) {
-            throw new RuntimeException("Error: El usuario ya posee un perfil de usuario activo.");
+            throw new RuntimeException("Error: El usuario ya posee un perfil activo.");
         }
 
-        // 3. El Mapper ahora es automático: toma el DTO y el Usuario, 
-        // y copia internamente pNombre, apellidos, region, comuna, etc.
-        PerfilUsuario nuevaEntidad = mapper.mapToEntityCrear(dto, usuario);
+        // 3. Procesamos el archivo binario del banner si existe
+        String urlBanner = "N"; // Valor por defecto
+        if (archivoBanner != null && !archivoBanner.isEmpty()) {
+            try {
+                urlBanner = minioStorageService.subirArchivo(archivoBanner);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al subir el Banner a MinIO: " + e.getMessage());
+            }
+        }
 
-        // 4. Guardamos la entidad y la transformamos al DTO de lectura
+        // Rescatamos la foto de perfil que ya tenía el usuario base al registrarse nivel 1
+        String urlPerfilOriginal = usuario.getFoto() != null ? usuario.getFoto() : "N";
+
+        // 4. Mapeamos pasando las dos URLs resueltas
+        PerfilUsuario nuevaEntidad = mapper.mapToEntityCrear(dto, usuario, urlBanner, urlPerfilOriginal);
+
+        // 5. Guardamos en Aiven
         PerfilUsuario guardado = perfilRepository.save(nuevaEntidad);
         return mapper.mapToLeerDTO(guardado);
     }
 
+
+    //--------METODOS GET--------
     @Override
     @Transactional(readOnly = true)
     public PerfilUsuarioLeerDTO obtenerPorId(Integer id) {
@@ -85,21 +105,33 @@ public class PerfilUsuarioServiceImpl implements PerfilUsuarioService {
                 .map(mapper::mapToLeerDTO).collect(Collectors.toList());
     }
 
+
+    //---METODOS UPDATE Y DELETE---
     @Override
     @Transactional
-    public PerfilUsuarioLeerDTO actualizarPerfil(Integer id, PerfilUsuarioActualizarDTO dto) {
-        // 1. Buscamos el perfil existente
+    public PerfilUsuarioLeerDTO actualizarPerfil(Integer id, PerfilUsuarioActualizarDTO dto, MultipartFile nuevoBanner) {
+        // 1. Buscamos el perfil existente en Aiven
         PerfilUsuario perfilExistente = perfilRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Perfil no encontrado para actualizar."));
 
-        // 2. Aplicamos solo los cambios de apodo y banner. 
-        // Los datos de región, comuna o nombres se mantienen intactos en esta capa.
-        mapper.mapToEntityActualizar(dto, perfilExistente);
+        // 2. Procesamos el nuevo archivo binario de banner solo si el cliente lo adjuntó
+        String nuevaUrlBanner = null; 
+        if (nuevoBanner != null && !nuevoBanner.isEmpty()) {
+            try {
+                nuevaUrlBanner = minioStorageService.subirArchivo(nuevoBanner);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al actualizar el Banner en MinIO: " + e.getMessage());
+            }
+        }
 
-        // 3. Guardamos y retornamos
+        // 3. Aplicamos los cambios al objeto mapeado (pasando la nueva URL si existe)
+        mapper.mapToEntityActualizar(dto, perfilExistente, nuevaUrlBanner);
+
+        // 4. Sincronizamos los cambios en Aiven
         PerfilUsuario actualizado = perfilRepository.save(perfilExistente);
         return mapper.mapToLeerDTO(actualizado);
     }
+    
 
     @Override
     @Transactional
@@ -110,7 +142,7 @@ public class PerfilUsuarioServiceImpl implements PerfilUsuarioService {
         perfilRepository.deleteById(id);
     }
 
-    // Métodos de búsqueda individual delegados al método de filtros múltiples para mayor eficiencia
+    //----métodos de búsqueda por filtros específicos (que internamente llaman al método de filtros múltiples)----
     @Override
     @Transactional(readOnly = true)
     public List<PerfilUsuarioLeerDTO> buscarPorRegion(Integer idRegion) {

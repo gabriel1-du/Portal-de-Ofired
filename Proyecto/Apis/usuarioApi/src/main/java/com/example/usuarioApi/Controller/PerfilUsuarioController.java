@@ -4,16 +4,19 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.usuarioApi.DTO.PerfilUsuarioDTO.PerfilUsuarioActualizarDTO;
 import com.example.usuarioApi.DTO.PerfilUsuarioDTO.PerfilUsuarioCrearDTO;
@@ -30,11 +33,15 @@ public class PerfilUsuarioController {
 
     // --- CREAR (POST) ---
     // Recibe un JSON pequeño con idUsuario, nombreApodo y fotografiaBanner
-    @PostMapping
-    public ResponseEntity<PerfilUsuarioLeerDTO> crearPerfil(@RequestBody PerfilUsuarioCrearDTO dto) {
-        PerfilUsuarioLeerDTO nuevoPerfil = perfilService.crearPerfil(dto);
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<PerfilUsuarioLeerDTO> crearPerfil(
+            @RequestPart("perfil") PerfilUsuarioCrearDTO dto,
+            @RequestPart(value = "banner", required = false) MultipartFile banner) {
+            
+        PerfilUsuarioLeerDTO nuevoPerfil = perfilService.crearPerfil(dto, banner);
         return new ResponseEntity<>(nuevoPerfil, HttpStatus.CREATED);
     }
+    
 
     // --- LECTURA INDIVIDUAL (GET) ---
     @GetMapping("/{id}")
@@ -90,12 +97,13 @@ public class PerfilUsuarioController {
     }
 
     // --- ACTUALIZAR (PUT) ---
-    // Recibe un JSON pequeño solo con nombreApodo y/o fotografiaBanner
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<PerfilUsuarioLeerDTO> actualizarPerfil(
             @PathVariable Integer id, 
-            @RequestBody PerfilUsuarioActualizarDTO dto) {
-        PerfilUsuarioLeerDTO perfilActualizado = perfilService.actualizarPerfil(id, dto);
+            @RequestPart("perfil") PerfilUsuarioActualizarDTO dto,
+            @RequestPart(value = "banner", required = false) MultipartFile banner) {
+            
+        PerfilUsuarioLeerDTO perfilActualizado = perfilService.actualizarPerfil(id, dto, banner);
         return ResponseEntity.ok(perfilActualizado);
     }
 

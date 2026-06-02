@@ -52,63 +52,55 @@ public class PerfilUsuarioMapper {
         return dto;
     }
 
-    // --- MAP TO ENTITY CREAR (AUTOMATIZADO) ---
-    public PerfilUsuario mapToEntityCrear(PerfilUsuarioCrearDTO dto, Usuario usuario) {
+    // --- MAP TO ENTITY CREAR (Pasando URLs calculadas) ---
+    public PerfilUsuario mapToEntityCrear(PerfilUsuarioCrearDTO dto, Usuario usuario, String urlBanner, String urlPerfil) {
         PerfilUsuario entidad = new PerfilUsuario();
 
-        // 1. Vínculo principal
         entidad.setUsuario(usuario);
-
-        // 2. Datos exclusivos del Perfil (Vienen del JSON/DTO)
         entidad.setNombreApodo(dto.getNombreApodo());
-        entidad.setFotografiaBanner(dto.getFotografiaBanner());
         
-        // --- NUEVO: Lógica de la descripción por defecto ---
+        // ASIGNACIÓN DE MULTIMEDIA DESDE MINIO
+        entidad.setFotografiaBanner(urlBanner);
+        entidad.setFotoPerfil(urlPerfil); // Viene del usuario original, pero se puede pisar si se requiere
+
         if (dto.getDescripcion() == null || dto.getDescripcion().trim().isEmpty()) {
             entidad.setDescripcion("Sin descripción aún...");
         } else {
             entidad.setDescripcion(dto.getDescripcion());
         }
 
-        // 3. Auto-completado: Copiamos los datos básicos desde Usuario a PerfilUsuario
         entidad.setPNombre(usuario.getPNombre());
         entidad.setSNombre(usuario.getSNombre());
         entidad.setPApellido(usuario.getPApellido());
         entidad.setSApellido(usuario.getSApellido());
         entidad.setNumeroTelefono(usuario.getNumeroTelef()); 
-        entidad.setFotoPerfil(usuario.getFoto()); 
 
-        // 4. Auto-completado: Copiamos las Relaciones
         entidad.setRegion(usuario.getRegion());
         entidad.setComuna(usuario.getComuna());
         entidad.setOficio(usuario.getOficio());
         entidad.setSexoUsuario(usuario.getSexo()); 
 
-        // 5. Valores por defecto
         entidad.setCalificacionPUsuario(BigDecimal.ZERO);
 
         return entidad;
     }
 
     // --- MAP TO ENTITY ACTUALIZAR (SOLO DATOS DE PERFIL) ---
-    public void mapToEntityActualizar(PerfilUsuarioActualizarDTO dto, PerfilUsuario entidad) {
-        
+    public void mapToEntityActualizar(PerfilUsuarioActualizarDTO dto, PerfilUsuario entidad, String nuevaUrlBanner) {
+    
         if (dto.getNombreApodo() != null) {
             entidad.setNombreApodo(dto.getNombreApodo());
         }
         
-        if (dto.getFotografiaBanner() != null) {
-            entidad.setFotografiaBanner(dto.getFotografiaBanner());
+        // Si el servicio logró procesar un archivo de banner nuevo, se lo inyectamos
+        if (nuevaUrlBanner != null) {
+            entidad.setFotografiaBanner(nuevaUrlBanner);
         }
         
-        // --- NUEVO: Actualización de la descripción ---
         if (dto.getDescripcion() != null) {
-            // Aquí puedes decidir si permites que la actualicen a un texto vacío
-            // o si solo aplicas el cambio. Lo estándar es aplicar lo que mande el JSON.
             entidad.setDescripcion(dto.getDescripcion());
         }
         
-        // --- NUEVO: Actualización de la calificación ---
         if (dto.getCalificacion() != null) {
             entidad.setCalificacionPUsuario(dto.getCalificacion());
         }
