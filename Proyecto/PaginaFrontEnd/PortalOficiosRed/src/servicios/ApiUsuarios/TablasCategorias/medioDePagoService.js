@@ -1,13 +1,14 @@
 const API_URL = import.meta.env.VITE_MEDIOS_PAGO_API_URL;
 
 // Función para crear un nuevo medio de pago (POST /crear)
-export const crearMedioDePago = async (dto) => {
+export const crearMedioDePago = async (dto, token) => {
   try {
     console.log("Llamando a la API de Medio de Pago (POST):", `${API_URL}/crear`);
     const response = await fetch(`${API_URL}/crear`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(dto),
     });
@@ -53,13 +54,14 @@ export const leerTodosLosMediosDePago = async () => {
 };
 
 // Función para actualizar un medio de pago (PUT /actualizar/{id})
-export const actualizarMedioDePago = async (id, dto) => {
+export const actualizarMedioDePago = async (id, dto, token) => {
   try {
     console.log("Llamando a la API de Medio de Pago (PUT):", `${API_URL}/actualizar/${id}`);
     const response = await fetch(`${API_URL}/actualizar/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(dto),
     });
@@ -76,11 +78,14 @@ export const actualizarMedioDePago = async (id, dto) => {
 };
 
 // Función para eliminar un medio de pago (DELETE /eliminar/{id})
-export const eliminarMedioDePago = async (id) => {
+export const eliminarMedioDePago = async (id, token) => {
   try {
     console.log("Llamando a la API de Medio de Pago (DELETE):", `${API_URL}/eliminar/${id}`);
     const response = await fetch(`${API_URL}/eliminar/${id}`, {
       method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
     if (!response.ok) throw new Error(`Error al eliminar el medio de pago con ID ${id}.`);
     return true;

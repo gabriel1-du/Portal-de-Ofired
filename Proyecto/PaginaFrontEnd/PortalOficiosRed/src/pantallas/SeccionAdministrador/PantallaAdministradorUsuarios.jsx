@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { leerTodosLosUsuarios, eliminarUsuario } from '../../servicios/usuariosService'; 
 import FormularioEditarUsuarioAdmin from './FormulariosAdmisnitrador/FormularioEditarUsuarioAdmin'; 
 import FormularioCrearUsuarioAdmin from './FormulariosAdmisnitrador/FormularioCrearUsuarioAdmin'; 
+import BarraLateralAdmin from '../../assets/barrasLaterales/BarraLateralAdmin';
 import '../../style/styleAdmin/pantallaAdminUsuarios.css';
 
 const PantallaAdministradorUsuarios = () => {
@@ -78,18 +79,7 @@ const PantallaAdministradorUsuarios = () => {
       </header>
 
       <div className="admin-body">
-        {/* Menú Lateral Izquierdo */}
-        <aside className="admin-sidebar-menu">
-          <nav>
-            <button 
-              className={`admin-menu-btn ${menuActivo === 'usuarios' ? 'activo' : ''}`}
-              onClick={() => setMenuActivo('usuarios')}
-            >
-              👥 Entidad: Usuarios
-            </button>
-            {/* Aquí puedes agregar más entidades en el futuro (Oficios, Reseñas, etc.) */}
-          </nav>
-        </aside>
+        <BarraLateralAdmin menuActivo={menuActivo} />
 
         {/* Contenido Principal Derecho (Tabla) */}
         <main className="admin-content-area">

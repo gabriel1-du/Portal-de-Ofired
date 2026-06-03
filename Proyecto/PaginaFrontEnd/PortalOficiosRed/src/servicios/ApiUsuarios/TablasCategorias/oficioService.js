@@ -35,13 +35,14 @@ export const getOficioById = async (id) => {
 };
 
 // Función para crear un nuevo oficio
-export const createOficio = async (oficioData) => {
+export const createOficio = async (oficioData, token) => {
   try {
     console.log("Llamando a la API de Oficios (POST):", `${API_URL_OFICIOS}`);
     const response = await fetch(`${API_URL_OFICIOS}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(oficioData),
     });
@@ -61,13 +62,14 @@ export const createOficio = async (oficioData) => {
 };
 
 // Función para actualizar un oficio existente por su ID
-export const updateOficio = async (id, oficioData) => {
+export const updateOficio = async (id, oficioData, token) => {
   try {
     console.log("Llamando a la API de Oficios (PUT):", `${API_URL_OFICIOS}/${id}`);
     const response = await fetch(`${API_URL_OFICIOS}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(oficioData),
     });
@@ -83,6 +85,31 @@ export const updateOficio = async (id, oficioData) => {
     }
   } catch (error) {
     console.error(`Algo falló en la petición para actualizar el oficio con ID ${id}:`, error);
+    throw error;
+  }
+};
+
+// Función para eliminar un oficio por su ID
+export const deleteOficio = async (id, token) => {
+  try {
+    console.log("Llamando a la API de Oficios (DELETE):", `${API_URL_OFICIOS}/${id}`);
+    const response = await fetch(`${API_URL_OFICIOS}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      console.log(`Oficio con ID ${id} eliminado exitosamente.`);
+      return { message: `Oficio con ID ${id} eliminado.` };
+    } else {
+      const errorText = await response.text();
+      console.error(`Error al eliminar el oficio con ID ${id}. Respuesta del servidor:`, errorText);
+      throw new Error(`Error al eliminar el oficio: ${errorText}`);
+    }
+  } catch (error) {
+    console.error(`Algo falló en la petición para eliminar el oficio con ID ${id}:`, error);
     throw error;
   }
 };

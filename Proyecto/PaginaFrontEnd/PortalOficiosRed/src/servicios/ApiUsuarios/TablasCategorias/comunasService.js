@@ -35,13 +35,14 @@ export const getComunaById = async (id) => {
 };
 
 // Función para crear una nueva comuna
-export const createComuna = async (comunaData) => {
+export const createComuna = async (comunaData, token) => {
   try {
     console.log("Llamando a la API de Comunas (POST):", `${API_URL_COMUNAS}`);
     const response = await fetch(`${API_URL_COMUNAS}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(comunaData),
     });
@@ -61,13 +62,14 @@ export const createComuna = async (comunaData) => {
 };
 
 // Función para actualizar una comuna existente por su ID
-export const updateComuna = async (id, comunaData) => {
+export const updateComuna = async (id, comunaData, token) => {
   try {
     console.log("Llamando a la API de Comunas (PUT):", `${API_URL_COMUNAS}/${id}`);
     const response = await fetch(`${API_URL_COMUNAS}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(comunaData),
     });
@@ -83,6 +85,31 @@ export const updateComuna = async (id, comunaData) => {
     }
   } catch (error) {
     console.error(`Algo falló en la petición para actualizar la comuna con ID ${id}:`, error);
+    throw error;
+  }
+};
+
+// Función para eliminar una comuna por su ID
+export const deleteComuna = async (id, token) => {
+  try {
+    console.log("Llamando a la API de Comunas (DELETE):", `${API_URL_COMUNAS}/${id}`);
+    const response = await fetch(`${API_URL_COMUNAS}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      console.log(`Comuna con ID ${id} eliminada exitosamente.`);
+      return { message: `Comuna con ID ${id} eliminada.` };
+    } else {
+      const errorText = await response.text();
+      console.error(`Error al eliminar la comuna con ID ${id}. Respuesta del servidor:`, errorText);
+      throw new Error(`Error al eliminar la comuna: ${errorText}`);
+    }
+  } catch (error) {
+    console.error(`Algo falló en la petición para eliminar la comuna con ID ${id}:`, error);
     throw error;
   }
 };

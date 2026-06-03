@@ -20,8 +20,13 @@ import ChatPantalla from './pantallas/PantallasMensajes/ChatPantalla'; // Import
 import MisMensajesPantalla from './pantallas/PantallasMensajes/MisMensajesPantalla'; // Importamos la lista de chats
 import FormularioTransaccion from './pantallas/Formularios/FormularioTransaccion'; // Importamos el formulario de transacciones
 import ListaTratos from './pantallas/PantallasMensajes/ListaTratos'; // Importamos la lista de tratos
+//Seccion de administradores
 import PantallaAdministradorUsuarios from './pantallas/SeccionAdministrador/PantallaAdministradorUsuarios'; // Importamos pantalla de administrador
-
+import PantallaAdministradorRegiones from './pantallas/SeccionAdministrador/PantallaAdministradorRegiones'; // Importamos pantalla de administrador regiones
+import PantallaAdministradorComunas from './pantallas/SeccionAdministrador/PantallaAdministradorComunas'; // Importamos pantalla de administrador comunas
+import PantallaAdministradorOficios from './pantallas/SeccionAdministrador/PantallaAdministradorOficios'; // Importamos pantalla de administrador oficios
+import PantallaAdministradorSexos from './pantallas/SeccionAdministrador/PantallaAdministradorSexos';
+import PantallaAdministradorMediosDePago from './pantallas/SeccionAdministrador/PantallaAdministradorMediosDePago';
 // IMPORTAMOS LA PANTALLA DE COMENTARIOS
 import DetallePublicacionPantalla from './pantallas/DetallePublicacionPantalla'; 
 
@@ -52,13 +57,23 @@ function App() {
           <Route path="/mis-mensajes" element={<MisMensajesPantalla />} />
           <Route path="/crear-transaccion/:idCliente" element={<FormularioTransaccion />} />
           <Route path="/mis-tratos" element={<ListaTratos />} />
+
+          {/* RUTA PARA EL PANEL DE ADMINISTRACIÓN */}
           <Route path="/admin/usuarios" element={<PantallaAdministradorUsuarios />} />
+    
+          <Route path="/admin/regiones" element={<PantallaAdministradorRegiones />} />
+          <Route path="/admin/comunas" element={<PantallaAdministradorComunas />} />
+          <Route path="/admin/oficios" element={<PantallaAdministradorOficios />} />
+          <Route path="/admin/sexos" element={<PantallaAdministradorSexos />} />
+          <Route path="/admin/medios-pago" element={<PantallaAdministradorMediosDePago />} />
 
           {/* RUTA DINÁMICA PARA EL DETALLE Y COMENTARIOS DE LA PUBLICACIÓN */}
           <Route path="/publicacion/:idPublicacion" element={<DetallePublicacionPantalla />} />
 
           {/* IMPLEMENTACIÓN: NUEVA RUTA PARA EL FORMULARIO DE CREACIÓN */}
           <Route path="/crear-publicacion" element={<FormularioCrearPublicacion />} />
+
+          
         </Routes>
       </div>
     </Router>

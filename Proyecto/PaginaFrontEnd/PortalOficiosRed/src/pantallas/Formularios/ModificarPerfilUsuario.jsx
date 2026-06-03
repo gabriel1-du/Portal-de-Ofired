@@ -102,58 +102,66 @@ const ModificarPerfilUsuario = () => {
     }
   };
 
-  if (cargando) return <div className="estado-mensaje">Cargando datos del perfil...</div>;
-  if (error) return <div className="estado-mensaje error">{error}</div>;
+  if (cargando) return <div className="text-center mt-5 text-muted fst-italic">Cargando datos del perfil...</div>;
+  if (error) return <div className="alert alert-danger text-center m-5 shadow-sm">{error}</div>;
 
   return (
-    <div className="modificar-perfil-contenedor">
-      <header className="modificar-perfil-header">
-        <button className="btn-volver" aria-label="Volver" onClick={() => navigate(-1)}>
-          &#10094;
+    <div className="container my-5 d-flex justify-content-center">
+      <div className="card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-white w-100 position-relative" style={{ maxWidth: '800px' }}>
+        
+        {/* Botón Volver usando Bootstrap y la clase personalizada */}
+        <button 
+          className="btn btn-link text-decoration-none fw-bold p-0 position-absolute btn-volver-perfil" 
+          onClick={() => navigate(-1)} 
+          aria-label="Volver"
+        >
+          &#10094; Volver
         </button>
-        <h1 className="titulo-modificar">Modifica tu perfil</h1>
-      </header>
 
-      <main className="modificar-perfil-tarjeta">
-        <label className="input-area banner-area">
-          <input type="file" accept="image/*" name="fotografiaBanner" className="input-archivo-oculto" onChange={handleChange} />
+        <div className="text-center mb-5 mt-2 mt-md-0">
+          <h1 className="fw-bolder text-dark fs-2 mb-3">Modifica tu perfil</h1>
+        </div>
+
+        <label className="input-area border border-2 border-secondary border-opacity-25 rounded-4 d-flex align-items-center justify-content-center text-center overflow-hidden position-relative w-100 bg-light border-dashed mb-4" style={{ height: '200px' }}>
+          <input type="file" accept="image/*" name="fotografiaBanner" className="d-none" onChange={handleChange} />
           
-          {/* Si NO hay foto, mostramos el texto. Si SÍ hay, mostramos la imagen */}
           {!formData.fotografiaBanner ? (
-            <span className="texto-placeholder">Ingresa la foto de tu banner</span>
+            <span className="text-secondary fw-semibold fs-5">Ingresa la foto de tu banner</span>
           ) : (
-            <img src={formData.fotografiaBanner} alt="Banner preview" className="preview-img" />
+            <img src={formData.fotografiaBanner} alt="Banner preview" className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />
           )}
         </label>
 
-        <div className="foto-perfil-seccion">
-          <label className="input-area foto-area">
-            <input type="file" accept="image/*" name="foto" className="input-archivo-oculto" onChange={handleChange} />
-            <span className="icono-camara">📷</span>
-            {formData.foto && <img src={formData.foto} alt="Perfil preview" className="preview-img" />}
+        <div className="d-flex align-items-center mb-4 position-relative" style={{ marginTop: '-70px', marginLeft: '20px' }}>
+          <label className="input-area bg-light border border-4 border-white rounded-circle shadow-sm d-flex align-items-center justify-content-center overflow-hidden position-relative flex-shrink-0" style={{ width: '130px', height: '130px', zIndex: 2 }}>
+            <input type="file" accept="image/*" name="foto" className="d-none" onChange={handleChange} />
+            <span className="fs-1">📷</span>
+            {formData.foto && <img src={formData.foto} alt="Perfil preview" className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />}
           </label>
-          <span className="texto-foto-lateral">Ingresa tu foto de perfil</span>
+          <span className="ms-3 mt-4 text-dark fw-bold fs-5">Ingresa tu foto de perfil</span>
         </div>
 
-        <div className="form-group-modificar">
-          <label htmlFor="nombreApodo">Apodo:</label>
-          <input type="text" id="nombreApodo" name="nombreApodo" value={formData.nombreApodo} onChange={handleChange} placeholder="Tu apodo o nombre profesional" />
+        <div className="mb-4">
+          <label htmlFor="nombreApodo" className="form-label fw-bold text-dark">Apodo:</label>
+          <input type="text" id="nombreApodo" name="nombreApodo" className="form-control form-control-lg bg-light shadow-sm border-0 input-perfil" value={formData.nombreApodo} onChange={handleChange} placeholder="Tu apodo o nombre profesional" />
         </div>
 
-        <div className="descripcion-seccion">
-          <textarea className="input-descripcion" name="descripcion" placeholder="Ingresa tu descripcion" maxLength={500} value={formData.descripcion} onChange={handleChange}></textarea>
+        <div className="mb-4">
+          <label htmlFor="descripcion" className="form-label fw-bold text-dark">Descripción:</label>
+          <textarea className="form-control form-control-lg bg-light shadow-sm border-0 input-perfil" name="descripcion" placeholder="Ingresa tu descripción" rows="5" maxLength={500} value={formData.descripcion} onChange={handleChange} style={{ resize: 'vertical' }}></textarea>
         </div>
 
-        <div className="acciones-seccion">
-          <div className="aviso-configuracion">
-            <span className="icono-aviso" aria-hidden="true">⚙️</span>
-            <p className="texto-aviso">Para cambiar datos personales (nombre, correo), ve a <strong>Configuración de Cuenta</strong>.</p>
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 gap-4">
+          <div className="alert border-0 rounded-3 d-flex align-items-center flex-grow-1 m-0 shadow-sm w-100" style={{ backgroundColor: '#fdf6ec', borderLeft: '4px solid #f3961c' }}>
+            <span className="fs-4 me-3" aria-hidden="true">⚙️</span>
+            <p className="mb-0 text-secondary" style={{ fontSize: '0.95rem' }}>Para cambiar datos personales (nombre, correo), ve a <strong className="text-dark">Configuración de Cuenta</strong>.</p>
           </div>
-          <button className="btn-guardar" aria-label="Guardar cambios" onClick={handleGuardar} disabled={cargando}>
+          
+          <button className="btn text-white rounded-circle shadow-sm d-flex align-items-center justify-content-center flex-shrink-0 btn-guardar-perfil" aria-label="Guardar cambios" onClick={handleGuardar} disabled={cargando}>
             {cargando ? 'Guardando...' : '✓'}
           </button>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

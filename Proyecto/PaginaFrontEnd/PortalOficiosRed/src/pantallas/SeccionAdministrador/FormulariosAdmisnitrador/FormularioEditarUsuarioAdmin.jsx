@@ -5,7 +5,6 @@ import { getAllRegions } from '../../../servicios/ApiUsuarios/TablasCategorias/r
 import { getAllComunas } from '../../../servicios/ApiUsuarios/TablasCategorias/comunasService';
 import { getAllOficios } from '../../../servicios/ApiUsuarios/TablasCategorias/oficioService';
 import { getAllSexos } from '../../../servicios/ApiUsuarios/TablasCategorias/sexoService';
-import '../../../style/styleAdmin/formularioEditarUsuarioAdmin.css';
 
 const FormularioEditarUsuarioAdmin = ({ usuarioEdicionId, onClose, onRefresh }) => {
   const { token } = useContext(AuthContext);
@@ -132,55 +131,78 @@ const FormularioEditarUsuarioAdmin = ({ usuarioEdicionId, onClose, onRefresh }) 
     }
   };
 
-  if (cargando) return <div className="admin-loading-modal">Cargando datos...</div>;
+  if (cargando) return (
+    <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1050 }}>
+      <div className="spinner-border text-light" role="status">
+        <span className="visually-hidden">Cargando datos...</span>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="formulario-admin-modal">
-      <div className="formulario-admin-contenido">
-        <header className="formulario-admin-header">
-          <h2>Editar Usuario (ID: {usuarioEdicionId})</h2>
-          <button className="btn-cerrar-modal" onClick={onClose} aria-label="Cerrar">&times;</button>
+    <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1050, padding: '1rem' }}>
+      <div className="card shadow-lg border-0 rounded-4 w-100 d-flex flex-column bg-white" style={{ maxWidth: '900px', maxHeight: '90vh' }}>
+        <header className="card-header bg-white d-flex justify-content-between align-items-center p-4 border-bottom">
+          <h2 className="m-0 fs-4 fw-bolder text-dark">Editar Usuario (ID: {usuarioEdicionId})</h2>
+          <button type="button" className="btn-close" onClick={onClose} aria-label="Cerrar"></button>
         </header>
 
-        {error && <div className="admin-error" style={{margin: '15px'}}>{error}</div>}
+        <div className="card-body p-4 p-md-5 overflow-auto">
+          {error && <div className="alert alert-danger shadow-sm text-center mb-4">{error}</div>}
 
-        <form onSubmit={handleSubmit} className="formulario-admin-grid">
-          <div className="form-seccion">
-            <h3>1. Datos Personales</h3>
-            <div className="form-group-admin"><label>Primer Nombre:</label><input type="text" name="primerNombre" value={formData.primerNombre} onChange={handleChange} required /></div>
-            <div className="form-group-admin"><label>Segundo Nombre:</label><input type="text" name="segundoNombre" value={formData.segundoNombre} onChange={handleChange} /></div>
-            <div className="form-group-admin"><label>Primer Apellido:</label><input type="text" name="primerApellido" value={formData.primerApellido} onChange={handleChange} required /></div>
-            <div className="form-group-admin"><label>Segundo Apellido:</label><input type="text" name="segundoApellido" value={formData.segundoApellido} onChange={handleChange} /></div>
-            <div className="form-group-admin"><label>Sexo:</label><select name="idSexoUsu" value={formData.idSexoUsu} onChange={handleChange}><option value="">Seleccione...</option>{sexos.map(s => <option key={s.idSexo} value={s.idSexo}>{s.nombreSexo}</option>)}</select></div>
-          </div>
+          <form onSubmit={handleSubmit}>
+            
+            <div className="row g-4 mb-5">
+              <div className="col-12">
+                <h3 className="fs-5 fw-bold text-primary border-bottom pb-2 mb-0">1. Datos Personales</h3>
+              </div>
+              <div className="col-md-6"><label className="form-label fw-bold">Primer Nombre:</label><input type="text" className="form-control form-control-lg bg-light shadow-sm border-0" name="primerNombre" value={formData.primerNombre} onChange={handleChange} required /></div>
+              <div className="col-md-6"><label className="form-label fw-bold">Segundo Nombre:</label><input type="text" className="form-control form-control-lg bg-light shadow-sm border-0" name="segundoNombre" value={formData.segundoNombre} onChange={handleChange} /></div>
+              <div className="col-md-6"><label className="form-label fw-bold">Primer Apellido:</label><input type="text" className="form-control form-control-lg bg-light shadow-sm border-0" name="primerApellido" value={formData.primerApellido} onChange={handleChange} required /></div>
+              <div className="col-md-6"><label className="form-label fw-bold">Segundo Apellido:</label><input type="text" className="form-control form-control-lg bg-light shadow-sm border-0" name="segundoApellido" value={formData.segundoApellido} onChange={handleChange} /></div>
+              <div className="col-md-6"><label className="form-label fw-bold">Sexo:</label><select className="form-select form-control-lg bg-light shadow-sm border-0" name="idSexoUsu" value={formData.idSexoUsu} onChange={handleChange}><option value="">Seleccione...</option>{sexos.map(s => <option key={s.idSexo} value={s.idSexo}>{s.nombreSexo}</option>)}</select></div>
+            </div>
 
-          <div className="form-seccion">
-            <h3>2. Datos Críticos</h3>
-            <div className="form-group-admin"><label>Correo Electrónico:</label><input type="email" name="correoElec" value={formData.correoElec} onChange={handleChange} required /></div>
-            <div className="form-group-admin"><label>RUT (cuerpo):</label><input type="text" name="rut" value={formData.rut} onChange={handleChange} /></div>
-            <div className="form-group-admin"><label>RUT (DV):</label><input type="text" name="rutDv" value={formData.rutDv} onChange={handleChange} maxLength="1" /></div>
-          </div>
+            <div className="row g-4 mb-5">
+              <div className="col-12">
+                <h3 className="fs-5 fw-bold text-primary border-bottom pb-2 mb-0">2. Datos Críticos</h3>
+              </div>
+              <div className="col-md-12"><label className="form-label fw-bold">Correo Electrónico:</label><input type="email" className="form-control form-control-lg bg-light shadow-sm border-0" name="correoElec" value={formData.correoElec} onChange={handleChange} required /></div>
+              <div className="col-md-6"><label className="form-label fw-bold">RUT (cuerpo):</label><input type="text" className="form-control form-control-lg bg-light shadow-sm border-0" name="rut" value={formData.rut} onChange={handleChange} /></div>
+              <div className="col-md-6"><label className="form-label fw-bold">RUT (DV):</label><input type="text" className="form-control form-control-lg bg-light shadow-sm border-0" name="rutDv" value={formData.rutDv} onChange={handleChange} maxLength="1" /></div>
+            </div>
 
-          <div className="form-seccion">
-            <h3>3. Permisos y Roles</h3>
-            <div className="form-group-admin"><label>Tipo de Usuario:</label><select name="idTipoUsu" value={formData.idTipoUsu} onChange={handleChange} required><option value="">Seleccione...</option><option value="1">Cliente (1)</option><option value="2">Profesional/Oficio (2)</option></select></div>
-            <div className="form-group-admin checkbox-admin"><label><input type="checkbox" name="habilitadorAdministrador" checked={formData.habilitadorAdministrador} onChange={handleChange} /> Es Administrador</label></div>
-            <div className="form-group-admin"><label>URL Foto (opcional):</label><input type="text" name="foto" value={formData.foto} onChange={handleChange} /></div>
-          </div>
+            <div className="row g-4 mb-5">
+              <div className="col-12">
+                <h3 className="fs-5 fw-bold text-primary border-bottom pb-2 mb-0">3. Permisos y Roles</h3>
+              </div>
+              <div className="col-md-6"><label className="form-label fw-bold">Tipo de Usuario:</label><select className="form-select form-control-lg bg-light shadow-sm border-0" name="idTipoUsu" value={formData.idTipoUsu} onChange={handleChange} required><option value="">Seleccione...</option><option value="1">Cliente (1)</option><option value="2">Profesional/Oficio (2)</option></select></div>
+              <div className="col-md-6"><label className="form-label fw-bold">URL Foto (opcional):</label><input type="text" className="form-control form-control-lg bg-light shadow-sm border-0" name="foto" value={formData.foto} onChange={handleChange} /></div>
+              
+              <div className="col-12 mt-4">
+                <div className="form-check bg-light p-3 border rounded shadow-sm">
+                  <input className="form-check-input ms-1 me-3" type="checkbox" id="checkAdminEdit" name="habilitadorAdministrador" checked={formData.habilitadorAdministrador} onChange={handleChange} />
+                  <label className="form-check-label fw-bold text-danger" htmlFor="checkAdminEdit">Es Administrador</label>
+                </div>
+              </div>
+            </div>
 
-          <div className="form-seccion">
-            <h3>4. Contacto y Ubicación</h3>
-            <div className="form-group-admin"><label>Número de Teléfono:</label><input type="text" name="numeroTelef" value={formData.numeroTelef} onChange={handleChange} /></div>
-            <div className="form-group-admin"><label>Región:</label><select name="idRegionUsu" value={formData.idRegionUsu} onChange={handleChange}><option value="">Seleccione...</option>{regiones.map(r => <option key={r.idRegion} value={r.idRegion}>{r.nombreRegion}</option>)}</select></div>
-            <div className="form-group-admin"><label>Comuna:</label><select name="idComunaUsu" value={formData.idComunaUsu} onChange={handleChange} disabled={!formData.idRegionUsu}><option value="">Seleccione...</option>{comunasFiltradas.map(c => <option key={c.idComuna} value={c.idComuna}>{c.nombreComuna}</option>)}</select></div>
-            <div className="form-group-admin"><label>Oficio:</label><select name="idOficio" value={formData.idOficio} onChange={handleChange} disabled={String(formData.idTipoUsu) !== '2'}><option value="">Seleccione... (Solo para Profesionales)</option>{oficios.map(o => <option key={o.idOficio} value={o.idOficio}>{o.nombreOficio}</option>)}</select></div>
-          </div>
+            <div className="row g-4 mb-5">
+              <div className="col-12">
+                <h3 className="fs-5 fw-bold text-primary border-bottom pb-2 mb-0">4. Contacto y Ubicación</h3>
+              </div>
+              <div className="col-md-6"><label className="form-label fw-bold">Número de Teléfono:</label><input type="text" className="form-control form-control-lg bg-light shadow-sm border-0" name="numeroTelef" value={formData.numeroTelef} onChange={handleChange} /></div>
+              <div className="col-md-6"><label className="form-label fw-bold">Región:</label><select className="form-select form-control-lg bg-light shadow-sm border-0" name="idRegionUsu" value={formData.idRegionUsu} onChange={handleChange}><option value="">Seleccione...</option>{regiones.map(r => <option key={r.idRegion} value={r.idRegion}>{r.nombreRegion}</option>)}</select></div>
+              <div className="col-md-6"><label className="form-label fw-bold">Comuna:</label><select className="form-select form-control-lg bg-light shadow-sm border-0" name="idComunaUsu" value={formData.idComunaUsu} onChange={handleChange} disabled={!formData.idRegionUsu}><option value="">Seleccione...</option>{comunasFiltradas.map(c => <option key={c.idComuna} value={c.idComuna}>{c.nombreComuna}</option>)}</select></div>
+              <div className="col-md-6"><label className="form-label fw-bold">Oficio:</label><select className="form-select form-control-lg bg-light shadow-sm border-0" name="idOficio" value={formData.idOficio} onChange={handleChange} disabled={String(formData.idTipoUsu) !== '2'}><option value="">Seleccione... (Solo para Profesionales)</option>{oficios.map(o => <option key={o.idOficio} value={o.idOficio}>{o.nombreOficio}</option>)}</select></div>
+            </div>
 
-          <div className="form-acciones-admin">
-            <button type="button" className="btn-cancelar-admin" onClick={onClose} disabled={guardando}>Cancelar</button>
-            <button type="submit" className="btn-guardar-admin" disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar Cambios'}</button>
-          </div>
-        </form>
+            <div className="d-flex justify-content-end gap-3 mt-4 pt-3 border-top">
+              <button type="button" className="btn btn-secondary px-4 py-2 fw-bold" onClick={onClose} disabled={guardando}>Cancelar</button>
+              <button type="submit" className="btn btn-primary px-4 py-2 fw-bold shadow-sm" disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar Cambios'}</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
