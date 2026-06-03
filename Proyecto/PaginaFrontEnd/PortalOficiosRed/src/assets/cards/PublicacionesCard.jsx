@@ -1,16 +1,20 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // 1. Importamos la herramienta de navegación de react-router-dom
-import '../../style/cards/PublicacionCard.css'
+import { useNavigate, useLocation } from 'react-router-dom'; 
+import '../../style/cards/PublicacionCard.css';
 
 const PublicacionCard = ({ publicacion }) => {
-  const navigate = useNavigate(); // 2. Inicializamos la función para poder cambiar de pantalla
+  const navigate = useNavigate(); 
+  const location = useLocation(); // Detecta en qué URL estamos
+
+  // Si la URL actual incluye "/publicacion/", significa que estamos en la vista de detalle
+  const esDetalle = location.pathname.includes('/publicacion/');
 
   const {
-    idPublicacion, // 3. Extraemos el idPublicacion que viene desde la base de datos
+    idPublicacion, 
     tituloPublicacion,
     nombreRegion,
     nombreComuna,
-    ubicacionPublicacion,
+    ubicacionPublicacion, // Por si lo usas más adelante
     descripcionPublicacion,
     cantidadLikes,
     imagenUrl, 
@@ -18,12 +22,17 @@ const PublicacionCard = ({ publicacion }) => {
   } = publicacion;
 
   return (
-    <div className="publicacion-card">
-      {/* Añadimos un contenedor de imagen para que se vea más atractivo */}
+    <div className={`publicacion-card ${esDetalle ? 'modo-detalle' : ''}`}>
+      
       <div className="publicacion-card-image">
+        {/* 👇 AQUÍ ESTÁ LA MAGIA: Si la imagen falla, pone una de repuesto y no se achica */}
         <img 
-          src={imagenUrl || 'https://via.placeholder.com/350x200?text=Servicio+Ofired'} 
+          src={imagenUrl || 'https://via.placeholder.com/800x400?text=Servicio+Ofired'} 
           alt={tituloPublicacion} 
+          onError={(e) => { 
+            e.target.onerror = null; // Evita un bucle infinito si la imagen de repuesto también falla
+            e.target.src = 'https://via.placeholder.com/800x400?text=Servicio+Ofired'; 
+          }}
         />
         {precioServicio && <span className="badge-precio">${precioServicio}</span>}
       </div>
@@ -37,20 +46,25 @@ const PublicacionCard = ({ publicacion }) => {
           <p className="ubicacion">
             <i className="fas fa-map-marker-alt"></i> {nombreRegion}, {nombreComuna}
           </p>
-          <p className="descripcion">{descripcionPublicacion}</p>
+          {/* La descripción completa solo se muestra si estamos en el detalle */}
+          <p className={`descripcion ${esDetalle ? 'descripcion-completa' : ''}`}>
+            {descripcionPublicacion}
+          </p>
         </div>
 
         <div className="publicacion-card-footer">
           <div className="likes-section">
             <span>❤️ {cantidadLikes || 0}</span>
           </div>
-          {/* 4. Le asignamos el evento onClick al botón para navegar dinámicamente */}
-          <button 
-            className="btn-ver-perfil" 
-            onClick={() => navigate(`/publicacion/${idPublicacion}`)}
-          >
-            Ver Detalles
-          </button>
+          {/* Si NO estamos en el detalle, mostramos el botón. Si estamos, lo ocultamos. */}
+          {!esDetalle && (
+            <button 
+              className="btn-ver-perfil" 
+              onClick={() => navigate(`/publicacion/${idPublicacion}`)}
+            >
+              Ver Detalles
+            </button>
+          )}
         </div>
       </div>
     </div>

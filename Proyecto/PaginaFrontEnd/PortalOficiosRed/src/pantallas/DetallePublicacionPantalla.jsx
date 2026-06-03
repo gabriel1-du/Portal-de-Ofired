@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
+// 👇 AQUÍ ESTÁ LA RUTA CORREGIDA DIRECTO A LA CARPETA CARDS
 import PublicacionCard from '../assets/cards/PublicacionesCard'; 
 import { AuthContext } from '../context/AuthContext'; 
+import { obtenerComentarios, crearComentario } from '../servicios/comentariosService';
 
 const DetallePublicacionPantalla = () => {
     const { idPublicacion } = useParams(); 
@@ -11,59 +13,35 @@ const DetallePublicacionPantalla = () => {
     const [cargandoPublicacion, setCargandoPublicacion] = useState(true);
 
     const { token, usuario: user } = useContext(AuthContext);
-    
     const idUsuarioActual = user?.idUsuario || user?.id_usuario || user?.userId || user?.id || 1; 
 
     useEffect(() => {
-        setCargandoPublicacion(true);
-
-        // 1. Traer la publicación (Funciona Correctamente)
-        fetch(`${import.meta.env.VITE_PUBLICACIONES_API_URL}/${idPublicacion}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+        const cargarDatos = async () => {
+            setCargandoPublicacion(true);
+            
+            try {
+                // Obtenemos la publicación
+                const resPub = await fetch(`${import.meta.env.VITE_PUBLICACIONES_API_URL}/${idPublicacion}`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (resPub.ok) {
+                    setPublicacion(await resPub.json());
+                }
+            } catch (error) {
+                console.error("Error cargando publicación");
             }
-        })
-            .then(res => {
-                if (!res.ok) throw new Error("No se pudo obtener la publicación");
-                return res.json();
-            })
-            .then(data => {
-                setPublicacion(data);
-                setCargandoPublicacion(false);
-            })
-            .catch(err => {
-                console.error("Error cargando detalle de publicación:", err);
-                setCargandoPublicacion(false);
-            });
 
-        const urlGetComentarios = `http://localhost:8888/api/proxy/comentariosApi/publicacion/${idPublicacion}`;
+            // Obtenemos los comentarios con nuestro nuevo SERVICIO
+            const dataComentarios = await obtenerComentarios(idPublicacion, token);
+            setComentarios(dataComentarios);
+            
+            setCargandoPublicacion(false);
+        };
 
-        fetch(urlGetComentarios, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        })
-        .then(res => {
-            if (!res.ok) {
-                console.warn(`Respuesta GET comentarios no OK (Status: ${res.status})`);
-                return [];
-            }
-            return res.json();
-        })
-        .then(data => {
-            setComentarios(Array.isArray(data) ? data : []);
-        })
-        .catch(err => {
-            console.error("Error crítico cargando comentarios:", err);
-            setComentarios([]);
-        });
+        cargarDatos();
     }, [idPublicacion, token]); 
 
-    const handleEnviarComentario = (e) => {
+    const handleEnviarComentario = async (e) => {
         e.preventDefault(); 
         if (!nuevoComentario.trim()) return;
 
@@ -73,81 +51,84 @@ const DetallePublicacionPantalla = () => {
             contenido: nuevoComentario
         };
 
-        // 3. Guardar comentario - Ruta Sanitizada
-        const urlPostComentario = `http://localhost:8888/api/proxy/comentariosApi`;
-        console.log("Payload que se va al backend:", comentarioPayload);
-        fetch(urlPostComentario, {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify(comentarioPayload)
-        })
-        .then(res => {
-            if (!res.ok) throw new Error(`Payload que se va al backend: ${JSON.stringify(comentarioPayload)}`);
-            return res.json();
-        })
-        .then(nuevoComit => {
-            setComentarios([...comentarios, nuevoComit]); 
+        try {
+            const nuevoComit = await crearComentario(comentarioPayload, token);
+            const comentarioParaMostrar = {
+                ...nuevoComit,
+                usuario: {
+                    pNombre: user?.p_nombre || user?.pNombre || "Yo",
+                    pApellido: user?.p_apellido || user?.pApellido || ""
+                }
+            };
+            setComentarios([...comentarios, comentarioParaMostrar]); 
             setNuevoComentario(""); 
-        })
-        .catch(err => console.error("Error al guardar comentario:", err));
+        } catch (err) {
+            console.error("Error al publicar:", err);
+        }
     };
 
-    if (cargandoPublicacion) {
-        return <p style={{ textAlign: 'center', marginTop: '40px', fontStyle: 'italic' }}>Cargando detalles de la publicación...</p>;
-    }
-
-    if (!publicacion) {
-        return <p style={{ textAlign: 'center', marginTop: '40px', color: 'red' }}>No se encontró la publicación solicitada.</p>;
-    }
+    if (cargandoPublicacion) return <div style={{ textAlign: 'center', marginTop: '50px', fontSize: '1.2rem', color: '#666' }}>Cargando información del servicio...</div>;
+    if (!publicacion) return <div style={{ textAlign: 'center', marginTop: '50px', color: '#dc3545', fontWeight: 'bold' }}>No se encontró la publicación solicitada.</div>;
 
     return (
-        <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', fontFamily: 'sans-serif' }}>
-            <PublicacionCard publicacion={publicacion} />
+        <div style={{ maxWidth: '1000px', margin: '40px auto', padding: '0 20px', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>
+            
+            {/* SECCIÓN PRINCIPAL: Tarjeta Gigante y Estable */}
+            <div style={{ marginBottom: '50px', backgroundColor: '#fff', width: '100%' }}>
+                <PublicacionCard publicacion={publicacion} />
+            </div>
 
-            <hr style={{ margin: '30px 0', borderColor: '#ccc' }} />
+            {/* SECCIÓN DE COMENTARIOS */}
+            <div style={{ backgroundColor: '#ffffff', padding: '30px', borderRadius: '12px', border: '1px solid #e0e0e0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                <h3 style={{ borderBottom: '2px solid #f0f2f5', paddingBottom: '15px', marginBottom: '25px', color: '#1c1e21', fontSize: '1.4rem' }}>
+                    Preguntas y Comentarios <span style={{ color: '#65676B', fontSize: '1.1rem', fontWeight: 'normal' }}>({comentarios.length})</span>
+                </h3>
 
-            <div className="comentarios-section">
-                <h3>Comentarios ({comentarios.length})</h3>
-
-                <form onSubmit={handleEnviarComentario} style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-                    <input 
-                        type="text" 
-                        placeholder="Escribe un comentario o pregunta sobre el servicio..." 
-                        value={nuevoComentario}
-                        onChange={(e) => setNuevoComentario(e.target.value)}
-                        style={{ flex: 1, padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-                    />
-                    <button type="submit" style={{ padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                        Comentar
-                    </button>
+                <form onSubmit={handleEnviarComentario} style={{ display: 'flex', gap: '15px', marginBottom: '35px', alignItems: 'flex-start' }}>
+                    <div style={{ width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '#007bff', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', flexShrink: 0, fontSize: '1.1rem' }}>
+                        TÚ
+                    </div>
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <textarea 
+                            rows="2"
+                            placeholder="Escribe una pregunta al técnico..." 
+                            value={nuevoComentario}
+                            onChange={(e) => setNuevoComentario(e.target.value)}
+                            style={{ width: '100%', padding: '15px', borderRadius: '8px', border: '1px solid #ccd0d5', resize: 'vertical', fontSize: '16px', backgroundColor: '#f5f6f7' }}
+                        />
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <button type="submit" disabled={!nuevoComentario.trim()} style={{ padding: '10px 28px', backgroundColor: nuevoComentario.trim() ? '#1877f2' : '#e4e6eb', color: nuevoComentario.trim() ? 'white' : '#bcc0c4', border: 'none', borderRadius: '6px', fontWeight: 'bold', fontSize: '15px', cursor: nuevoComentario.trim() ? 'pointer' : 'not-allowed', transition: 'background-color 0.2s' }}>
+                                Publicar
+                            </button>
+                        </div>
+                    </div>
                 </form>
 
-                <div className="comentarios-lista" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     {comentarios.length === 0 ? (
-                        <p style={{ color: '#777', fontStyle: 'italic' }}>No hay comentarios aún. ¡Sé el primero en preguntar!</p>
+                        <div style={{ textAlign: 'center', padding: '30px', color: '#65676b', backgroundColor: '#f0f2f5', borderRadius: '8px', fontSize: '1.1rem' }}>
+                            Aún no hay comentarios. ¡Sé el primero en hacer una consulta!
+                        </div>
                     ) : (
                         comentarios.map((com, index) => {
-                            // 1. Extraer el ID de forma segura
-                            const idReal = com.usuario?.idUsuario || com.usuario?.id_usuario || com.idUsuario || com.id_usuario || 'Desconocido';
-                            
-                            // 2. Extraer el Nombre (revisando camelCase de Java 'pNombre' y variantes)
-                            let nombreMostrar = com.usuario?.pNombre || com.usuario?.p_nombre || com.usuario?.pnombre;
-                            let apellidoMostrar = com.usuario?.pApellido || com.usuario?.p_apellido || com.usuario?.papellido || "";
-
-                            // 3. Plan de respaldo limpio sin trucos: Si no hay nombre, usa el ID
-                            if (!nombreMostrar) {
-                                nombreMostrar = `Usuario #${idReal}`;
-                            }
+                            const idReal = com.usuario?.idUsuario || com.idUsuario || 'X';
+                            // Intentamos mostrar el nombre, si no, mostramos Usuario y el ID
+                            let nombreMostrar = com.usuario?.pNombre || `Usuario #${idReal}`;
+                            let apellidoMostrar = com.usuario?.pApellido || "";
 
                             return (
-                                <div key={com.idComentario || index} style={{ backgroundColor: '#f9f9f9', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #007bff' }}>
-                                    <p style={{ margin: '0 0 5px 0', fontSize: '14px', color: '#555' }}>
-                                        <strong style={{ textTransform: 'capitalize' }}>{nombreMostrar} {apellidoMostrar}</strong>
-                                    </p>
-                                    <p style={{ margin: 0, color: '#333' }}>{com.contenido}</p>
+                                <div key={com.idComentario || index} style={{ display: 'flex', gap: '15px' }}>
+                                    <div style={{ width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '#e4e6eb', color: '#1c1e21', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', flexShrink: 0, fontSize: '1.1rem' }}>
+                                        {nombreMostrar.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div style={{ backgroundColor: '#f0f2f5', padding: '14px 18px', borderRadius: '18px', width: 'fit-content', maxWidth: '85%' }}>
+                                        <div style={{ fontWeight: '700', fontSize: '15px', color: '#1c1e21', marginBottom: '6px', textTransform: 'capitalize' }}>
+                                            {nombreMostrar} {apellidoMostrar}
+                                        </div>
+                                        <div style={{ fontSize: '16px', color: '#1c1e21', lineHeight: '1.5' }}>
+                                            {com.contenido}
+                                        </div>
+                                    </div>
                                 </div>
                             );
                         })
