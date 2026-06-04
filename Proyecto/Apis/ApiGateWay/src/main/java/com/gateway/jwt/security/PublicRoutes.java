@@ -4,7 +4,8 @@ public class PublicRoutes {
 
     // Rutas públicas para GET
     public static final String[] PUBLIC_GET = {
-        "/api/ping"
+        "/api/ping",
+        "/api/proxy/fotosApi/**"
     };
 
 

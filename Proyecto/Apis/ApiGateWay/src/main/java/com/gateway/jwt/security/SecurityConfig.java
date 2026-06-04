@@ -35,6 +35,7 @@ import static com.gateway.redireccionApis.ApiUsuarios.TiposDeTrabajo.TiposDeTrab
 import static com.gateway.redireccionApis.ApiUsuarios.MediosDePago.MediosDePagoPublicRoutes.MEDIOS_DE_PAGO_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.ConfirmacionTransacciones.ConfirmacionTransaccionesPublicRoutes.CONFIRMACION_TRANSACCIONES_PUBLIC_GET;
 import static com.gateway.redireccionApis.publicacionesApis.ComentarioPublicRoutes.COMENTARIO_PUBLIC_GET;
+import static com.gateway.redireccionApis.publicacionesApis.FotosPublicRoutes.FOTOS_PUBLIC_GET;
 import java.util.Arrays;
 
 
@@ -112,6 +113,9 @@ public class SecurityConfig {
 
                 // URL públicas API Confirmacion Comentario
                 .requestMatchers(HttpMethod.GET, COMENTARIO_PUBLIC_GET ).permitAll()
+
+                // URL públicas API Fotos (Imágenes de publicaciones)
+                .requestMatchers(HttpMethod.GET, FOTOS_PUBLIC_GET).permitAll()
 
 
                 // Otras URL Token obligatorio
