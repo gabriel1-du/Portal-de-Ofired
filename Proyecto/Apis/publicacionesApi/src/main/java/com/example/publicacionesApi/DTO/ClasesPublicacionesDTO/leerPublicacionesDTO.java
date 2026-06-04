@@ -1,25 +1,22 @@
 package com.example.publicacionesApi.DTO.ClasesPublicacionesDTO;
 
 import lombok.AllArgsConstructor;
-
 import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data // Genera getters, setters, toString, equals y hashCode automáticamente
-@NoArgsConstructor // Constructor sin argumentos
-@AllArgsConstructor // Constructor sin argumentos y con todos los argumentos
+@Data 
+@NoArgsConstructor 
+@AllArgsConstructor 
 public class leerPublicacionesDTO {
 
     private Integer idPublicacion;
     private Integer idAutor;
     private String tituloPublicacion;
     
-    // Datos aplanados de la Región
     private Integer idRegion;
     private String nombreRegion;
     
-    // Datos aplanados de la Comuna
     private Integer idComuna;
     private String nombreComuna;
     
@@ -27,6 +24,7 @@ public class leerPublicacionesDTO {
     private String descripcionPublicacion;
     private Integer cantidadLikes;
     private LocalDateTime fechaPublicacion;
-
-
+    
+    // 👇 Agregamos esto para enviar el link a React
+    private String imagenUrl;
 }

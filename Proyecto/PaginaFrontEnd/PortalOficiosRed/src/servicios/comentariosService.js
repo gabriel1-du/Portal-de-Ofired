@@ -19,18 +19,22 @@ export const obtenerComentarios = async (idPublicacion, token) => {
         const comentariosConNombres = await Promise.all(
             comentariosBrutos.map(async (com) => {
                 try {
-                    const infoUsuario = await getUsuarioById(com.idUsuario);
+                    const idParaBuscar = com.idUsuario || com.id_usuario || com.usuarioId; 
+                    
+                    if (!idParaBuscar) return com;
+
+                    const infoUsuario = await getUsuarioById(idParaBuscar);
                     
                     return {
                         ...com,
                         usuario: {
-                            // 👇 AQUÍ PUSIMOS LAS VARIABLES DE TU GUÍA
-                            pNombre: infoUsuario.p_nombre || infoUsuario.pNombre || infoUsuario.nombreUsuario || "Usuario",
-                            pApellido: infoUsuario.p_apellido || infoUsuario.pApellido || ""
+                            // 👇 AQUÍ ESTÁ LA MAGIA: Conectamos con lo que dice tu consola
+                            pNombre: infoUsuario?.primerNombre || "Usuario",
+                            pApellido: infoUsuario?.primerApellido || ""
                         }
                     };
                 } catch (error) {
-                    console.warn(`No se pudo cargar el nombre del usuario ${com.idUsuario}`);
+                    console.warn(`No se pudo cargar el nombre del usuario`, error);
                     return com; 
                 }
             })

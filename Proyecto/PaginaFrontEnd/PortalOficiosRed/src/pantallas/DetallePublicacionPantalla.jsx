@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-// 👇 AQUÍ ESTÁ LA RUTA CORREGIDA DIRECTO A LA CARPETA CARDS
 import PublicacionCard from '../assets/cards/PublicacionesCard'; 
 import { AuthContext } from '../context/AuthContext'; 
 import { obtenerComentarios, crearComentario } from '../servicios/comentariosService';
@@ -53,11 +52,12 @@ const DetallePublicacionPantalla = () => {
 
         try {
             const nuevoComit = await crearComentario(comentarioPayload, token);
+            // 👇 AQUÍ ESTÁ LA MAGIA: Toma tu nombre real de la sesión de inmediato
             const comentarioParaMostrar = {
                 ...nuevoComit,
                 usuario: {
-                    pNombre: user?.p_nombre || user?.pNombre || "Yo",
-                    pApellido: user?.p_apellido || user?.pApellido || ""
+                    pNombre: user?.primerNombre || user?.p_nombre || user?.pNombre || "Yo",
+                    pApellido: user?.primerApellido || user?.p_apellido || user?.pApellido || ""
                 }
             };
             setComentarios([...comentarios, comentarioParaMostrar]); 
@@ -97,8 +97,9 @@ const DetallePublicacionPantalla = () => {
                             style={{ width: '100%', padding: '15px', borderRadius: '8px', border: '1px solid #ccd0d5', resize: 'vertical', fontSize: '16px', backgroundColor: '#f5f6f7' }}
                         />
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            {/* 👇 AQUÍ CAMBIAMOS EL TEXTO A "Comentar" */}
                             <button type="submit" disabled={!nuevoComentario.trim()} style={{ padding: '10px 28px', backgroundColor: nuevoComentario.trim() ? '#1877f2' : '#e4e6eb', color: nuevoComentario.trim() ? 'white' : '#bcc0c4', border: 'none', borderRadius: '6px', fontWeight: 'bold', fontSize: '15px', cursor: nuevoComentario.trim() ? 'pointer' : 'not-allowed', transition: 'background-color 0.2s' }}>
-                                Publicar
+                                Comentar
                             </button>
                         </div>
                     </div>
@@ -112,7 +113,6 @@ const DetallePublicacionPantalla = () => {
                     ) : (
                         comentarios.map((com, index) => {
                             const idReal = com.usuario?.idUsuario || com.idUsuario || 'X';
-                            // Intentamos mostrar el nombre, si no, mostramos Usuario y el ID
                             let nombreMostrar = com.usuario?.pNombre || `Usuario #${idReal}`;
                             let apellidoMostrar = com.usuario?.pApellido || "";
 
@@ -139,4 +139,4 @@ const DetallePublicacionPantalla = () => {
     );
 };
 
-export default DetallePublicacionPantalla;
+export default DetallePublicacionPantalla

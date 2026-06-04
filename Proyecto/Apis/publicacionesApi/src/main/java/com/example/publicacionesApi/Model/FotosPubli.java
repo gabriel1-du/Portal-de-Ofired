@@ -15,7 +15,8 @@ public class FotosPubli {
     @JoinColumn(name = "id_publicacion", nullable = false)
     private Publicacion publicacion;
 
-    @Column(name = "url_foto", nullable = false, length = 255)
+    // 💡 CAMBIO: Cambiamos a columnDefinition = "TEXT" para que soporte links gigantes sin límite de 255
+    @Column(name = "url_foto", nullable = false, columnDefinition = "TEXT")
     private String urlFoto;
 
     public Integer getIdFotoPubli() { return idFotoPubli; }

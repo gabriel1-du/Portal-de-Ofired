@@ -4,9 +4,8 @@ import '../../style/cards/PublicacionCard.css';
 
 const PublicacionCard = ({ publicacion }) => {
   const navigate = useNavigate(); 
-  const location = useLocation(); // Detecta en qué URL estamos
+  const location = useLocation();
 
-  // Si la URL actual incluye "/publicacion/", significa que estamos en la vista de detalle
   const esDetalle = location.pathname.includes('/publicacion/');
 
   const {
@@ -14,7 +13,6 @@ const PublicacionCard = ({ publicacion }) => {
     tituloPublicacion,
     nombreRegion,
     nombreComuna,
-    ubicacionPublicacion, // Por si lo usas más adelante
     descripcionPublicacion,
     cantidadLikes,
     imagenUrl, 
@@ -25,12 +23,11 @@ const PublicacionCard = ({ publicacion }) => {
     <div className={`publicacion-card ${esDetalle ? 'modo-detalle' : ''}`}>
       
       <div className="publicacion-card-image">
-        {/* 👇 AQUÍ ESTÁ LA MAGIA: Si la imagen falla, pone una de repuesto y no se achica */}
         <img 
           src={imagenUrl || 'https://via.placeholder.com/800x400?text=Servicio+Ofired'} 
           alt={tituloPublicacion} 
           onError={(e) => { 
-            e.target.onerror = null; // Evita un bucle infinito si la imagen de repuesto también falla
+            e.target.onerror = null; 
             e.target.src = 'https://via.placeholder.com/800x400?text=Servicio+Ofired'; 
           }}
         />
@@ -46,7 +43,6 @@ const PublicacionCard = ({ publicacion }) => {
           <p className="ubicacion">
             <i className="fas fa-map-marker-alt"></i> {nombreRegion}, {nombreComuna}
           </p>
-          {/* La descripción completa solo se muestra si estamos en el detalle */}
           <p className={`descripcion ${esDetalle ? 'descripcion-completa' : ''}`}>
             {descripcionPublicacion}
           </p>
@@ -54,9 +50,8 @@ const PublicacionCard = ({ publicacion }) => {
 
         <div className="publicacion-card-footer">
           <div className="likes-section">
-            <span>❤️ {cantidadLikes || 0}</span>
+            <span role="img" aria-label="like">❤️</span> {cantidadLikes || 0}
           </div>
-          {/* Si NO estamos en el detalle, mostramos el botón. Si estamos, lo ocultamos. */}
           {!esDetalle && (
             <button 
               className="btn-ver-perfil" 

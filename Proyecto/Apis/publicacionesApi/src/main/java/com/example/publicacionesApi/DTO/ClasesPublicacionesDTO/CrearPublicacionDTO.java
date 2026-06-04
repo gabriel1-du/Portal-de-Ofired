@@ -1,7 +1,6 @@
 package com.example.publicacionesApi.DTO.ClasesPublicacionesDTO;
 
 import lombok.AllArgsConstructor;
-
 import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,4 +17,7 @@ public class CrearPublicacionDTO {
     private String ubicacionPublicacion;
     private String descripcionPublicacion;
     private LocalDateTime fechaPublicacion;
+    
+    // 👇 Agregamos esto para recibir el link de React
+    private String imagenUrl; 
 }

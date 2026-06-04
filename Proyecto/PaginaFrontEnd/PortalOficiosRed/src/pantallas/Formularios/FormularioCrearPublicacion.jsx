@@ -18,12 +18,11 @@ const FormularioCrearPublicacion = () => {
         idRegion: '', 
         idComuna: '', 
         precioServicio: '',
-        imagenUrl: ''
+        imagenUrl: '' // 👈 Aquí guardaremos el link de la foto
     });
 
     // 1. Cargar las regiones al abrir el formulario
     useEffect(() => {
-        // CORRECCIÓN: Agregados los backticks correspondientes para el Token
         fetch("http://localhost:8888/api/proxy/regionesApi", {
             headers: { "Authorization": `Bearer ${token}` }
         })
@@ -58,14 +57,13 @@ const FormularioCrearPublicacion = () => {
 
         // Armamos el paquete con los IDs convertidos a números
         const publicacionPayload = {
-            // CORRECCIÓN: 'usuario?.idUsuario' evita caídas si el contexto está cargando
             idAutor: usuario?.idUsuario || 1, 
             tituloPublicacion: formData.tituloPublicacion,
             descripcionPublicacion: formData.descripcionPublicacion,
             idRegion: formData.idRegion ? parseInt(formData.idRegion) : null,
             idComuna: formData.idComuna ? parseInt(formData.idComuna) : null,
             precioServicio: formData.precioServicio ? parseFloat(formData.precioServicio) : null,
-            imagenUrl: formData.imagenUrl || null,
+            imagenUrl: formData.imagenUrl || null, // 👈 Enviamos el link al backend
             cantidadLikes: 0 
         };
 
@@ -74,7 +72,7 @@ const FormularioCrearPublicacion = () => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` // CORRECCIÓN: Backticks agregados aquí también
+                "Authorization": `Bearer ${token}` 
             },
             body: JSON.stringify(publicacionPayload)
         })
@@ -83,7 +81,7 @@ const FormularioCrearPublicacion = () => {
                 alert("¡Publicación creada con éxito! 🎉");
                 navigate("/home"); 
             } else {
-                alert("Sigue habiendo un error en el servidor. Revisa la consola de Spring Boot.");
+                alert("Hubo un error en el servidor al intentar guardar la publicación.");
             }
         })
         .catch(err => console.error("Error al conectar con la ApiGateWay:", err));
@@ -165,6 +163,20 @@ const FormularioCrearPublicacion = () => {
                         onChange={handleChange}
                         style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
                     />
+                </div>
+
+                {/* 👇 AQUÍ AGREGAMOS EL CAMPO PARA LA IMAGEN */}
+                <div>
+                    <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Link de la Imagen (Opcional)</label>
+                    <input 
+                        type="url" 
+                        name="imagenUrl"
+                        placeholder="https://ejemplo.com/foto.jpg"
+                        value={formData.imagenUrl}
+                        onChange={handleChange}
+                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+                    />
+                    <small style={{ color: '#666', display: 'block', marginTop: '5px' }}>Pega aquí la URL de la imagen que quieres mostrar en el muro.</small>
                 </div>
 
                 <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
