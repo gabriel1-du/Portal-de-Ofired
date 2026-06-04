@@ -9,17 +9,18 @@ import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTOAdmin;
 
+import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.util.List;
 import java.sql.Timestamp;
 
 public interface UsuarioService {
 
-    leerUsuarioDTO crearUsuario(crearUsuarioDTO usuarioDTO);
+    leerUsuarioDTO crearUsuario(crearUsuarioDTO usuarioDTO, MultipartFile archivoFoto);
 
     leerUsuarioDTO leerUsuario(Integer id); // Método para leer un usuario por su ID (Get)
 
-    leerUsuarioDTO actualizarUsuario(Integer id, actualizarUserDTO usuarioDTO);
+    leerUsuarioDTO actualizarUsuario(Integer id, actualizarUserDTO usuarioDTO, MultipartFile archivoFoto);
 
     List<leerUsuarioDTO> leertTodosLosUsuariosDto (); // Método para leer todos los usuarios (Get All)
 
@@ -27,13 +28,13 @@ public interface UsuarioService {
 
     void eliminarUsuarioConIngresoContraseña(Integer id, eliminarUserDTO deleteDTO); // Método para eliminar un usuario con confirmación de contraseña
 
-    leerUsuarioDTO actualizarUsuarioAdmin(Integer id, actualizarUsuarioDTOAdmin usuarioDTO);
+    leerUsuarioDTO actualizarUsuarioAdmin(Integer id, actualizarUsuarioDTOAdmin usuarioDTO, MultipartFile archivoFoto);
 
-    leerUsuarioDTO crearUsuarioLVL1(crearUsuarioLVL1DTO usuarioDTO); // Método específico para crear usuarios de nivel 1 (Usuario no administrador/profesional)
+    leerUsuarioDTO crearUsuarioLVL1(crearUsuarioLVL1DTO usuarioDTO, MultipartFile archivoFoto); // Método específico para crear usuarios de nivel 1 (Usuario no administrador/profesional)
 
-    leerUsuarioDTO crearUsuarioLVL2(crearUsuarioLVL2DTO usuarioDTO); // Método específico para crear usuarios de nivel 1 (Usuario no administrador/profesional)
+    leerUsuarioDTO crearUsuarioLVL2(crearUsuarioLVL2DTO usuarioDTO, MultipartFile archivoFoto); // Método específico para crear usuarios de nivel 1 (Usuario no administrador/profesional)
 
-    leerUsuarioDTO crearUsuarioAdmin(crearUsuarioDTOAdmin usuarioDTO);
+    leerUsuarioDTO crearUsuarioAdmin(crearUsuarioDTOAdmin usuarioDTO, MultipartFile archivoFoto);
 
     //Metodos para iniciar sesión
     leerUsuarioDTO iniciarSesion(String correoElec, String password); 

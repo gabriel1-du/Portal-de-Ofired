@@ -60,12 +60,17 @@ export const buscarUsuariosPorNombre = async (nombre) => {
 //funcion para crear un nuevo usuario cliente en la base de datos a través de la API Gateway
 export const crearUsuarioCliente = async (datosUsuario) => {
   try {
+    const formData = new FormData();
+    const { foto, ...usuarioDTO } = datosUsuario;
+    
+    formData.append("usuario", new Blob([JSON.stringify(usuarioDTO)], { type: "application/json" }));
+    if (foto instanceof File || foto instanceof Blob) {
+      formData.append("foto", foto);
+    }
+
     const response = await fetch(`${API_URL_USUARIOS}/crearUsuarioLVL1`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(datosUsuario),
+      body: formData,
     });
 
     if (response.ok) {
@@ -85,13 +90,21 @@ export const updateUsuario = async (idUsuario, usuarioData, token) => {
   try {
     const url = `${API_URL_USUARIOS}/${idUsuario}`;
     console.log("Llamando a la API de Usuarios (PUT):", url);
+    
+    const formData = new FormData();
+    const { foto, ...usuarioDTO } = usuarioData;
+    
+    formData.append("usuario", new Blob([JSON.stringify(usuarioDTO)], { type: "application/json" }));
+    if (foto instanceof File || foto instanceof Blob) {
+      formData.append("foto", foto);
+    }
+
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(usuarioData),
+      body: formData,
     });
 
     if (response.ok) {
@@ -114,13 +127,21 @@ export const crearUsuarioPorAdmin = async (usuarioData, token) => {
   try {
     const url = `${API_URL_USUARIOS}/admin/crear`;
     console.log("Llamando a la API de Usuarios (POST Admin):", url);
+    
+    const formData = new FormData();
+    const { foto, ...usuarioDTO } = usuarioData;
+    
+    formData.append("usuario", new Blob([JSON.stringify(usuarioDTO)], { type: "application/json" }));
+    if (foto instanceof File || foto instanceof Blob) {
+      formData.append("foto", foto);
+    }
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(usuarioData),
+      body: formData,
     });
 
     if (response.ok) {
@@ -142,13 +163,21 @@ export const actualizarUsuarioAdmin = async (idUsuario, usuarioData, token) => {
   try {
     const url = `${API_URL_USUARIOS}/updateAdmin/${idUsuario}`;
     console.log("Llamando a la API de Usuarios (PUT Admin):", url);
+    
+    const formData = new FormData();
+    const { foto, ...usuarioDTO } = usuarioData;
+    
+    formData.append("usuario", new Blob([JSON.stringify(usuarioDTO)], { type: "application/json" }));
+    if (foto instanceof File || foto instanceof Blob) {
+      formData.append("foto", foto);
+    }
+
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(usuarioData),
+      body: formData,
     });
 
    if (response.ok) {
@@ -169,12 +198,17 @@ export const actualizarUsuarioAdmin = async (idUsuario, usuarioData, token) => {
 //
 export const crearUsuarioOficio= async (datosUsuario) => {
   try {
+    const formData = new FormData();
+    const { foto, ...usuarioDTO } = datosUsuario;
+    
+    formData.append("usuario", new Blob([JSON.stringify(usuarioDTO)], { type: "application/json" }));
+    if (foto instanceof File || foto instanceof Blob) {
+      formData.append("foto", foto);
+    }
+
     const response = await fetch(`${API_URL_USUARIOS}/crearUsuarioLVL2`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(datosUsuario),
+      body: formData,
     });
 
     if (response.ok) {

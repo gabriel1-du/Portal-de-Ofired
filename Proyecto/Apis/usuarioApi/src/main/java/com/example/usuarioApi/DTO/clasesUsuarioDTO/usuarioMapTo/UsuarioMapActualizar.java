@@ -37,7 +37,7 @@ public class UsuarioMapActualizar {
     }
 
 
-    public void mapActualizarDTOToUsuario(actualizarUserDTO dto, Usuario usuario) {
+    public void mapActualizarDTOToUsuario(actualizarUserDTO dto, Usuario usuario, String urlFoto) {
         // Mapeo de datos personales, solo si no son nulos en el DTO.
         if (dto.getPrimerNombre() != null) {
             usuario.setPNombre(defaultIfBlank(dto.getPrimerNombre(), "N"));
@@ -62,8 +62,8 @@ public class UsuarioMapActualizar {
         if (dto.getNumeroTelef() != null) {
             usuario.setNumeroTelef(defaultIfBlank(dto.getNumeroTelef(), "N"));
         }
-        if (dto.getFoto() != null) {
-            usuario.setFoto(dto.getFoto());
+        if (urlFoto != null) {
+            usuario.setFoto(urlFoto);
         }
         if (dto.getCalificacion() != null) {
             usuario.setValoracion(java.math.BigDecimal.valueOf(dto.getCalificacion()));
@@ -93,7 +93,7 @@ public class UsuarioMapActualizar {
 
     }
 
-    public void mapActualizarDTOToUsuarioAdmin(actualizarUsuarioDTOAdmin dto, Usuario usuario) {
+    public void mapActualizarDTOToUsuarioAdmin(actualizarUsuarioDTOAdmin dto, Usuario usuario, String urlFoto) {
         // Mapeo de datos personales, solo si no son nulos en el DTO.
         if (dto.getPrimerNombre() != null) {
             usuario.setPNombre(defaultIfBlank(dto.getPrimerNombre(), "N"));
@@ -115,8 +115,8 @@ public class UsuarioMapActualizar {
         if (dto.getNumeroTelef() != null) {
             usuario.setNumeroTelef(defaultIfBlank(dto.getNumeroTelef(), "N"));
         }
-        if (dto.getFoto() != null) {
-            usuario.setFoto(dto.getFoto());
+        if (urlFoto != null) {
+            usuario.setFoto(urlFoto);
         }
         if (dto.getRut() != null) {
             usuario.setRut(defaultIfBlank(dto.getRut(), "N"));

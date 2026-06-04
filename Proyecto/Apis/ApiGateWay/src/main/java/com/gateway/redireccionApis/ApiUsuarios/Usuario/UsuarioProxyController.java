@@ -37,12 +37,12 @@ public class UsuarioProxyController {
 
     @RequestMapping(value = {"", "/**"}, method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     public ResponseEntity<?> proxyUsuarios(HttpServletRequest request,
-                                           @RequestBody(required = false) String body,
+                                           @RequestBody(required = false) byte[] body,// Usamos byte[] para manejar cualquier tipo de contenido, no solo JSON
                                            @RequestHeader HttpHeaders headers) {
         return handleProxy(request, body, headers);
     }
 
-    private ResponseEntity<?> handleProxy(HttpServletRequest request, String body, HttpHeaders headers) {
+    private ResponseEntity<?> handleProxy(HttpServletRequest request, byte[] body, HttpHeaders headers) {
         String originalPath = request.getRequestURI().replace("/api/proxy/usuariosApi", "");
         String queryString = request.getQueryString();
 
@@ -89,9 +89,8 @@ public class UsuarioProxyController {
                 cleanHeaders.put(key, value);
             }
         });
-        cleanHeaders.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<String> entity = new HttpEntity<>(body, cleanHeaders);
+        HttpEntity<byte[]> entity = new HttpEntity<>(body, cleanHeaders);
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(targetUrl, method, entity, String.class);

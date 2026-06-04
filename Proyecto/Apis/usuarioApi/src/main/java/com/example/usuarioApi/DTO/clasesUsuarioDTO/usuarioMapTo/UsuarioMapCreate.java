@@ -42,7 +42,7 @@ public class UsuarioMapCreate {
 
 
     //Metodo para convertir ususario a crear
-     public Usuario mapCrearUsuarioDTOToUsuario(crearUsuarioDTO dto) {
+     public Usuario mapCrearUsuarioDTOToUsuario(crearUsuarioDTO dto, String urlFoto) {
         Usuario usuario = new Usuario();
 
         // Mapeo de datos personales, con "N" como valor por defecto para strings vacíos o nulos.
@@ -57,6 +57,7 @@ public class UsuarioMapCreate {
         usuario.setRut(defaultIfBlank(dto.getRut(), "N"));
         usuario.setRutDv(defaultIfBlank(dto.getRutDv(), "N"));
         usuario.setNumeroTelef(defaultIfBlank(dto.getNumeroTelef(), "N"));
+        usuario.setFoto(defaultIfBlank(urlFoto, "N"));
         usuario.setValoracion(dto.getValoracion() != null ? java.math.BigDecimal.valueOf(dto.getValoracion()) : java.math.BigDecimal.ZERO); // Valor por defecto de 0.0 si no se proporciona
         usuario.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 
@@ -92,7 +93,7 @@ public class UsuarioMapCreate {
     }
 
 
-    public Usuario mapCrearUsuarioLVL1DTOtoUsuario(crearUsuarioLVL1DTO dto) {
+    public Usuario mapCrearUsuarioLVL1DTOtoUsuario(crearUsuarioLVL1DTO dto, String urlFoto) {
         Usuario usuario = new Usuario();
 
         // Mapeo de datos personales, con "N" como valor por defecto para strings vacíos o nulos.
@@ -107,7 +108,7 @@ public class UsuarioMapCreate {
         usuario.setRut(null);
         usuario.setRutDv(null);
         usuario.setNumeroTelef(defaultIfBlank(dto.getNumeroTelef(), "N"));
-        usuario.setFoto(defaultIfBlank(dto.getFoto(), "N"));
+        usuario.setFoto(defaultIfBlank(urlFoto, "N"));
         usuario.setTipoUsuario(tipoUsuarioRepository.findById(1) // Asumiendo que el ID 1 corresponde a "Usuario Nivel 1"
                 .orElseThrow(() -> new RuntimeException("Tipo de Usuario no encontrado con id: 1")));
         usuario.setHabilitadorAdministrador(null);
@@ -137,7 +138,7 @@ public class UsuarioMapCreate {
 
 
     
-     public Usuario mapCrearUsuarioLVL2DTOtoUsuario(crearUsuarioLVL2DTO dto) {
+     public Usuario mapCrearUsuarioLVL2DTOtoUsuario(crearUsuarioLVL2DTO dto, String urlFoto) {
         Usuario usuario = new Usuario();
 
         // Mapeo de datos personales, con "N" como valor por defecto para strings vacíos o nulos.
@@ -152,7 +153,7 @@ public class UsuarioMapCreate {
         usuario.setRut(dto.getRut());
         usuario.setRutDv(dto.getRutDv());
         usuario.setNumeroTelef(defaultIfBlank(dto.getNumeroTelef(), "N"));
-        usuario.setFoto(defaultIfBlank(dto.getFoto(), "N"));
+        usuario.setFoto(defaultIfBlank(urlFoto, "N"));
         if (dto.getIdTipoUsu() != null) {
             TipoUsuario tipoUsuario = tipoUsuarioRepository.findById(dto.getIdTipoUsu())
                     .orElseThrow(() -> new RuntimeException("Tipo de Usuario no encontrado con id: " + dto.getIdTipoUsu()));
@@ -188,7 +189,7 @@ public class UsuarioMapCreate {
         return usuario;
     }
 
-    public Usuario mapCrearUsuarioAdminDTOtoUsuario(crearUsuarioDTOAdmin dto) {
+    public Usuario mapCrearUsuarioAdminDTOtoUsuario(crearUsuarioDTOAdmin dto, String urlFoto) {
         Usuario usuario = new Usuario();
 
         // Mapeo de datos personales, con "N" como valor por defecto para strings vacíos o nulos.
@@ -203,7 +204,7 @@ public class UsuarioMapCreate {
         usuario.setRut(defaultIfBlank(dto.getRut(), "N"));
         usuario.setRutDv(defaultIfBlank(dto.getRutDv(), "N"));
         usuario.setNumeroTelef(defaultIfBlank(dto.getNumeroTelef(), "N"));
-        usuario.setFoto(defaultIfBlank(dto.getFoto(), "N"));
+        usuario.setFoto(defaultIfBlank(urlFoto, "N"));
         usuario.setHabilitadorAdministrador(dto.getHabilitadorAdministrador() != null ? dto.getHabilitadorAdministrador() : false);
         usuario.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
         usuario.setValoracion(dto.getValoracion() != null ? java.math.BigDecimal.valueOf(dto.getValoracion()) : java.math.BigDecimal.ZERO);

@@ -22,8 +22,11 @@ const FormularioCreacionDePerfilUsuario = () => {
       if (file) {
         // Se crea una URL local para el archivo seleccionado.
         // Esto es temporal hasta que se conecte a un servicio de almacenamiento en la nube.
-        // Guardamos la URL temporal en el contexto.
-        updateFormData({ [name]: URL.createObjectURL(file) });
+        // Guardamos el File real para la API y la URL para la previsualización local.
+        updateFormData({ 
+          [name]: file, 
+          [`${name}Preview`]: URL.createObjectURL(file) 
+        });
       }
     } else {
       updateFormData({ [name]: value });
@@ -138,10 +141,10 @@ const FormularioCreacionDePerfilUsuario = () => {
         {/* 1. Área del Banner (Replicado de ModificarPerfil) */}
         <label className="input-area border border-2 border-secondary border-opacity-25 rounded-4 d-flex align-items-center justify-content-center text-center overflow-hidden position-relative w-100 bg-light border-dashed mb-4" style={{ height: '200px' }}>
           <input type="file" accept="image/*" className="d-none" name="fotografiaBanner" onChange={handleChange} />
-          {!formData.fotografiaBanner ? (
+          {!formData.fotografiaBannerPreview && !formData.fotografiaBanner ? (
             <span className="text-secondary fw-semibold fs-5">Ingresa la foto de tu banner</span>
           ) : (
-            <img src={formData.fotografiaBanner} alt="Banner preview" className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />
+            <img src={formData.fotografiaBannerPreview || formData.fotografiaBanner} alt="Banner preview" className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />
           )}
         </label>
 
@@ -150,7 +153,7 @@ const FormularioCreacionDePerfilUsuario = () => {
           <label className="input-area bg-light border border-4 border-white rounded-circle shadow-sm d-flex align-items-center justify-content-center overflow-hidden position-relative flex-shrink-0" style={{ width: '130px', height: '130px', zIndex: 2 }}>
             <input type="file" accept="image/*" className="d-none" name="foto" onChange={handleChange} />
             <span className="fs-1">📷</span>
-            {formData.foto && <img src={formData.foto} alt="Perfil preview" className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />}
+            {(formData.fotoPreview || formData.foto) && <img src={formData.fotoPreview || formData.foto} alt="Perfil preview" className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />}
           </label>
           <span className="ms-3 mt-4 text-dark fw-bold fs-5">Ingresa tu foto de perfil</span>
         </div>

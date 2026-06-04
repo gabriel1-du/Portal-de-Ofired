@@ -14,7 +14,9 @@ const ModificarPerfilUsuario = () => {
     nombreApodo: '',
     fotografiaBanner: '',
     descripcion: '',
-    foto: '' // Foto principal del usuario
+    foto: '', // Foto principal del usuario
+    fotografiaBannerPreview: '',
+    fotoPreview: ''
   });
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -35,9 +37,12 @@ const ModificarPerfilUsuario = () => {
             nombreApodo: datos.nombreApodo || '',
             fotografiaBanner: datos.fotografiaBanner || '',
             descripcion: datos.descripcion || '',
-            foto: datos.foto || ''
+            foto: datos.foto || '',
+            fotografiaBannerPreview: '',
+            fotoPreview: ''
           });
-          setIdPerfil(datos.idPerfilUsuario);
+          // Aseguramos capturar el ID sin importar cómo lo haya nombrado el backend
+          setIdPerfil(datos.idPerfilUsuario || datos.idPerfil || datos.id);
         } else {
           setError("No se encontró un perfil para modificar. Es posible que necesites crear uno primero.");
         }
@@ -57,9 +62,12 @@ const ModificarPerfilUsuario = () => {
     if (type === 'file') {
       const file = files[0];
       if (file) {
-        // Aquí deberías subir el archivo a tu servidor/nube y obtener una URL.
-        // Por ahora, usamos una URL de objeto como placeholder.
-        setFormData(prev => ({ ...prev, [name]: URL.createObjectURL(file) }));
+        // Guardamos el File real para la API y la URL temporal para la previsualización
+        setFormData(prev => ({ 
+          ...prev, 
+          [name]: file,
+          [`${name}Preview`]: URL.createObjectURL(file) 
+        }));
       }
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
@@ -68,7 +76,8 @@ const ModificarPerfilUsuario = () => {
 
   const handleGuardar = async () => {
     if (!idPerfil || !token || !usuario || !usuario.idUsuario) {
-      setError("No se puede guardar: falta información crítica de usuario, perfil o autenticación.");
+      console.error("Fallo de validación. Datos detectados:", { idPerfil, tieneToken: !!token, idUsuario: usuario?.idUsuario });
+      setError(`No se puede guardar. Falta información: ${!idPerfil ? 'ID del Perfil. ' : ''}${!token ? 'Token de Sesión. ' : ''}${!usuario?.idUsuario ? 'ID de Usuario.' : ''}`);
       return;
     }
 
@@ -82,12 +91,11 @@ const ModificarPerfilUsuario = () => {
       };
       await updateUsuario(usuario.idUsuario, datosFotoUsuario, token);
 
-      // 2. Actualizar los datos del perfil (sin la foto).
+      // 2. Actualizar los datos del perfil (ajustado exactamente al PerfilUsuarioActualizarDTO).
       const datosPerfilParaActualizar = {
-        idUsuario: usuario.idUsuario, // El backend podría necesitarlo para validación
         nombreApodo: formData.nombreApodo,
-        fotografiaBanner: formData.fotografiaBanner,
         descripcion: formData.descripcion,
+        fotografiaBanner: formData.fotografiaBanner
       };
       await updatePerfilUsuario(idPerfil, datosPerfilParaActualizar, token);
 
@@ -125,10 +133,10 @@ const ModificarPerfilUsuario = () => {
         <label className="input-area border border-2 border-secondary border-opacity-25 rounded-4 d-flex align-items-center justify-content-center text-center overflow-hidden position-relative w-100 bg-light border-dashed mb-4" style={{ height: '200px' }}>
           <input type="file" accept="image/*" name="fotografiaBanner" className="d-none" onChange={handleChange} />
           
-          {!formData.fotografiaBanner ? (
+          {!formData.fotografiaBannerPreview && !formData.fotografiaBanner ? (
             <span className="text-secondary fw-semibold fs-5">Ingresa la foto de tu banner</span>
           ) : (
-            <img src={formData.fotografiaBanner} alt="Banner preview" className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />
+            <img src={formData.fotografiaBannerPreview || formData.fotografiaBanner} alt="Banner preview" className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />
           )}
         </label>
 
@@ -136,7 +144,7 @@ const ModificarPerfilUsuario = () => {
           <label className="input-area bg-light border border-4 border-white rounded-circle shadow-sm d-flex align-items-center justify-content-center overflow-hidden position-relative flex-shrink-0" style={{ width: '130px', height: '130px', zIndex: 2 }}>
             <input type="file" accept="image/*" name="foto" className="d-none" onChange={handleChange} />
             <span className="fs-1">📷</span>
-            {formData.foto && <img src={formData.foto} alt="Perfil preview" className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />}
+            {(formData.fotoPreview || formData.foto) && <img src={formData.fotoPreview || formData.foto} alt="Perfil preview" className="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />}
           </label>
           <span className="ms-3 mt-4 text-dark fw-bold fs-5">Ingresa tu foto de perfil</span>
         </div>

@@ -19,6 +19,9 @@ import com.example.usuarioApi.Repository.PerfilUsuarioRepository;
 import com.example.usuarioApi.Repository.RegionRepository;
 import com.example.usuarioApi.Repository.SexoUsuarioRepository;
 import com.example.usuarioApi.Repository.UsuarioRepository; // Importar todos los repositorios necesarios
+import com.example.usuarioApi.Minio.MinioStorageService;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import org.springframework.stereotype.Service;
 
 import com.example.usuarioApi.Service.UsuarioService;
@@ -67,11 +70,23 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private SexoUsuarioRepository sexoRepository;
 
+    @Autowired
+    private MinioStorageService minioStorageService;
+
     @Override
-    public leerUsuarioDTO crearUsuario(crearUsuarioDTO usuarioDTO) {
+    public leerUsuarioDTO crearUsuario(crearUsuarioDTO usuarioDTO, MultipartFile archivoFoto) {
     
+        String urlFoto = null;
+        if (archivoFoto != null && !archivoFoto.isEmpty()) {
+            try {
+                urlFoto = minioStorageService.subirArchivo(archivoFoto);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al subir la foto a MinIO: " + e.getMessage());
+            }
+        }
+
         // 1. Mapear el DTO de creación a la entidad Usuario, aplicando la lógica de valores por defecto.
-        Usuario usuario = createMapper.mapCrearUsuarioDTOToUsuario(usuarioDTO);
+        Usuario usuario = createMapper.mapCrearUsuarioDTOToUsuario(usuarioDTO, urlFoto);
 
         // 2. Hashear la contraseña obtenida del DTO usando el PasswordEncoder.
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
@@ -86,9 +101,18 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public leerUsuarioDTO crearUsuarioLVL1(crearUsuarioLVL1DTO usuarioDTO) {
+    public leerUsuarioDTO crearUsuarioLVL1(crearUsuarioLVL1DTO usuarioDTO, MultipartFile archivoFoto) {
+        String urlFoto = null;
+        if (archivoFoto != null && !archivoFoto.isEmpty()) {
+            try {
+                urlFoto = minioStorageService.subirArchivo(archivoFoto);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al subir la foto a MinIO: " + e.getMessage());
+            }
+        }
+
         // 1. Mapear el DTO de creación específico para nivel 1 a la entidad Usuario, aplicando reglas de negocio particulares.
-        Usuario usuario = createMapper.mapCrearUsuarioLVL1DTOtoUsuario(usuarioDTO);
+        Usuario usuario = createMapper.mapCrearUsuarioLVL1DTOtoUsuario(usuarioDTO, urlFoto);
 
         // 2. Hashear la contraseña obtenida del DTO usando el PasswordEncoder.
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
@@ -101,9 +125,18 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
      @Override
-    public leerUsuarioDTO crearUsuarioLVL2(crearUsuarioLVL2DTO usuarioDTO) {
+    public leerUsuarioDTO crearUsuarioLVL2(crearUsuarioLVL2DTO usuarioDTO, MultipartFile archivoFoto) {
+        String urlFoto = null;
+        if (archivoFoto != null && !archivoFoto.isEmpty()) {
+            try {
+                urlFoto = minioStorageService.subirArchivo(archivoFoto);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al subir la foto a MinIO: " + e.getMessage());
+            }
+        }
+
         // 1. Mapear el DTO de creación específico para nivel 1 a la entidad Usuario, aplicando reglas de negocio particulares.
-        Usuario usuario = createMapper.mapCrearUsuarioLVL2DTOtoUsuario(usuarioDTO);
+        Usuario usuario = createMapper.mapCrearUsuarioLVL2DTOtoUsuario(usuarioDTO, urlFoto);
 
         // 2. Hashear la contraseña obtenida del DTO usando el PasswordEncoder.
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
@@ -116,8 +149,17 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public leerUsuarioDTO crearUsuarioAdmin(crearUsuarioDTOAdmin usuarioDTO) {
-        Usuario usuario = createMapper.mapCrearUsuarioAdminDTOtoUsuario(usuarioDTO);
+    public leerUsuarioDTO crearUsuarioAdmin(crearUsuarioDTOAdmin usuarioDTO, MultipartFile archivoFoto) {
+        String urlFoto = null;
+        if (archivoFoto != null && !archivoFoto.isEmpty()) {
+            try {
+                urlFoto = minioStorageService.subirArchivo(archivoFoto);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al subir la foto a MinIO: " + e.getMessage());
+            }
+        }
+
+        Usuario usuario = createMapper.mapCrearUsuarioAdminDTOtoUsuario(usuarioDTO, urlFoto);
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         Usuario nuevoUsuario = usuarioRepository.save(usuario);
         return readMapper.mapUsuarioToLeerUsuarioDTO(nuevoUsuario);
@@ -133,15 +175,24 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public leerUsuarioDTO actualizarUsuario(Integer id, actualizarUserDTO usuarioDTO) {
+    public leerUsuarioDTO actualizarUsuario(Integer id, actualizarUserDTO usuarioDTO, MultipartFile archivoFoto) {
     
         // 1. Buscar el usuario existente en la base de datos.
         // Si no se encuentra, se lanzará la excepción.
         Usuario usuarioExistente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
 
+        String nuevaUrlFoto = null;
+        if (archivoFoto != null && !archivoFoto.isEmpty()) {
+            try {
+                nuevaUrlFoto = minioStorageService.subirArchivo(archivoFoto);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al actualizar la foto en MinIO: " + e.getMessage());
+            }
+        }
+
         // 2. Usar el mapper para aplicar los cambios del DTO a la entidad existente.
-        updateMapper.mapActualizarDTOToUsuario(usuarioDTO, usuarioExistente);
+        updateMapper.mapActualizarDTOToUsuario(usuarioDTO, usuarioExistente, nuevaUrlFoto);
 
         // Si se proporcionó una nueva contraseña en el DTO, hashearla y actualizarla de forma segura.
         if (usuarioDTO.getPassword() != null && !usuarioDTO.getPassword().trim().isEmpty()) {
@@ -160,7 +211,11 @@ public class UsuarioServiceImpl implements UsuarioService {
             if (usuarioDTO.getPrimerApellido() != null) perfil.setPApellido(usuarioDTO.getPrimerApellido());
             if (usuarioDTO.getSegundoApellido() != null) perfil.setSApellido(usuarioDTO.getSegundoApellido());
             if (usuarioDTO.getNumeroTelef() != null) perfil.setNumeroTelefono(usuarioDTO.getNumeroTelef());
-            if (usuarioDTO.getFoto() != null) perfil.setFotoPerfil(usuarioDTO.getFoto());
+            if (nuevaUrlFoto != null) {
+                perfil.setFotoPerfil(nuevaUrlFoto);
+            } else if (usuarioDTO.getFoto() != null) {
+                perfil.setFotoPerfil(usuarioDTO.getFoto());
+            }
 
             // Para las relaciones, buscamos las entidades completas
             if (usuarioDTO.getIdRegionUsu() != null) {
@@ -227,14 +282,23 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public leerUsuarioDTO actualizarUsuarioAdmin(Integer id, actualizarUsuarioDTOAdmin usuarioDTO) {
+    public leerUsuarioDTO actualizarUsuarioAdmin(Integer id, actualizarUsuarioDTOAdmin usuarioDTO, MultipartFile archivoFoto) {
         // 1. Buscar el usuario existente en la base de datos.
         Usuario usuarioExistente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
 
+        String nuevaUrlFoto = null;
+        if (archivoFoto != null && !archivoFoto.isEmpty()) {
+            try {
+                nuevaUrlFoto = minioStorageService.subirArchivo(archivoFoto);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al actualizar la foto en MinIO: " + e.getMessage());
+            }
+        }
+
         // 2. Usar el mapper para aplicar los cambios del DTO de admin a la entidad existente.
         // El objeto 'usuarioExistente' se modifica por referencia dentro de este método.
-        updateMapper.mapActualizarDTOToUsuarioAdmin(usuarioDTO, usuarioExistente);
+        updateMapper.mapActualizarDTOToUsuarioAdmin(usuarioDTO, usuarioExistente, nuevaUrlFoto);
 
         // 3. Guardar la entidad que fue modificada.
         Usuario usuarioGuardado = usuarioRepository.save(usuarioExistente);

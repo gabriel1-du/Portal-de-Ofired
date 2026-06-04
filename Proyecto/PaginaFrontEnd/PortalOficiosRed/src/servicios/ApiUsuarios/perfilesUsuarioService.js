@@ -23,13 +23,21 @@ export const getPerfilById = async (id) => {
 export const createPerfilUsuario = async (perfilData, token) => {
   try {
     console.log("Llamando a la API de Perfiles (POST):", `${API_URL_PERFILES}`);
+    
+    const formData = new FormData();
+    const { fotografiaBanner, ...perfilDTO } = perfilData;
+    
+    formData.append("perfil", new Blob([JSON.stringify(perfilDTO)], { type: "application/json" }));
+    if (fotografiaBanner instanceof File || fotografiaBanner instanceof Blob) {
+      formData.append("banner", fotografiaBanner);
+    }
+
     const response = await fetch(`${API_URL_PERFILES}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}` // Añadimos el token para autorización
       },
-      body: JSON.stringify(perfilData),
+      body: formData,
     });
 
     if (response.ok) {
@@ -51,13 +59,21 @@ export const updatePerfilUsuario = async (idPerfil, perfilData, token) => {
   try {
     const url = `${API_URL_PERFILES}/${idPerfil}`;
     console.log("Llamando a la API de Perfiles (PUT):", url);
+    
+    const formData = new FormData();
+    const { fotografiaBanner, ...perfilDTO } = perfilData;
+    
+    formData.append("perfil", new Blob([JSON.stringify(perfilDTO)], { type: "application/json" }));
+    if (fotografiaBanner instanceof File || fotografiaBanner instanceof Blob) {
+      formData.append("banner", fotografiaBanner);
+    }
+
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}` // Añadimos el token de autorización
       },
-      body: JSON.stringify(perfilData),
+      body: formData,
     });
 
     if (response.ok) {

@@ -14,6 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
+import org.mockito.Mockito;
+import com.example.usuarioApi.Minio.MinioStorageService;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -52,6 +57,9 @@ public class UsuarioServiceImplTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @MockBean
+    private MinioStorageService minioStorageService;
 
     private Region regionInicial, regionNueva;
     private Comuna comunaInicial, comunaNueva;
@@ -114,8 +122,24 @@ public class UsuarioServiceImplTest {
         datosParaActualizar.setIdComunaUsu(comunaNueva.getIdComuna()); // Aquí está la clave de tu pregunta
         datosParaActualizar.setIdOficio(oficioNuevo.getIdOficio());
 
+        // Creamos un archivo falso para simular la subida de imagen
+        MockMultipartFile fakeFoto = new MockMultipartFile(
+                "archivoFoto",
+                "foto-perfil.jpg",
+                "image/jpeg",
+                "bytes-de-imagen-falsa".getBytes()
+        );
+
+        // Simulamos (Mock) el comportamiento de MinioStorageService para que devuelva una URL sin conectarse a Docker
+        try {
+            Mockito.when(minioStorageService.subirArchivo(Mockito.any(MultipartFile.class)))
+                   .thenReturn("http://minio-falso.com/bucket/foto-perfil.jpg");
+        } catch (Exception e) {
+            fail("El mock no debería lanzar excepciones");
+        }
+
         // Llamamos al método del servicio
-        leerUsuarioDTO resultadoDTO = usuarioService.actualizarUsuario(usuarioExistente.getIdUsuario(), datosParaActualizar);
+        leerUsuarioDTO resultadoDTO = usuarioService.actualizarUsuario(usuarioExistente.getIdUsuario(), datosParaActualizar, fakeFoto);
 
         // 3. Assert: Verificar que los cambios se aplicaron correctamente.
 
@@ -129,11 +153,13 @@ public class UsuarioServiceImplTest {
         Usuario usuarioActualizado = usuarioRepository.findById(usuarioExistente.getIdUsuario()).orElseThrow();
         assertEquals("Pedro", usuarioActualizado.getPNombre(), "El nombre en la entidad Usuario debe estar actualizado.");
         assertEquals(comunaNueva.getIdComuna(), usuarioActualizado.getComuna().getIdComuna(), "El ID de comuna en la entidad Usuario debe ser el nuevo.");
+        assertEquals("http://minio-falso.com/bucket/foto-perfil.jpg", usuarioActualizado.getFoto(), "La foto en la entidad Usuario debe ser la URL de MinIO.");
 
         // Verificación #3: La entidad PerfilUsuario en la BD está sincronizada. ¡Esta es la más importante!
         PerfilUsuario perfilActualizado = perfilUsuarioRepository.findByUsuario_IdUsuario(usuarioExistente.getIdUsuario()).orElseThrow();
         assertEquals("Pedro", perfilActualizado.getPNombre(), "El nombre en el perfil debe sincronizarse.");
         assertEquals("987654321", perfilActualizado.getNumeroTelefono(), "El teléfono en el perfil debe sincronizarse.");
+        assertEquals("http://minio-falso.com/bucket/foto-perfil.jpg", perfilActualizado.getFotoPerfil(), "La foto en el perfil debe sincronizarse con la URL de MinIO.");
 
         // Verificamos que la entidad completa de la comuna fue asignada al perfil.
         assertNotNull(perfilActualizado.getComuna(), "La comuna en el perfil no debe ser nula.");

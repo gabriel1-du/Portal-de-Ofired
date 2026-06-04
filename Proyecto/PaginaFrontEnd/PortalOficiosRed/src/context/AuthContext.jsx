@@ -5,7 +5,10 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     // Al iniciar, intentamos leer tanto el token como los datos del usuario desde las cookies.
-    const [token, setToken] = useState(Cookies.get('token') || null);
+    const [token, setToken] = useState(() => {
+        const tokenGuardado = Cookies.get('token');
+        return (tokenGuardado && tokenGuardado !== 'undefined') ? tokenGuardado : null;
+    });
     const [usuario, setUsuario] = useState(() => {
         const usuarioGuardado = Cookies.get('usuario');
         try {
@@ -25,7 +28,9 @@ export const AuthProvider = ({ children }) => {
         setToken(nuevoToken);
         setUsuario(datosUsuario);
         // Guardamos tanto el token como el objeto de usuario en cookies, con expiración de 2 días
-        Cookies.set('token', nuevoToken, { expires: 2 });
+        if (nuevoToken && nuevoToken !== 'undefined') {
+            Cookies.set('token', nuevoToken, { expires: 2 });
+        }
         // Solución Preventiva: Nos aseguramos de no guardar 'undefined' en las cookies.
         if (datosUsuario) {
             Cookies.set('usuario', JSON.stringify(datosUsuario), { expires: 2 });

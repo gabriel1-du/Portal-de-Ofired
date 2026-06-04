@@ -15,8 +15,10 @@ import com.example.usuarioApi.Service.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -29,27 +31,35 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
  
-    @PostMapping
-    public ResponseEntity<leerUsuarioDTO> crearUsuarioRaw(@RequestBody crearUsuarioDTO usuarioDTO) {
-        leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuario(usuarioDTO);
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<leerUsuarioDTO> crearUsuarioRaw(
+            @RequestPart("usuario") crearUsuarioDTO usuarioDTO,
+            @RequestPart(value = "foto", required = false) MultipartFile archivoFoto) {
+        leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuario(usuarioDTO, archivoFoto);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
-    @PostMapping("/crearUsuarioLVL1") //crear usuario sin oficio
-    public ResponseEntity<leerUsuarioDTO> crearUsuarioLVL1(@RequestBody crearUsuarioLVL1DTO usuarioDTO) {
-        leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioLVL1(usuarioDTO);
+    @PostMapping(value = "/crearUsuarioLVL1", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }) //crear usuario sin oficio
+    public ResponseEntity<leerUsuarioDTO> crearUsuarioLVL1(
+            @RequestPart("usuario") crearUsuarioLVL1DTO usuarioDTO,
+            @RequestPart(value = "foto", required = false) MultipartFile archivoFoto) {
+        leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioLVL1(usuarioDTO, archivoFoto);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
-    @PostMapping("/crearUsuarioLVL2") //crear usuario con oficio
-    public ResponseEntity<leerUsuarioDTO> crearUsuarioLVL2(@RequestBody crearUsuarioLVL2DTO usuarioDTO) {
-        leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioLVL2(usuarioDTO);
+    @PostMapping(value = "/crearUsuarioLVL2", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }) //crear usuario con oficio
+    public ResponseEntity<leerUsuarioDTO> crearUsuarioLVL2(
+            @RequestPart("usuario") crearUsuarioLVL2DTO usuarioDTO,
+            @RequestPart(value = "foto", required = false) MultipartFile archivoFoto) {
+        leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioLVL2(usuarioDTO, archivoFoto);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
-    @PostMapping("/admin/crear") // Endpoint específico para que el admin cree un usuario con todos los campos, incluyendo rol y estado
-    public ResponseEntity<leerUsuarioDTO> crearUsuarioPorAdmin(@RequestBody crearUsuarioDTOAdmin dto) {
-        leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioAdmin(dto);
+    @PostMapping(value = "/admin/crear", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }) // Endpoint específico para que el admin cree un usuario con todos los campos, incluyendo rol y estado
+    public ResponseEntity<leerUsuarioDTO> crearUsuarioPorAdmin(
+            @RequestPart("usuario") crearUsuarioDTOAdmin dto,
+            @RequestPart(value = "foto", required = false) MultipartFile archivoFoto) {
+        leerUsuarioDTO nuevoUsuario = usuarioService.crearUsuarioAdmin(dto, archivoFoto);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
@@ -59,9 +69,12 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<leerUsuarioDTO> actualizarUsuario(@PathVariable Integer id, @RequestBody actualizarUserDTO usuarioDTO) {
-        leerUsuarioDTO usuarioActualizado = usuarioService.actualizarUsuario(id, usuarioDTO);
+    @PutMapping(value = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<leerUsuarioDTO> actualizarUsuario(
+            @PathVariable Integer id, 
+            @RequestPart("usuario") actualizarUserDTO usuarioDTO,
+            @RequestPart(value = "foto", required = false) MultipartFile archivoFoto) {
+        leerUsuarioDTO usuarioActualizado = usuarioService.actualizarUsuario(id, usuarioDTO, archivoFoto);
         return ResponseEntity.ok(usuarioActualizado);
     }
 
@@ -84,9 +97,12 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/updateAdmin/{id}")
-    public ResponseEntity<leerUsuarioDTO> actualizarUsuarioAdmin(@PathVariable Integer id, @RequestBody actualizarUsuarioDTOAdmin usuarioDTO) {
-        leerUsuarioDTO usuarioActualizado = usuarioService.actualizarUsuarioAdmin(id, usuarioDTO);
+    @PutMapping(value = "/updateAdmin/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<leerUsuarioDTO> actualizarUsuarioAdmin(
+            @PathVariable Integer id, 
+            @RequestPart("usuario") actualizarUsuarioDTOAdmin usuarioDTO,
+            @RequestPart(value = "foto", required = false) MultipartFile archivoFoto) {
+        leerUsuarioDTO usuarioActualizado = usuarioService.actualizarUsuarioAdmin(id, usuarioDTO, archivoFoto);
         return ResponseEntity.ok(usuarioActualizado);
     }
    
