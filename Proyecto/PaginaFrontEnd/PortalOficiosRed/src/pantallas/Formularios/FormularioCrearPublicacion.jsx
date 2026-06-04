@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { getAllRegions } from '../../servicios/ApiUsuarios/TablasCategorias/regionService';
+import { getAllComunas } from '../../servicios/ApiUsuarios/TablasCategorias/comunasService';
+import { createPublicacion } from '../../servicios/ApiPublicaciones/publicacionesService';
 
 const FormularioCrearPublicacion = () => {
     const navigate = useNavigate();
@@ -18,36 +21,35 @@ const FormularioCrearPublicacion = () => {
         idRegion: '', 
         idComuna: '', 
         precioServicio: '',
-        imagenUrl: '' // 👈 Aquí guardaremos el link de la foto
+        imagenUrl: '' // 👈 Volvemos a guardar el link de la foto
     });
 
     // 1. Cargar las regiones al abrir el formulario
     useEffect(() => {
-        fetch("http://localhost:8888/api/proxy/regionesApi", {
-            headers: { "Authorization": `Bearer ${token}` }
-        })
-        .then(res => res.json())
-        .then(data => setListaRegiones(data))
-        .catch(err => console.error("Error cargando regiones:", err));
-        
-        // 2. Cargar comunas
-        fetch("http://localhost:8888/api/proxy/comunasApi", {
-            headers: { "Authorization": `Bearer ${token}` }
-        })
-        .then(res => res.json())
-        .then(data => setListaComunas(data))
-        .catch(err => console.error("Error cargando comunas:", err));
-    }, [token]);
+        const cargarListas = async () => {
+            try {
+                const regiones = await getAllRegions();
+                setListaRegiones(regiones || []);
+            } catch (error) {
+                console.error("Error cargando regiones:", error);
+            }
+
+            try {
+                const comunas = await getAllComunas();
+                setListaComunas(comunas || []);
+            } catch (error) {
+                console.error("Error cargando comunas:", error);
+            }
+        };
+        cargarListas();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!formData.tituloPublicacion.trim() || !formData.descripcionPublicacion.trim()) {
@@ -59,32 +61,21 @@ const FormularioCrearPublicacion = () => {
         const publicacionPayload = {
             idAutor: usuario?.idUsuario || 1, 
             tituloPublicacion: formData.tituloPublicacion,
-            descripcionPublicacion: formData.descripcionPublicacion,
             idRegion: formData.idRegion ? parseInt(formData.idRegion) : null,
             idComuna: formData.idComuna ? parseInt(formData.idComuna) : null,
-            precioServicio: formData.precioServicio ? parseFloat(formData.precioServicio) : null,
-            imagenUrl: formData.imagenUrl || null, // 👈 Enviamos el link al backend
-            cantidadLikes: 0 
+            ubicacionPublicacion: null, // Lo enviamos como null ya que está en tu DTO
+            descripcionPublicacion: formData.descripcionPublicacion,
+            imagenUrl: formData.imagenUrl || null 
         };
 
-        // Enviar publicación al Gateway
-        fetch("http://localhost:8888/api/proxy/publicacionesApi", { 
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` 
-            },
-            body: JSON.stringify(publicacionPayload)
-        })
-        .then(res => {
-            if (res.ok) {
-                alert("¡Publicación creada con éxito! 🎉");
-                navigate("/home"); 
-            } else {
-                alert("Hubo un error en el servidor al intentar guardar la publicación.");
-            }
-        })
-        .catch(err => console.error("Error al conectar con la ApiGateWay:", err));
+        try {
+            await createPublicacion(publicacionPayload, token);
+            alert("¡Publicación creada con éxito! 🎉");
+            navigate("/home"); 
+        } catch (err) {
+            console.error("Error al crear la publicación:", err);
+            alert("Hubo un error en el servidor al intentar guardar la publicación.");
+        }
     };
 
     return (
@@ -167,16 +158,16 @@ const FormularioCrearPublicacion = () => {
 
                 {/* 👇 AQUÍ AGREGAMOS EL CAMPO PARA LA IMAGEN */}
                 <div>
-                    <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Link de la Imagen (Opcional)</label>
+            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Link de la Imagen (Opcional)</label>
                     <input 
-                        type="url" 
-                        name="imagenUrl"
-                        placeholder="https://ejemplo.com/foto.jpg"
-                        value={formData.imagenUrl}
+                type="url" 
+                name="imagenUrl"
+                placeholder="https://ejemplo.com/foto.jpg"
+                value={formData.imagenUrl}
                         onChange={handleChange}
                         style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
                     />
-                    <small style={{ color: '#666', display: 'block', marginTop: '5px' }}>Pega aquí la URL de la imagen que quieres mostrar en el muro.</small>
+            <small style={{ color: '#666', display: 'block', marginTop: '5px' }}>Pega aquí la URL de la imagen que quieres mostrar en el muro.</small>
                 </div>
 
                 <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>

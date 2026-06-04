@@ -1,6 +1,7 @@
 package com.example.publicacionesApi.Controller;
 
-import com.example.publicacionesApi.Model.Comentario;
+import com.example.publicacionesApi.DTO.ComentariosDTO.CrearComentarioDTO;
+import com.example.publicacionesApi.DTO.ComentariosDTO.LeerComentarioDTO;
 import com.example.publicacionesApi.Model.RespuestaComentario;
 import com.example.publicacionesApi.Service.ComentarioService;
 import com.example.publicacionesApi.Service.RespuestaComentarioService;
@@ -22,14 +23,14 @@ public class ComentarioController {
     private RespuestaComentarioService respuestaService;
 
     @PostMapping
-    public ResponseEntity<Comentario> crearComentario(@RequestBody Comentario comentario) {
-        Comentario nuevoComentario = comentarioService.guardarComentario(comentario);
+    public ResponseEntity<LeerComentarioDTO> crearComentario(@RequestBody CrearComentarioDTO comentarioDTO) {
+        LeerComentarioDTO nuevoComentario = comentarioService.guardarComentario(comentarioDTO);
         return new ResponseEntity<>(nuevoComentario, HttpStatus.CREATED);
     }
 
     @GetMapping("/publicacion/{idPublicacion}")
-    public ResponseEntity<List<Comentario>> listarComentariosPorPublicacion(@PathVariable Integer idPublicacion) { 
-        List<Comentario> comentarios = comentarioService.obtenerComentariosPorPublicacion(idPublicacion);
+    public ResponseEntity<List<LeerComentarioDTO>> listarComentariosPorPublicacion(@PathVariable Integer idPublicacion) { 
+        List<LeerComentarioDTO> comentarios = comentarioService.obtenerComentariosPorPublicacion(idPublicacion);
         return ResponseEntity.ok(comentarios);
     }
 

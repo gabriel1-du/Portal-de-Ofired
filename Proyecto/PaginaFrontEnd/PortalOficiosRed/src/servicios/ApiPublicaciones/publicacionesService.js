@@ -35,13 +35,15 @@ export const getPublicacionById = async (id) => {
 };
 
 // Función para crear una nueva publicación
-export const createPublicacion = async (publicacionData) => {
+export const createPublicacion = async (publicacionData, token) => {
   try {
     console.log("Llamando a la API de Publicaciones (POST):", `${API_URL_PUBLICACIONES}`);
+    
     const response = await fetch(`${API_URL_PUBLICACIONES}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(publicacionData),
     });

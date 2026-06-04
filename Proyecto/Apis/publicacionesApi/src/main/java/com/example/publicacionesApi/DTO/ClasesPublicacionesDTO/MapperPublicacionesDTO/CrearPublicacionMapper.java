@@ -29,7 +29,7 @@ public class CrearPublicacionMapper {
         publicacion.setTituloPublicacion(dto.getTituloPublicacion());
         publicacion.setUbicacionPublicacion(dto.getUbicacionPublicacion());
         publicacion.setDescripcionPublicacion(dto.getDescripcionPublicacion());
-        publicacion.setFechaPublicacion(dto.getFechaPublicacion());
+        publicacion.setFechaPublicacion(LocalDateTime.now());
         
         
         // Buscar y setear la Región validando que exista en la base de datos

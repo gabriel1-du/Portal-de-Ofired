@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import PublicacionCard from '../assets/cards/PublicacionesCard'; 
 import { AuthContext } from '../context/AuthContext'; 
+import { getPublicacionById } from '../servicios/ApiPublicaciones/publicacionesService';
+import { obtenerComentarios, crearComentario } from '../servicios/comentariosService';
 
 const DetallePublicacionPantalla = () => {
     const { idPublicacion } = useParams(); 
@@ -19,12 +21,8 @@ const DetallePublicacionPantalla = () => {
             
             try {
                 // Obtenemos la publicación
-                const resPub = await fetch(`${import.meta.env.VITE_PUBLICACIONES_API_URL}/${idPublicacion}`, {
-                    headers: { "Authorization": `Bearer ${token}` }
-                });
-                if (resPub.ok) {
-                    setPublicacion(await resPub.json());
-                }
+                const pubData = await getPublicacionById(idPublicacion);
+                setPublicacion(pubData);
             } catch (error) {
                 console.error("Error cargando publicación");
             }

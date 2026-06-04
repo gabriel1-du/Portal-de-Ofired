@@ -2,7 +2,6 @@ package com.example.publicacionesApi.DTO.ClasesPublicacionesDTO;
 
 import lombok.AllArgsConstructor;
 
-import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +16,6 @@ public class CrearPublicacionDTO {
     private Integer idComuna;
     private String ubicacionPublicacion;
     private String descripcionPublicacion;
-    private LocalDateTime fechaPublicacion;
     //para la imagen
     private String imagenUrl; 
 }
