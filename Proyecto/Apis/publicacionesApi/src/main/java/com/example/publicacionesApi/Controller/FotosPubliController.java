@@ -1,10 +1,14 @@
 package com.example.publicacionesApi.Controller;
 
-import com.example.publicacionesApi.Model.FotosPubli;
 import com.example.publicacionesApi.Service.FotosPubliService;
+import com.example.publicacionesApi.DTO.FotosPubliDTO.FotosPubliDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @RestController
@@ -15,13 +19,16 @@ public class FotosPubliController {
     private FotosPubliService fotosPubliService;
 
     @GetMapping("/publicacion/{idPublicacion}")
-    public ResponseEntity<List<FotosPubli>> listarPorPublicacion(@PathVariable Integer idPublicacion) {
+    public ResponseEntity<List<FotosPubliDTO>> listarPorPublicacion(@PathVariable Integer idPublicacion) {
         return ResponseEntity.ok(fotosPubliService.listarPorPublicacion(idPublicacion));
     }
 
-    @PostMapping
-    public ResponseEntity<FotosPubli> agregar(@RequestBody FotosPubli fotosPubli) {
-        return ResponseEntity.ok(fotosPubliService.agregar(fotosPubli));
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<FotosPubliDTO> agregar(
+            @RequestPart("datos") FotosPubliDTO fotosPubliDTO,
+            @RequestPart(value = "foto", required = false) MultipartFile archivoFoto) {
+        FotosPubliDTO nuevaFoto = fotosPubliService.agregar(fotosPubliDTO, archivoFoto);
+        return new ResponseEntity<>(nuevaFoto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

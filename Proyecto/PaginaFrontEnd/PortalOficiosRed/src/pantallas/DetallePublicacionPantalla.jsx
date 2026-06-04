@@ -113,14 +113,27 @@ const DetallePublicacionPantalla = () => {
                             let nombreMostrar = com.usuario?.pNombre || `Usuario #${idReal}`;
                             let apellidoMostrar = com.usuario?.pApellido || "";
 
+                        // Damos un formato legible a la fecha (ej: 4 de junio de 2026, 17:40)
+                        const fechaFormateada = com.fechaComentario 
+                            ? new Date(com.fechaComentario).toLocaleDateString('es-CL', {
+                                year: 'numeric', month: 'long', day: 'numeric',
+                                hour: '2-digit', minute: '2-digit'
+                              })
+                            : "Hace un momento";
+
                             return (
                                 <div key={com.idComentario || index} style={{ display: 'flex', gap: '15px' }}>
                                     <div style={{ width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '#e4e6eb', color: '#1c1e21', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', flexShrink: 0, fontSize: '1.1rem' }}>
                                         {nombreMostrar.charAt(0).toUpperCase()}
                                     </div>
                                     <div style={{ backgroundColor: '#f0f2f5', padding: '14px 18px', borderRadius: '18px', width: 'fit-content', maxWidth: '85%' }}>
-                                        <div style={{ fontWeight: '700', fontSize: '15px', color: '#1c1e21', marginBottom: '6px', textTransform: 'capitalize' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '15px', marginBottom: '6px' }}>
+                                        <span style={{ fontWeight: '700', fontSize: '15px', color: '#1c1e21', textTransform: 'capitalize' }}>
                                             {nombreMostrar} {apellidoMostrar}
+                                        </span>
+                                        <span style={{ fontSize: '12px', color: '#65676b', fontWeight: 'normal' }}>
+                                            {fechaFormateada}
+                                        </span>
                                         </div>
                                         <div style={{ fontSize: '16px', color: '#1c1e21', lineHeight: '1.5' }}>
                                             {com.contenido}

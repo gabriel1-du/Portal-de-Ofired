@@ -27,8 +27,9 @@ const PublicacionCard = ({ publicacion }) => {
           src={imagenUrl || 'https://via.placeholder.com/800x400?text=Servicio+Ofired'} 
           alt={tituloPublicacion} 
           onError={(e) => { 
-            e.target.onerror = null; 
-            e.target.src = 'https://via.placeholder.com/800x400?text=Servicio+Ofired'; 
+            if (!e.target.src.includes('via.placeholder.com')) {
+              e.target.src = 'https://via.placeholder.com/800x400?text=Servicio+Ofired'; 
+            }
           }}
         />
         {precioServicio && <span className="badge-precio">${precioServicio}</span>}

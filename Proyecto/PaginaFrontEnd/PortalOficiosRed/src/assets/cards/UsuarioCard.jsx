@@ -21,7 +21,11 @@ const UsuarioCard = ({ usuario }) => {
               src={foto || 'https://via.placeholder.com/150'} 
               alt={primerNombre}
               className="rounded-circle usuario-card-img shadow-sm"
-              onError={(e) => { e.target.src = 'https://via.placeholder.com/150'; }} // Si la imagen falla, muestra un placeholder
+              onError={(e) => { 
+                if (!e.target.src.includes('via.placeholder.com')) {
+                  e.target.src = 'https://via.placeholder.com/150'; 
+                }
+              }}
             />
           </div>
           <div className="col px-4 py-3 overflow-hidden">
