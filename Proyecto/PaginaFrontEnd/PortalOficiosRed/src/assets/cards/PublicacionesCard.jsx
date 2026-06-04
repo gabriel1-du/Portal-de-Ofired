@@ -3,14 +3,16 @@ import { useNavigate } from 'react-router-dom'; // 1. Importamos la herramienta 
 import '../../style/cards/PublicacionCard.css'
 
 const PublicacionCard = ({ publicacion }) => {
-  const navigate = useNavigate(); // 2. Inicializamos la función para poder cambiar de pantalla
+  const navigate = useNavigate(); 
+  const location = useLocation();
+
+  const esDetalle = location.pathname.includes('/publicacion/');
 
   const {
-    idPublicacion, // 3. Extraemos el idPublicacion que viene desde la base de datos
+    idPublicacion, 
     tituloPublicacion,
     nombreRegion,
     nombreComuna,
-    ubicacionPublicacion,
     descripcionPublicacion,
     cantidadLikes,
     imagenUrl, 
@@ -18,12 +20,16 @@ const PublicacionCard = ({ publicacion }) => {
   } = publicacion;
 
   return (
-    <div className="publicacion-card">
-      {/* Añadimos un contenedor de imagen para que se vea más atractivo */}
+    <div className={`publicacion-card ${esDetalle ? 'modo-detalle' : ''}`}>
+      
       <div className="publicacion-card-image">
         <img 
-          src={imagenUrl || 'https://via.placeholder.com/350x200?text=Servicio+Ofired'} 
+          src={imagenUrl || 'https://via.placeholder.com/800x400?text=Servicio+Ofired'} 
           alt={tituloPublicacion} 
+          onError={(e) => { 
+            e.target.onerror = null; 
+            e.target.src = 'https://via.placeholder.com/800x400?text=Servicio+Ofired'; 
+          }}
         />
         {precioServicio && <span className="badge-precio">${precioServicio}</span>}
       </div>
@@ -37,20 +43,23 @@ const PublicacionCard = ({ publicacion }) => {
           <p className="ubicacion">
             <i className="fas fa-map-marker-alt"></i> {nombreRegion}, {nombreComuna}
           </p>
-          <p className="descripcion">{descripcionPublicacion}</p>
+          <p className={`descripcion ${esDetalle ? 'descripcion-completa' : ''}`}>
+            {descripcionPublicacion}
+          </p>
         </div>
 
         <div className="publicacion-card-footer">
           <div className="likes-section">
-            <span>❤️ {cantidadLikes || 0}</span>
+            <span role="img" aria-label="like">❤️</span> {cantidadLikes || 0}
           </div>
-          {/* 4. Le asignamos el evento onClick al botón para navegar dinámicamente */}
-          <button 
-            className="btn-ver-perfil" 
-            onClick={() => navigate(`/publicacion/${idPublicacion}`)}
-          >
-            Ver Detalles
-          </button>
+          {!esDetalle && (
+            <button 
+              className="btn-ver-perfil" 
+              onClick={() => navigate(`/publicacion/${idPublicacion}`)}
+            >
+              Ver Detalles
+            </button>
+          )}
         </div>
       </div>
     </div>

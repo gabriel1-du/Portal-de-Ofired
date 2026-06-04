@@ -18,4 +18,6 @@ public class CrearPublicacionDTO {
     private String ubicacionPublicacion;
     private String descripcionPublicacion;
     private LocalDateTime fechaPublicacion;
+    //para la imagen
+    private String imagenUrl; 
 }

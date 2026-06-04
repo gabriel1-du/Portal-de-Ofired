@@ -11,15 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // Constructor sin argumentos y con todos los argumentos
 public class leerPublicacionesDTO {
 
-    private Integer idPublicacion;
+     private Integer idPublicacion;
     private Integer idAutor;
     private String tituloPublicacion;
     
-    // Datos aplanados de la Región
     private Integer idRegion;
     private String nombreRegion;
     
-    // Datos aplanados de la Comuna
     private Integer idComuna;
     private String nombreComuna;
     
@@ -27,6 +25,8 @@ public class leerPublicacionesDTO {
     private String descripcionPublicacion;
     private Integer cantidadLikes;
     private LocalDateTime fechaPublicacion;
-
+    
+    // Para la imagen
+    private String imagenUrl;
 
 }
