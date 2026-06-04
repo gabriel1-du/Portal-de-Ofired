@@ -16,13 +16,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // setAllowedOriginPatterns("*") permite que clientes en diferentes puertos (como React en 3000) se conecten sin problemas de CORS
         // withSockJS() habilita opciones de respaldo por si el navegador no soporta WebSockets puros
         registry.addEndpoint("/ws-chat")
-                .setAllowedOriginPatterns("*")
-                .withSockJS();
+                .setAllowedOriginPatterns("*");
+                
                 
         // Nuevo endpoint con "api" en el nombre para mantener compatibilidad con tu API Gateway
         registry.addEndpoint("/ws-api")
-                .setAllowedOriginPatterns("*")
-                .withSockJS();
+                .setAllowedOriginPatterns("*");
+                
     }
 
     @Override
