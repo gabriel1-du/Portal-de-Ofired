@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { getAllRegions } from '../../servicios/ApiUsuarios/TablasCategorias/regionService';
 import { getAllComunas } from '../../servicios/ApiUsuarios/TablasCategorias/comunasService';
 import { createPublicacion } from '../../servicios/ApiPublicaciones/publicacionesService';
+import { agregarFotoPublicacion } from '../../servicios/ApiPublicaciones/fotosPubli';
 
 const FormularioCrearPublicacion = () => {
     const navigate = useNavigate();
@@ -14,14 +15,16 @@ const FormularioCrearPublicacion = () => {
     // Estados para guardar las listas de la base de datos
     const [listaRegiones, setListaRegiones] = useState([]);
     const [listaComunas, setListaComunas] = useState([]);
+    const [archivosFoto, setArchivosFoto] = useState([]);
+    const [previews, setPreviews] = useState([]);
+    const [subiendo, setSubiendo] = useState(false);
 
     const [formData, setFormData] = useState({
         tituloPublicacion: '',
         descripcionPublicacion: '',
         idRegion: '', 
         idComuna: '', 
-        precioServicio: '',
-        imagenUrl: '' // 👈 Volvemos a guardar el link de la foto
+        precioServicio: ''
     });
 
     // 1. Cargar las regiones al abrir el formulario
@@ -49,6 +52,22 @@ const FormularioCrearPublicacion = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleFileChange = (e) => {
+        const files = Array.from(e.target.files);
+        if (archivosFoto.length + files.length > 2) {
+            alert('Solo puedes subir un máximo de 2 fotos.');
+            return;
+        }
+        const nuevosArchivos = [...archivosFoto, ...files];
+        setArchivosFoto(nuevosArchivos);
+        setPreviews(nuevosArchivos.map(file => URL.createObjectURL(file)));
+    };
+
+    const eliminarFoto = (index) => {
+        setArchivosFoto(archivosFoto.filter((_, i) => i !== index));
+        setPreviews(previews.filter((_, i) => i !== index));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -56,6 +75,8 @@ const FormularioCrearPublicacion = () => {
             alert("Por favor, rellena los campos obligatorios.");
             return;
         }
+
+        setSubiendo(true);
 
         // Armamos el paquete con los IDs convertidos a números
         const publicacionPayload = {
@@ -65,16 +86,28 @@ const FormularioCrearPublicacion = () => {
             idComuna: formData.idComuna ? parseInt(formData.idComuna) : null,
             ubicacionPublicacion: null, // Lo enviamos como null ya que está en tu DTO
             descripcionPublicacion: formData.descripcionPublicacion,
-            imagenUrl: formData.imagenUrl || null 
+            precioServicio: formData.precioServicio ? parseFloat(formData.precioServicio) : null,
+            imagenUrl: null // Lo enviamos nulo porque ahora usaremos la tabla fotos
         };
 
         try {
-            await createPublicacion(publicacionPayload, token);
+            // 1. Crear la publicación
+            const nuevaPub = await createPublicacion(publicacionPayload, token);
+            
+            // 2. Subir las fotos asociadas al ID generado (iterando el arreglo)
+            if (nuevaPub && nuevaPub.idPublicacion && archivosFoto.length > 0) {
+                for (const foto of archivosFoto) {
+                    await agregarFotoPublicacion(nuevaPub.idPublicacion, foto, token);
+                }
+            }
+
             alert("¡Publicación creada con éxito! 🎉");
             navigate("/home"); 
         } catch (err) {
             console.error("Error al crear la publicación:", err);
             alert("Hubo un error en el servidor al intentar guardar la publicación.");
+        } finally {
+            setSubiendo(false);
         }
     };
 
@@ -84,7 +117,7 @@ const FormularioCrearPublicacion = () => {
             
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                 
-                <div>
+                <div> {/* Título del Servicio */ }
                     <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Título del Servicio *</label>
                     <input 
                         type="text" 
@@ -96,7 +129,7 @@ const FormularioCrearPublicacion = () => {
                     />
                 </div>
 
-                <div>
+                <div> {/* Descripción del Servicio */ }
                     <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Descripción del Servicio *</label>
                     <textarea 
                         name="descripcionPublicacion"
@@ -111,6 +144,7 @@ const FormularioCrearPublicacion = () => {
                 <div style={{ display: 'flex', gap: '15px' }}>
                     <div style={{ flex: 1 }}>
                         <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Región</label>
+                        {/* Aquí cargamos las regiones desde la base de datos */}
                         <select 
                             name="idRegion"
                             value={formData.idRegion}
@@ -128,6 +162,7 @@ const FormularioCrearPublicacion = () => {
                     </div>
                     <div style={{ flex: 1 }}>
                         <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Comuna</label>
+                        {/* Aquí cargamos las comunas desde la base de datos */}
                         <select 
                             name="idComuna"
                             value={formData.idComuna}
@@ -156,18 +191,40 @@ const FormularioCrearPublicacion = () => {
                     />
                 </div>
 
-                {/* 👇 AQUÍ AGREGAMOS EL CAMPO PARA LA IMAGEN */}
                 <div>
-            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Link de la Imagen (Opcional)</label>
+                    <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Imágenes del Servicio (Máx 2 fotos)</label>
                     <input 
-                type="url" 
-                name="imagenUrl"
-                placeholder="https://ejemplo.com/foto.jpg"
-                value={formData.imagenUrl}
-                        onChange={handleChange}
+                        type="file" 
+                        accept="image/*"
+                        multiple
+                        onChange={handleFileChange}
                         style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+                        disabled={archivosFoto.length >= 2}
                     />
-            <small style={{ color: '#666', display: 'block', marginTop: '5px' }}>Pega aquí la URL de la imagen que quieres mostrar en el muro.</small>
+                    <small style={{ color: '#666', display: 'block', marginTop: '5px' }}>Sube hasta 2 fotos desde tu dispositivo para mostrar tu trabajo.</small>
+                    
+                    {/* Previsualización de imágenes */}
+                    {previews.length > 0 && (
+                        <div style={{ display: 'flex', gap: '15px', marginTop: '15px' }}>
+                            {previews.map((preview, index) => (
+                                <div key={index} style={{ position: 'relative', width: '100px', height: '100px' }}>
+                                    <img 
+                                        src={preview} 
+                                        alt={`Preview ${index}`} 
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px', border: '1px solid #ddd' }} 
+                                    />
+                                    <button 
+                                        type="button"
+                                        onClick={() => eliminarFoto(index)}
+                                        style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '12px', lineHeight: '1', padding: '0' }}
+                                        title="Eliminar foto"
+                                    >
+                                        X
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
@@ -175,14 +232,16 @@ const FormularioCrearPublicacion = () => {
                         type="button" 
                         onClick={() => navigate('/home')}
                         style={{ flex: 1, padding: '12px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
+                        disabled={subiendo}
                     >
                         Cancelar
                     </button>
                     <button 
                         type="submit" 
-                        style={{ flex: 1, padding: '12px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
+                        style={{ flex: 1, padding: '12px', backgroundColor: subiendo ? '#1e7e34' : '#28a745', color: 'white', border: 'none', borderRadius: '5px', cursor: subiendo ? 'not-allowed' : 'pointer', fontWeight: 'bold' }}
+                        disabled={subiendo}
                     >
-                        Publicar Servicio 🚀
+                        {subiendo ? 'Publicando...' : 'Publicar Servicio 🚀'}
                     </button>
                 </div>
 
