@@ -1,0 +1,14 @@
+/* Contenedor de la imagen/carrusel en el detalle */
+.detalle-pub-img {
+    height: 500px;
+    object-fit: cover;
+    width: 100%;
+    background-color: #f8f9fa;
+}
+
+/* Ajuste responsivo para pantallas más pequeñas (celulares) */
+@media (max-width: 768px) {
+    .detalle-pub-img {
+        height: 300px;
+    }
+}

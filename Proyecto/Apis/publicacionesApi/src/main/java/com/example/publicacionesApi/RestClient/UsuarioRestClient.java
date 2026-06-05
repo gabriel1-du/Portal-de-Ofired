@@ -4,6 +4,9 @@ import com.example.publicacionesApi.RestClientDTO.actualizarUserDTO;
 import com.example.publicacionesApi.RestClientDTO.UsuarioExternoDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -36,9 +39,13 @@ public class UsuarioRestClient {
     }
 
     public void actualizarUsuario(Integer id, actualizarUserDTO usuarioDTO) {
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("usuario", usuarioDTO); // Coincide con @RequestPart("usuario")
+
         restClient.put()
                 .uri("/{id}", id)
-                .body(usuarioDTO)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(body)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
                     throw new RuntimeException("Error 4xx: Usuario con ID " + id + " no encontrado o petición inválida al actualizar.");

@@ -257,18 +257,16 @@ const PerfilPantalla = () => {
             )}
           </div>
 
-          {/* Mostramos el botón solo si hay reseñas */}
-          {reseñas.length > 0 && (
-            <div className="text-center mt-4">
-              <button 
-                className="btn text-white rounded-pill px-4 py-2 fw-bold shadow-sm" 
-                onClick={() => navigate(`/valoraciones/${idDelPerfil}`)}
-                style={{ backgroundColor: '#f3961c' }}
-              >
-                Ver más reseñas
-              </button>
-            </div>
-          )}
+          {/* Mostramos el botón siempre, independientemente de la cantidad de reseñas */}
+          <div className="text-center mt-4">
+            <button 
+              className="btn text-white rounded-pill px-4 py-2 fw-bold shadow-sm" 
+              onClick={() => navigate(`/valoraciones/${idDelPerfil}`)}
+              style={{ backgroundColor: '#f3961c' }}
+            >
+              Ver más reseñas
+            </button>
+          </div>
         </div>
       </div>
 

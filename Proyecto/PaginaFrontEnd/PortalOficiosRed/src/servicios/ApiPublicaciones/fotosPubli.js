@@ -7,7 +7,9 @@ export const getFotosPorPublicacion = async (idPublicacion) => {
         if (!response.ok) {
             throw new Error(`Error al obtener fotos para la publicación ${idPublicacion}`);
         }
-        return await response.json();
+        const data = await response.json();
+        console.log(`Cantidad de imágenes encontradas para la publicación ${idPublicacion}: ${data.length}`);
+        return data;
     } catch (error) {
         console.error("Error en getFotosPorPublicacion:", error);
         return []; // Retornamos array vacío para no romper la UI en caso de error
