@@ -63,13 +63,14 @@ export const createPublicacion = async (publicacionData, token) => {
 };
 
 // Función para actualizar una publicación existente por su ID
-export const updatePublicacion = async (id, publicacionData) => {
+export const updatePublicacion = async (id, publicacionData, token) => {
   try {
     console.log("Llamando a la API de Publicaciones (PUT):", `${API_URL_PUBLICACIONES}/${id}`);
     const response = await fetch(`${API_URL_PUBLICACIONES}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(publicacionData),
     });
@@ -107,11 +108,14 @@ export const getPublicacionesByNombre = async (nombrePublicacion) => {
 };
 
 // Función para eliminar una publicación por su ID
-export const deletePublicacion = async (id) => {
+export const deletePublicacion = async (id, token) => {
   try {
     console.log("Llamando a la API de Publicaciones (DELETE):", `${API_URL_PUBLICACIONES}/${id}`);
     const response = await fetch(`${API_URL_PUBLICACIONES}/${id}`, {
       method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
     if (!response.ok) {
       console.error(`Error en la respuesta de la red (DELETE Publicacion by ID ${id}):`, response.status, response.statusText);

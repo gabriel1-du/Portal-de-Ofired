@@ -32,6 +32,8 @@ import DetallePublicacionPantalla from './pantallas/DetallePublicacionPantalla';
 
 // IMPLEMENTACIÓN: IMPORTAMOS EL NUEVO FORMULARIO DE CREAR PUBLICACIÓN
 import FormularioCrearPublicacion from './pantallas/Formularios/FormularioCrearPublicacion';
+import PantallaAdministradorPublicaciones from './pantallas/SeccionAdministrador/PantallaAdministradorPublicaciones';
+
 
 function App() {
   return (
@@ -72,6 +74,8 @@ function App() {
 
           {/* IMPLEMENTACIÓN: NUEVA RUTA PARA EL FORMULARIO DE CREACIÓN */}
           <Route path="/crear-publicacion" element={<FormularioCrearPublicacion />} />
+          <Route path="/admin/publicaciones" element={<PantallaAdministradorPublicaciones />} />
+
 
           
         </Routes>

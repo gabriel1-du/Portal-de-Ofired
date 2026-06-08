@@ -44,6 +44,12 @@ const BarraLateralAdmin = ({ menuActivo }) => {
         >
           💳 Entidad: Medios de Pago
         </button>
+        <button 
+          className={`admin-menu-btn ${menuActivo === 'publicaciones' ? 'activo' : ''}`}
+          onClick={() => navigate('/admin/publicaciones')}
+        >
+          📋 Entidad: Publicaciones
+        </button>
       </nav>
     </aside>
   );

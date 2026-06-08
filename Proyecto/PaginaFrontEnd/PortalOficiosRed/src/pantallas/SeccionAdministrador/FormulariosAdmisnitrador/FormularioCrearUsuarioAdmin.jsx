@@ -17,7 +17,8 @@ const FormularioCrearUsuarioAdmin = ({ onClose, onRefresh }) => {
     rutCompleto: '', numeroTelef: '',
     habilitadorAdministrador: false,
     idSexoUsu: '', idTipoUsu: '',
-    idRegionUsu: '', idComunaUsu: '', idOficio: ''
+    idRegionUsu: '', idComunaUsu: '', idOficio: '',
+    foto: null
   });
 
   const [catalogos, setCatalogos] = useState({ regiones: [], comunas: [], sexos: [], oficios: [] });
@@ -39,10 +40,10 @@ const FormularioCrearUsuarioAdmin = ({ onClose, onRefresh }) => {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked, files } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : type === 'file' ? (files.length > 0 ? files[0] : null) : value
     }));
   };
 
@@ -72,7 +73,7 @@ const FormularioCrearUsuarioAdmin = ({ onClose, onRefresh }) => {
         rut: rutCuerpo || null,
         rutDv: rutDv || null,
         numeroTelef: formData.numeroTelef || null,
-        foto: null, // Asumimos null por defecto al crear como admin
+        foto: formData.foto, // Enviamos el archivo
         valoracion: 0.0,
         habilitadorAdministrador: formData.habilitadorAdministrador,
         idSexoUsu: formData.idSexoUsu ? parseInt(formData.idSexoUsu) : null,
@@ -151,7 +152,12 @@ const FormularioCrearUsuarioAdmin = ({ onClose, onRefresh }) => {
               </select>
             </div>
 
-            <div className="col-md-12">
+          <div className="col-md-6">
+            <label className="form-label fw-bold">Foto (Opcional)</label>
+            <input type="file" accept="image/*" className="form-control form-control-lg bg-light shadow-sm border-0" name="foto" onChange={handleChange} />
+          </div>
+
+          <div className="col-md-6">
               <label className="form-label fw-bold">Sexo *</label>
               <select className="form-select form-control-lg bg-light shadow-sm border-0" name="idSexoUsu" value={formData.idSexoUsu} onChange={handleChange} required>
                 <option value="">Seleccione...</option>

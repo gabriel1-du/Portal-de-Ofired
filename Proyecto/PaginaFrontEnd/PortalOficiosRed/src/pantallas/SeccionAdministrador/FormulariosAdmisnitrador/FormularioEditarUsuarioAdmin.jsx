@@ -20,7 +20,7 @@ const FormularioEditarUsuarioAdmin = ({ usuarioEdicionId, onClose, onRefresh }) 
     rutDv: '',
     idTipoUsu: '',
     habilitadorAdministrador: false,
-    foto: '',
+    foto: null,
     numeroTelef: '',
     idRegionUsu: '',
     idComunaUsu: '',
@@ -65,7 +65,7 @@ const FormularioEditarUsuarioAdmin = ({ usuarioEdicionId, onClose, onRefresh }) 
             rutDv: userData.rutDv || '',
             idTipoUsu: userData.idTipoUsu || '',
             habilitadorAdministrador: userData.habilitadorAdministrador || userData.habilitador_administrador || userData.admin || false,
-            foto: userData.foto || '',
+            foto: null, // Mantenemos nulo para la carga de nuevos archivos
             numeroTelef: userData.numeroTelef || userData.telefono || '',
             idRegionUsu: userData.idRegionUsu || '',
             idComunaUsu: userData.idComunaUsu || '',
@@ -95,9 +95,11 @@ const FormularioEditarUsuarioAdmin = ({ usuarioEdicionId, onClose, onRefresh }) 
   }, [formData.idRegionUsu, comunas]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked, files } = e.target;
     if (type === 'checkbox') {
       setFormData(prev => ({ ...prev, [name]: checked }));
+    } else if (type === 'file') {
+      setFormData(prev => ({ ...prev, [name]: files.length > 0 ? files[0] : null }));
     } else if (name === 'idRegionUsu') {
       setFormData(prev => ({ ...prev, [name]: value, idComunaUsu: '' }));
     } else {
@@ -177,7 +179,7 @@ const FormularioEditarUsuarioAdmin = ({ usuarioEdicionId, onClose, onRefresh }) 
                 <h3 className="fs-5 fw-bold text-primary border-bottom pb-2 mb-0">3. Permisos y Roles</h3>
               </div>
               <div className="col-md-6"><label className="form-label fw-bold">Tipo de Usuario:</label><select className="form-select form-control-lg bg-light shadow-sm border-0" name="idTipoUsu" value={formData.idTipoUsu} onChange={handleChange} required><option value="">Seleccione...</option><option value="1">Cliente (1)</option><option value="2">Profesional/Oficio (2)</option></select></div>
-              <div className="col-md-6"><label className="form-label fw-bold">URL Foto (opcional):</label><input type="text" className="form-control form-control-lg bg-light shadow-sm border-0" name="foto" value={formData.foto} onChange={handleChange} /></div>
+              <div className="col-md-6"><label className="form-label fw-bold">Nueva Foto de Perfil (opcional):</label><input type="file" accept="image/*" className="form-control form-control-lg bg-light shadow-sm border-0" name="foto" onChange={handleChange} /></div>
               
               <div className="col-12 mt-4">
                 <div className="form-check bg-light p-3 border rounded shadow-sm">
