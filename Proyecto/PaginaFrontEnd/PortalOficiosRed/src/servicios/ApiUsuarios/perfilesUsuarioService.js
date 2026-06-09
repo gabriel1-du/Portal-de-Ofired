@@ -2,6 +2,24 @@ const API_URL_PERFILES = import.meta.env.VITE_PERFILES_API_URL ; //url de acceso
 
 
 
+
+
+// Función para obtener todos los perfiles (Vista Administrador)
+export const getAllPerfiles = async () => {
+  try {
+    console.log("Llamando a la API de Perfiles (GET ALL):", `${API_URL_PERFILES}`);
+    const response = await fetch(`${API_URL_PERFILES}`);
+    if (!response.ok) {
+      console.error("Error en la respuesta de la red (GET ALL Perfiles):", response.status, response.statusText);
+      throw new Error("Error al obtener todos los perfiles.");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error al intentar obtener todos los perfiles:", error);
+    throw error;
+  }
+};
+
 // Función para obtener un perfil por su ID
 export const getPerfilById = async (id) => {
   try {

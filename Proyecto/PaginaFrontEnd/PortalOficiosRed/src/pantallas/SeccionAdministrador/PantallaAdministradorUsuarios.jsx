@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { leerTodosLosUsuarios, eliminarUsuario } from '../../servicios/usuariosService'; 
 import FormularioEditarUsuarioAdmin from './FormulariosAdmisnitrador/FormularioEditarUsuarioAdmin'; 
@@ -9,13 +9,14 @@ import '../../style/styleAdmin/pantallaAdminUsuarios.css';
 
 const PantallaAdministradorUsuarios = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { token, usuario } = useContext(AuthContext);
   
   const [usuarios, setUsuarios] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [menuActivo, setMenuActivo] = useState('usuarios'); 
-  const [terminoBusqueda, setTerminoBusqueda] = useState(''); // Estado para la barra de búsqueda
+  const [terminoBusqueda, setTerminoBusqueda] = useState(location.state?.searchTerm || ''); // Lee del state de React Router si viene de otra pantalla
   
   // Estado para controlar a qué usuario estamos editando
   const [usuarioEditandoId, setUsuarioEditandoId] = useState(null);

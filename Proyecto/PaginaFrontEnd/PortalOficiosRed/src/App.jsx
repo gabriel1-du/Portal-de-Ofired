@@ -33,6 +33,7 @@ import DetallePublicacionPantalla from './pantallas/DetallePublicacionPantalla';
 // IMPLEMENTACIÓN: IMPORTAMOS EL NUEVO FORMULARIO DE CREAR PUBLICACIÓN
 import FormularioCrearPublicacion from './pantallas/Formularios/FormularioCrearPublicacion';
 import PantallaAdministradorPublicaciones from './pantallas/SeccionAdministrador/PantallaAdministradorPublicaciones';
+import PantallaAdministradorPerfiles from './pantallas/SeccionAdministrador/PantallaAdministradorPerfiles';
 
 
 function App() {
@@ -63,6 +64,7 @@ function App() {
           {/* RUTA PARA EL PANEL DE ADMINISTRACIÓN */}
           <Route path="/admin/usuarios" element={<PantallaAdministradorUsuarios />} />
     
+          <Route path="/admin/perfiles" element={<PantallaAdministradorPerfiles />} />
           <Route path="/admin/regiones" element={<PantallaAdministradorRegiones />} />
           <Route path="/admin/comunas" element={<PantallaAdministradorComunas />} />
           <Route path="/admin/oficios" element={<PantallaAdministradorOficios />} />

@@ -50,6 +50,12 @@ const BarraLateralAdmin = ({ menuActivo }) => {
         >
           📋 Entidad: Publicaciones
         </button>
+        <button 
+          className={`admin-menu-btn ${menuActivo === 'perfiles' ? 'activo' : ''}`}
+          onClick={() => navigate('/admin/perfiles')}
+        >
+          🪪 Entidad: Perfiles
+        </button>
       </nav>
     </aside>
   );
