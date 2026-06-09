@@ -22,6 +22,10 @@ public class MinioStorageService {
     @Value("${minio.endpoint}")
     private String endpoint;
 
+    // INYECTAMOS LA URL PÚBLICA DE LA NUBE
+    @Value("${minio.public-url}")
+    private String publicUrl;
+
     public MinioStorageService(S3Client s3Client) {
         this.s3Client = s3Client;
     }
@@ -42,7 +46,7 @@ public class MinioStorageService {
 
         // Retornar la URL pública local para que React renderice la imagen
         // Estructura: http://localhost:9000/nombre-bucket/nombre-archivo
-        return endpoint + "/" + bucketName + "/" + nombreArchivo;
+        return publicUrl + "/" + nombreArchivo;
     }
 
 }
