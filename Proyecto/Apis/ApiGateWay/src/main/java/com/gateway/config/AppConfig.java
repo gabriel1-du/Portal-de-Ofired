@@ -8,6 +8,14 @@ import org.springframework.web.client.RestTemplate;
 public class AppConfig {
     @Bean
     public RestTemplate restTemplate() {
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+    
+        // Añadir un interceptor global a la Gateway
+        restTemplate.getInterceptors().add((request, body, execution) -> {
+            request.getHeaders().set("Accept-Encoding", "identity");
+            return execution.execute(request, body);
+        });
+        
+        return restTemplate;
     }
 }
