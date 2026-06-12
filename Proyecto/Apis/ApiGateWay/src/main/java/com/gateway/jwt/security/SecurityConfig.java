@@ -149,11 +149,18 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // El puerto 5173 es el de tu React/Vite
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); 
+        
+        //CAMBIO CLAVE: Se agrega frontend de Render a la lista sin borrar el localhost
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:5173", 
+            "https://portal-de-ofired-1.onrender.com"
+        )); 
+        
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
-        configuration.setAllowCredentials(true); // Permitir que viajen los tokens/cookies
+        
+        // Dejamos tus cabeceras y añadimos "Accept-Encoding" por el cambio del interceptor que hicimos antes
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "Accept-Encoding"));
+        configuration.setAllowCredentials(true); 
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
