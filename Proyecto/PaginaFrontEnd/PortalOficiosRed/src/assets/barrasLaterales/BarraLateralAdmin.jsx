@@ -44,6 +44,13 @@ const BarraLateralAdmin = ({ menuActivo }) => {
         >
           💳 Entidad: Medios de Pago
         </button>
+        {/* Aquí agregamos el nuevo botón para las Denuncias */}
+        <button 
+          className={`admin-menu-btn ${menuActivo === 'denuncias' ? 'activo' : ''}`}
+          onClick={() => navigate('/admin/denuncias')}
+        >
+          🚨 Entidad: Denuncias
+        </button>
       </nav>
     </aside>
   );
