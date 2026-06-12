@@ -56,7 +56,7 @@ const FormularioDenuncia = ({ isOpen, onClose, idUsuarioDenunciado, idUsuarioDen
         console.log("ID Denunciante (X-Usuario-Id):", idUsuarioDenunciante);
 
         try {
-            await crearDenuncia(idUsuarioDenunciante, datos, token);
+            await crearDenuncia(datos, token);
             alert("✅ Reporte enviado correctamente. Un administrador lo revisará pronto.");
             setDescripcion('');
             setTipoDenuncia('');

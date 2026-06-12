@@ -1,15 +1,15 @@
 // src/servicios/ApiUsuarios/DenunciarUsuario/denunciasService.js
 
-const URL_BASE = import.meta.env.VITE_DENUNCIAS_API_UR;
+const URL_BASE = import.meta.env.VITE_DENUNCIAS_API_URL;
 
-export const crearDenuncia = async (idUsuarioDenunciante, datosDenuncia, token) => {
+export const crearDenuncia = async (datosDenuncia, token) => {
     try {
+        console.log("Llamando a la API de Denuncias (POST):", `${URL_BASE}/crear`);
         const res = await fetch(`${URL_BASE}/crear`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-                'X-Usuario-Id': idUsuarioDenunciante
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(datosDenuncia)
         });
