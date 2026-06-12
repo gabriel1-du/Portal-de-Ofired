@@ -15,6 +15,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.http.HttpMethod; // Asegúrate de importar esto arriba
 import static com.gateway.jwt.security.PublicRoutes.*; //importa las rutas publicas de jwt
+
 import static com.gateway.redireccionApis.ApiUsuarios.Region.RegionPublicRoutes.REGION_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.Comuna.ComunaPublicRoutes.COMUNA_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.SexoUsuario.SexoUsuarioPublicRoutes.SEXO_USUARIO_PUBLIC_GET;
@@ -35,8 +36,11 @@ import static com.gateway.redireccionApis.ApiUsuarios.TiposDeTrabajo.TiposDeTrab
 import static com.gateway.redireccionApis.ApiUsuarios.MediosDePago.MediosDePagoPublicRoutes.MEDIOS_DE_PAGO_PUBLIC_GET;
 import static com.gateway.redireccionApis.ApiUsuarios.ConfirmacionTransacciones.ConfirmacionTransaccionesPublicRoutes.CONFIRMACION_TRANSACCIONES_PUBLIC_GET;
 import static com.gateway.redireccionApis.publicacionesApis.ComentarioPublicRoutes.COMENTARIO_PUBLIC_GET;
-import java.util.Arrays;
 
+// === IMPORTACIÓN NUEVA DE DENUNCIAS ===
+import static com.gateway.redireccionApis.ApiUsuarios.Denuncia.DenunciaPublicRoutes.DENUNCIA_PUBLIC_GET;
+
+import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
@@ -113,6 +117,9 @@ public class SecurityConfig {
                 // URL públicas API Confirmacion Comentario
                 .requestMatchers(HttpMethod.GET, COMENTARIO_PUBLIC_GET ).permitAll()
 
+                // === NUEVO: URL públicas API Denuncias ===
+                .requestMatchers(HttpMethod.GET, DENUNCIA_PUBLIC_GET ).permitAll()
+
 
                 // Otras URL Token obligatorio
                 .anyRequest().authenticated()
@@ -148,7 +155,10 @@ public class SecurityConfig {
         // El puerto 5173 es el de tu React/Vite
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+        
+        // === AQUÍ ESTÁ LA MAGIA: AGREGAMOS X-Usuario-Id ===
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "X-Usuario-Id"));
+        
         configuration.setAllowCredentials(true); // Permitir que viajen los tokens/cookies
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
