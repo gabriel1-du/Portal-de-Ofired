@@ -1,6 +1,6 @@
 import { getUsuarioById } from './usuariosService';
 
-const URL_BASE = "http://localhost:8888/api/proxy/comentariosApi";
+const URL_BASE = import.meta.env.VITE_COMENTARIOS_API_URL;
 
 export const obtenerComentarios = async (idPublicacion, token) => {
     try {
