@@ -3,6 +3,7 @@ import '../style/home.css';
 import PublicacionCard from '../assets/cards/PublicacionesCard.jsx'; 
 import BarraBusqueda from '../assets/barraBusqueda.jsx';
 import { AuthContext } from '../context/AuthContext.jsx'; // CORREGIDO: Subimos solo un nivel
+import { getAllPublicaciones } from '../servicios/ApiPublicaciones/publicacionesService';
 
 function PaginaHome() {
   const [publicaciones, setPublicaciones] = useState([]);
@@ -13,30 +14,21 @@ function PaginaHome() {
   useEffect(() => {
     const limitePublicaciones = 10; 
     
-    fetch(`http://localhost:8888/api/proxy/publicacionesApi?limit=${limitePublicaciones}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      }
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Error en la respuesta del servidor o falta de autorización");
-        }
-        return res.json();
-      })
-      .then((data) => {
+    const cargarPublicaciones = async () => {
+      try {
+        const data = await getAllPublicaciones();
         const publicacionesRaw = Array.isArray(data) ? data : (data.content || []);
         const listaLimitada = publicacionesRaw.slice(0, limitePublicaciones);
         
         setPublicaciones(listaLimitada);
-        setCargando(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Error cargando publicaciones generales:", err);
+      } finally {
         setCargando(false);
-      });
+      }
+    };
+
+    cargarPublicaciones();
   }, [token]); 
 
   return (
