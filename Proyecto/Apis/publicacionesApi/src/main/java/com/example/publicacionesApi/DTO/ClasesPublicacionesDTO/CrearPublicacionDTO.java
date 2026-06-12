@@ -1,7 +1,6 @@
 package com.example.publicacionesApi.DTO.ClasesPublicacionesDTO;
 
 import lombok.AllArgsConstructor;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

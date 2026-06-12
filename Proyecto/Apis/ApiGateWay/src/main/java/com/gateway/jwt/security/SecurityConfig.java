@@ -36,8 +36,10 @@ import static com.gateway.redireccionApis.ApiUsuarios.MediosDePago.MediosDePagoP
 import static com.gateway.redireccionApis.ApiUsuarios.ConfirmacionTransacciones.ConfirmacionTransaccionesPublicRoutes.CONFIRMACION_TRANSACCIONES_PUBLIC_GET;
 import static com.gateway.redireccionApis.publicacionesApis.ComentarioPublicRoutes.COMENTARIO_PUBLIC_GET;
 import static com.gateway.redireccionApis.publicacionesApis.FotosPublicRoutes.FOTOS_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.TipoDenuncia.TipoDenunciaPublicRoutes.TIPO_DENUNCIA_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.TipoContenidoDenunciado.TipoContenidoDenunciadoPublicRoutes.TIPO_CONTENIDO_DENUNCIADO_PUBLIC_GET;
+import static com.gateway.redireccionApis.ApiUsuarios.Denuncia.DenunciaPublicRoutes.DENUNCIA_PUBLIC_GET;
 import java.util.Arrays;
-
 
 @Configuration
 @RequiredArgsConstructor
@@ -117,6 +119,15 @@ public class SecurityConfig {
                 // URL públicas API Fotos (Imágenes de publicaciones)
                 .requestMatchers(HttpMethod.GET, FOTOS_PUBLIC_GET).permitAll()
 
+
+                // URL públicas API Tipo Denuncia
+                .requestMatchers(HttpMethod.GET, TIPO_DENUNCIA_PUBLIC_GET).permitAll()
+
+                // URL públicas API Tipo Contenido Denunciado
+                .requestMatchers(HttpMethod.GET, TIPO_CONTENIDO_DENUNCIADO_PUBLIC_GET).permitAll()
+
+                // URL públicas API Denuncias
+                .requestMatchers(HttpMethod.GET, DENUNCIA_PUBLIC_GET).permitAll()
 
                 // Otras URL Token obligatorio
                 .anyRequest().authenticated()

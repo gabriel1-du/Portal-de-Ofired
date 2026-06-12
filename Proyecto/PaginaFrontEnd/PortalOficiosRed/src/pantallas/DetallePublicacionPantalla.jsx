@@ -45,6 +45,7 @@ const DetallePublicacionPantalla = () => {
     }, [idPublicacion, token]); 
 
     const handleEnviarComentario = async (e) => {
+    const handleEnviarComentario = async (e) => {
         e.preventDefault(); 
         if (!nuevoComentario.trim()) return;
 
@@ -54,6 +55,17 @@ const DetallePublicacionPantalla = () => {
             contenido: nuevoComentario
         };
 
+        try {
+            const nuevoComit = await crearComentario(comentarioPayload, token);
+            // 👇 AQUÍ ESTÁ LA MAGIA: Toma tu nombre real de la sesión de inmediato
+            const comentarioParaMostrar = {
+                ...nuevoComit,
+                usuario: {
+                    pNombre: user?.primerNombre || user?.p_nombre || user?.pNombre || "Yo",
+                    pApellido: user?.primerApellido || user?.p_apellido || user?.pApellido || ""
+                }
+            };
+            setComentarios([...comentarios, comentarioParaMostrar]); 
         try {
             const nuevoComit = await crearComentario(comentarioPayload, token);
             // 👇 AQUÍ ESTÁ LA MAGIA: Toma tu nombre real de la sesión de inmediato
@@ -82,6 +94,8 @@ const DetallePublicacionPantalla = () => {
         setFotoActiva((prev) => (prev === fotos.length - 1 ? 0 : prev + 1));
     };
 
+    if (cargandoPublicacion) return <div style={{ textAlign: 'center', marginTop: '50px', fontSize: '1.2rem', color: '#666' }}>Cargando información del servicio...</div>;
+    if (!publicacion) return <div style={{ textAlign: 'center', marginTop: '50px', color: '#dc3545', fontWeight: 'bold' }}>No se encontró la publicación solicitada.</div>;
     if (cargandoPublicacion) return <div style={{ textAlign: 'center', marginTop: '50px', fontSize: '1.2rem', color: '#666' }}>Cargando información del servicio...</div>;
     if (!publicacion) return <div style={{ textAlign: 'center', marginTop: '50px', color: '#dc3545', fontWeight: 'bold' }}>No se encontró la publicación solicitada.</div>;
 
@@ -199,10 +213,33 @@ const DetallePublicacionPantalla = () => {
                             </button>
                         </div>
                     </div>
+                <form onSubmit={handleEnviarComentario} style={{ display: 'flex', gap: '15px', marginBottom: '35px', alignItems: 'flex-start' }}>
+                    <div style={{ width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '#007bff', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', flexShrink: 0, fontSize: '1.1rem' }}>
+                        TÚ
+                    </div>
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <textarea 
+                            rows="2"
+                            placeholder="Escribe una pregunta al técnico..." 
+                            value={nuevoComentario}
+                            onChange={(e) => setNuevoComentario(e.target.value)}
+                            style={{ width: '100%', padding: '15px', borderRadius: '8px', border: '1px solid #ccd0d5', resize: 'vertical', fontSize: '16px', backgroundColor: '#f5f6f7' }}
+                        />
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            {/* 👇 AQUÍ CAMBIAMOS EL TEXTO A "Comentar" */}
+                            <button type="submit" disabled={!nuevoComentario.trim()} style={{ padding: '10px 28px', backgroundColor: nuevoComentario.trim() ? '#1877f2' : '#e4e6eb', color: nuevoComentario.trim() ? 'white' : '#bcc0c4', border: 'none', borderRadius: '6px', fontWeight: 'bold', fontSize: '15px', cursor: nuevoComentario.trim() ? 'pointer' : 'not-allowed', transition: 'background-color 0.2s' }}>
+                                Comentar
+                            </button>
+                        </div>
+                    </div>
                 </form>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     {comentarios.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '30px', color: '#65676b', backgroundColor: '#f0f2f5', borderRadius: '8px', fontSize: '1.1rem' }}>
+                            Aún no hay comentarios. ¡Sé el primero en hacer una consulta!
+                        </div>
                         <div style={{ textAlign: 'center', padding: '30px', color: '#65676b', backgroundColor: '#f0f2f5', borderRadius: '8px', fontSize: '1.1rem' }}>
                             Aún no hay comentarios. ¡Sé el primero en hacer una consulta!
                         </div>
@@ -248,4 +285,5 @@ const DetallePublicacionPantalla = () => {
     );
 };
 
+export default DetallePublicacionPantalla
 export default DetallePublicacionPantalla
