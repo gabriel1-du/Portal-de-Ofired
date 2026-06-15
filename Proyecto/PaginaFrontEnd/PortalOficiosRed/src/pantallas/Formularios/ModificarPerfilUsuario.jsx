@@ -156,7 +156,7 @@ const ModificarPerfilUsuario = () => {
 
         <div className="mb-4">
           <label htmlFor="descripcion" className="form-label fw-bold text-dark">Descripción:</label>
-          <textarea className="form-control form-control-lg bg-light shadow-sm border-0 input-perfil" name="descripcion" placeholder="Ingresa tu descripción" rows="5" maxLength={500} value={formData.descripcion} onChange={handleChange} style={{ resize: 'vertical' }}></textarea>
+          <textarea id="descripcion" className="form-control form-control-lg bg-light shadow-sm border-0 input-perfil" name="descripcion" placeholder="Ingresa tu descripción" rows="5" maxLength={500} value={formData.descripcion} onChange={handleChange} style={{ resize: 'vertical' }}></textarea>
         </div>
 
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 gap-4">

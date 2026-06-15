@@ -100,29 +100,29 @@ const FormularioTransaccion = () => {
         <form onSubmit={handleSubmit}>
           
           <div className="mb-3">
-            <label className="form-label fw-bold text-dark">Monto del Servicio ($):</label>
-            <input type="number" min="0" step="0.01" className="form-control form-control-lg shadow-sm input-transaccion" value={montoServicio} onChange={(e) => setMontoServicio(e.target.value)} required />
+            <label htmlFor="montoServicio" className="form-label fw-bold text-dark">Monto del Servicio ($):</label>
+            <input id="montoServicio" type="number" min="0" step="0.01" className="form-control form-control-lg shadow-sm input-transaccion" value={montoServicio} onChange={(e) => setMontoServicio(e.target.value)} required />
           </div>
 
           <div className="mb-3">
-            <label className="form-label fw-bold text-dark">Medio de Pago:</label>
-            <select className="form-select form-control-lg shadow-sm input-transaccion" value={idMedioPago} onChange={(e) => setIdMedioPago(e.target.value)} required>
+            <label htmlFor="idMedioPago" className="form-label fw-bold text-dark">Medio de Pago:</label>
+            <select id="idMedioPago" className="form-select form-control-lg shadow-sm input-transaccion" value={idMedioPago} onChange={(e) => setIdMedioPago(e.target.value)} required>
               <option value="">Selecciona un medio de pago</option>
               {mediosPago.map(mp => ( <option key={mp.idMedioPago || mp.id} value={mp.idMedioPago || mp.id}>{mp.nombreMedioPago || mp.nombre || `Medio de pago ${mp.idMedioPago || mp.id}`}</option> ))}
             </select>
           </div>
 
           <div className="mb-3">
-            <label className="form-label fw-bold text-dark">Tipo de Trabajo:</label>
-            <select className="form-select form-control-lg shadow-sm input-transaccion" value={idTipoTrabajo} onChange={(e) => setIdTipoTrabajo(e.target.value)} required>
+            <label htmlFor="idTipoTrabajo" className="form-label fw-bold text-dark">Tipo de Trabajo:</label>
+            <select id="idTipoTrabajo" className="form-select form-control-lg shadow-sm input-transaccion" value={idTipoTrabajo} onChange={(e) => setIdTipoTrabajo(e.target.value)} required>
               <option value="">Selecciona un tipo de trabajo</option>
               {tiposTrabajo.map(tt => ( <option key={tt.idTipoTrabajo || tt.id} value={tt.idTipoTrabajo || tt.id}>{tt.nombreTipoTrabajo || tt.nombre || `Tipo de trabajo ${tt.idTipoTrabajo || tt.id}`}</option> ))}
             </select>
           </div>
 
           <div className="mb-4">
-            <label className="form-label fw-bold text-dark">Observaciones (opcional):</label>
-            <textarea className="form-control shadow-sm input-transaccion" value={observacionesTrato} onChange={(e) => setObservacionesTrato(e.target.value)} rows="4" placeholder="Especifica los detalles del trabajo aquí..." />
+            <label htmlFor="observacionesTrato" className="form-label fw-bold text-dark">Observaciones (opcional):</label>
+            <textarea id="observacionesTrato" className="form-control shadow-sm input-transaccion" value={observacionesTrato} onChange={(e) => setObservacionesTrato(e.target.value)} rows="4" placeholder="Especifica los detalles del trabajo aquí..." />
           </div>
 
           <button type="submit" disabled={enviando} className="btn btn-transaccion w-100 rounded-pill py-3 fw-bold fs-5 shadow-sm"> 
