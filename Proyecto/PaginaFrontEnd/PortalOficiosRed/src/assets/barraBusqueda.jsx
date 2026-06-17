@@ -141,8 +141,8 @@ function BarraBusqueda() {
                 <h6 className="fw-bold mb-3 border-bottom pb-2">Opciones de Filtro</h6>
                 <form>
                   <div className="mb-3 text-start">
-                    <label className="form-label text-dark fw-semibold small mb-1">Región</label>
-                    <select className="form-select shadow-sm" value={regionSeleccionada} onChange={handleRegionChange}>
+                    <label htmlFor="filtroRegion" className="form-label text-dark fw-semibold small mb-1">Región</label>
+                    <select id="filtroRegion" className="form-select shadow-sm" value={regionSeleccionada} onChange={handleRegionChange}>
                       <option value="">Selecciona una región</option>
                       {regiones.map((region) => (
                         <option key={region.idRegion} value={region.idRegion}>
@@ -153,8 +153,9 @@ function BarraBusqueda() {
                   </div>
                   
                   <div className="mb-3 text-start">
-                    <label className="form-label text-dark fw-semibold small mb-1">Comuna</label>
+                    <label htmlFor="filtroComuna" className="form-label text-dark fw-semibold small mb-1">Comuna</label>
                     <select 
+                      id="filtroComuna"
                       className="form-select shadow-sm" 
                       value={comunaSeleccionada} 
                       onChange={handleComunaChange}
@@ -170,8 +171,9 @@ function BarraBusqueda() {
                   </div>
 
                   <div className="mb-3 text-start">
-                    <label className="form-label text-dark fw-semibold small mb-1">Oficio</label>
+                    <label htmlFor="filtroOficio" className="form-label text-dark fw-semibold small mb-1">Oficio</label>
                     <select 
+                      id="filtroOficio"
                       className="form-select shadow-sm" 
                       value={oficioSeleccionado} 
                       onChange={(e) => setOficioSeleccionado(e.target.value)}
@@ -186,8 +188,9 @@ function BarraBusqueda() {
                   </div>
 
                   <div className="mb-3 text-start">
-                    <label className="form-label text-dark fw-semibold small mb-1">Tipo de Contenido</label>
+                    <label htmlFor="filtroTipo" className="form-label text-dark fw-semibold small mb-1">Tipo de Contenido</label>
                     <select 
+                      id="filtroTipo"
                       className="form-select shadow-sm" 
                       value={tipoContenido} 
                       onChange={(e) => setTipoContenido(e.target.value)}
@@ -199,8 +202,9 @@ function BarraBusqueda() {
                   </div>
 
                   <div className="mb-3 text-start">
-                    <label className="form-label text-dark fw-semibold small mb-1">Desde (Fecha)</label>
+                    <label htmlFor="filtroFecha" className="form-label text-dark fw-semibold small mb-1">Desde (Fecha)</label>
                     <input 
+                      id="filtroFecha"
                       type="date" 
                       className="form-control shadow-sm" 
                       value={fechaDesde} 
