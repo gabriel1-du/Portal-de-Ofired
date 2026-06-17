@@ -14,6 +14,7 @@ public class PublicRoutes {
         "/api/auth/login",
         "/api/auth/gateway/login",
         "/api/proxy/usuarios",
+        "/api/auth/recuperacion/generar-token"
         // puedes agregar otras si es necesario
     };
 

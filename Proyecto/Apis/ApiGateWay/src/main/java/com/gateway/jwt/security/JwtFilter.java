@@ -32,7 +32,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Si la petición es para el endpoint de login, la dejamos pasar sin procesar el token.
         // en otras palabras cada vez que se inicie sesion devuelve el token sin necesidad de validarlo, ya que no existe en ese momento
-        if (request.getServletPath().equals("/api/auth/login")) {
+        String path = request.getServletPath();
+        if (path.equals("/api/auth/login") || path.equals("/api/auth/recuperacion/generar-token")) {
             filterChain.doFilter(request, response);
             return;
         }
