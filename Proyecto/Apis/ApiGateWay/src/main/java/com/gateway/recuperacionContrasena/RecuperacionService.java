@@ -1,8 +1,8 @@
 package com.gateway.recuperacionContrasena;
 
-import com.gateway.jwt.model.Usuario;
-import com.gateway.jwt.repository.UsuarioRepository;
 import com.gateway.jwt.security.JwtUtil;
+import com.gateway.recuperacionContrasena.RecuperacionRequest;
+import com.gateway.recuperacionContrasena.RecuperacionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +10,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RecuperacionService {
 
-    private final UsuarioRepository usuarioRepository;
     private final JwtUtil jwtUtil;
 
     public RecuperacionResponse generarTokenPorCorreo(RecuperacionRequest request) {
-        // 1. Buscamos al usuario solo por su correo electrónico (utilizando tu repositorio del JWT)
-        Usuario usuario = usuarioRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con el correo: " + request.getEmail()));
-
-        // 2. Determinamos su rol para el payload del JWT
-        String rol = Boolean.TRUE.equals(usuario.getAdmin()) ? "admin" : "user";
-        
-        // 3. Generamos el token de acceso usando el utilitario que ya tienes
-        String token = jwtUtil.generateToken(usuario.getEmail(), rol, usuario.getId());
+        // Generamos el token de recuperación directamente usando el correo recibido.
+        // Se asigna el rol "user" y un ID genérico (0) por defecto para estructurar el JWT.
+        String token = jwtUtil.generateToken(request.getEmail(), "user", 0);
         return new RecuperacionResponse(token);
     }
 }
