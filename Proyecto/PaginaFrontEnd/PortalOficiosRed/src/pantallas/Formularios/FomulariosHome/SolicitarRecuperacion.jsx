@@ -20,13 +20,11 @@ function SolicitarRecuperacion() {
       // Llamamos a tu servicio de API Gateway
       await solicitarRecuperacionPassword(email);
       
-      // Mostramos el mensaje exacto que solicitaste
-      setMensaje('Te enviamos un correo electrónico con el enlace de recuperación.');
+      // Mostramos el alert que solicitaste
+      alert('Se a enviado exitosamente el correo');
       
-      // Redirigimos al inicio de sesión luego de 3 segundos
-      setTimeout(() => {
-        navigate('/iniciar-sesion');
-      }, 3000);
+      // Redirigimos inmediatamente al inicio de sesión
+      navigate('/iniciar-sesion');
     } catch (err) {
       console.error('Error al solicitar recuperación:', err);
       setError(err.message || 'Error al solicitar la recuperación. Verifica el correo.');
