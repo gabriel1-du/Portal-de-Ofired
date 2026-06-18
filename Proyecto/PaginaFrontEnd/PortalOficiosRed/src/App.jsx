@@ -35,6 +35,8 @@ import FormularioCrearPublicacion from './pantallas/Formularios/FormularioCrearP
 import PantallaAdministradorPublicaciones from './pantallas/SeccionAdministrador/PantallaAdministradorPublicaciones';
 import PantallaAdministradorPerfiles from './pantallas/SeccionAdministrador/PantallaAdministradorPerfiles';
 
+//RECUPERACION DE CONTRASENAS
+import SolicitarRecuperacion from './pantallas/Formularios/FomulariosHome/SolicitarRecuperacion'; 
 
 function App() {
   return (
@@ -47,6 +49,8 @@ function App() {
           <Route path="/crear-perfil" element={<FormularioCreacionDePerfilUsuario />} />
           <Route path="/crear-cuentOfi" element={<FormularioCrearUsuarioOficio />} />
           <Route path="/iniciar-sesion" element={<IniciarSesion />} />
+          <Route path="/solicitar-recuperacion" element={<SolicitarRecuperacion />} />
+        
           <Route path="/resultados" element={<ResultadosBusqueda />} />
           <Route path="/perfil/:idDelPerfil" element={<PerfilPantalla />} />
           <Route path="/perfil/modificar" element={<ModificarPerfilUsuario />} />

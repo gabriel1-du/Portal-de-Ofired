@@ -27,13 +27,19 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        // Imprimimos la ruta interceptada para depuración, como solicitaste.
-        System.out.println(" Filtro JWT interceptando - PATH: " + request.getRequestURI() + "  METHOD: " + request.getMethod());
+        // LOGS DE DEPURACIÓN PROFUNDA PARA LA NUBE
+        System.out.println("🚀 [JwtFilter] Petición entrante interceptada:");
+        System.out.println("   - URI: " + request.getRequestURI());
+        System.out.println("   - ServletPath: " + request.getServletPath());
+        System.out.println("   - METHOD: " + request.getMethod());
+        System.out.println("   - Origin (CORS): " + request.getHeader("Origin"));
 
         // Si la petición es para el endpoint de login, la dejamos pasar sin procesar el token.
         // en otras palabras cada vez que se inicie sesion devuelve el token sin necesidad de validarlo, ya que no existe en ese momento
         String path = request.getServletPath();
-        if (path.equals("/api/auth/login") || path.equals("/api/auth/recuperacion/generar-token")) {
+        // Usamos startsWith en lugar de equals por si Render añade un "/" al final de la URL
+        if (path.startsWith("/api/auth/login") || path.startsWith("/api/auth/recuperacion/generar-token")) {
+            System.out.println("🔓 [JwtFilter] Ruta pública detectada. Omitiendo validación JWT y permitiendo paso.");
             filterChain.doFilter(request, response);
             return;
         }
@@ -44,6 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // simplemente continuamos la cadena. Spring Security decidirá después si la ruta
         // es pública (permitAll) o si debe denegar el acceso (403 Forbidden).
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("⚠️ [JwtFilter] No se encontró Token Bearer en la petición. Se continuará la cadena.");
             filterChain.doFilter(request, response);
             return;
         }
