@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth/recuperacion")
 @RequiredArgsConstructor
+@CrossOrigin(origins = {
+    "https://portal-de-ofired-1.onrender.com", 
+    "https://portal-de-ofired-apigateway.onrender.com", 
+    "http://localhost:5173"
+})
 public class RecuperacionController {
 
     private final RecuperacionService recuperacionService;
