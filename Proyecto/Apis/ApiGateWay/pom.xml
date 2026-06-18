@@ -67,6 +67,13 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Mailjet Client -->
+		<dependency>
+   			 <groupId>com.mailjet</groupId>
+    			<artifactId>mailjet-client</artifactId>
+    		<version>6.0.1</version>
+		</dependency>
+
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
