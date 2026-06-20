@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import '../../style/cards/PublicacionCard.css'
 
-const PublicacionCard = ({ publicacion }) => {
+const PublicacionCard = ({ publicacion, mostrarBotonEliminar = false, onEliminar, eliminando = false }) => {
   const navigate = useNavigate(); 
   const location = useLocation();
 
@@ -53,14 +53,26 @@ const PublicacionCard = ({ publicacion }) => {
           <div className="likes-section">
             <span role="img" aria-label="like">❤️</span> {cantidadLikes || 0}
           </div>
-          {!esDetalle && (
-            <button 
-              className="btn-ver-perfil" 
-              onClick={() => navigate(`/publicacion/${idPublicacion}`)}
-            >
-              Ver Detalles
-            </button>
-          )}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {!esDetalle && (
+              <button 
+                className="btn-ver-perfil" 
+                onClick={() => navigate(`/publicacion/${idPublicacion}`)}
+              >
+                Ver Detalles
+              </button>
+            )}
+            {mostrarBotonEliminar && (
+              <button
+                className="btn-ver-perfil"
+                onClick={() => onEliminar?.(publicacion)}
+                disabled={eliminando}
+                style={{ backgroundColor: '#dc3545' }}
+              >
+                {eliminando ? 'Eliminando...' : 'Eliminar'}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

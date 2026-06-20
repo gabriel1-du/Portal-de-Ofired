@@ -143,21 +143,21 @@ public class PublicacionServiceImpl implements PublicacionService {
     @Override
     public List<leerPublicacionesDTO> listarPorAutor(Integer idAutor) {
         return publicacionRepository.findByIdAutor(idAutor).stream()
-                .map(leerPublicacionesMapper::toDTO)
+                .map(this::mapearPublicacionConImagen)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<leerPublicacionesDTO> listarPorRegion(Integer idRegion) {
         return publicacionRepository.findByIdRegion(idRegion).stream()
-                .map(leerPublicacionesMapper::toDTO)
+                .map(this::mapearPublicacionConImagen)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<leerPublicacionesDTO> listarPorComuna(Integer idComuna) {
         return publicacionRepository.findByIdComuna(idComuna).stream()
-                .map(leerPublicacionesMapper::toDTO)
+                .map(this::mapearPublicacionConImagen)
                 .collect(Collectors.toList());
     }
 
@@ -165,16 +165,16 @@ public class PublicacionServiceImpl implements PublicacionService {
     public leerPublicacionesDTO darLike(Integer id) {
         Publicacion publicacionExistente = publicacionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Publicación no encontrada con id: " + id));
-        
+
         publicacionExistente.setCantidadLikes(publicacionExistente.getCantidadLikes() + 1);
         Publicacion publicacionGuardada = publicacionRepository.save(publicacionExistente);
-        return leerPublicacionesMapper.toDTO(publicacionGuardada);
+        return mapearPublicacionConImagen(publicacionGuardada);
     }
 
     @Override
     public List<leerPublicacionesDTO> listarPornombrePublicacion(String nombrePublicacion) {
         return publicacionRepository.findByTituloPublicacionContainingIgnoreCase(nombrePublicacion).stream()
-                .map(leerPublicacionesMapper::toDTO)
+                .map(this::mapearPublicacionConImagen)
                 .collect(Collectors.toList());
     }
 
@@ -182,7 +182,16 @@ public class PublicacionServiceImpl implements PublicacionService {
     public List<leerPublicacionesDTO> buscarPublicaciones(Integer idRegion, Integer idComuna, LocalDateTime fechaPublicacion) {
         List<Publicacion> publicaciones = publicacionRepository.findByFiltros(idRegion, idComuna, fechaPublicacion);
         return publicaciones.stream()
-                .map(leerPublicacionesMapper::toDTO)
+                .map(this::mapearPublicacionConImagen)
                 .collect(Collectors.toList());
+    }
+
+    private leerPublicacionesDTO mapearPublicacionConImagen(Publicacion publicacion) {
+        leerPublicacionesDTO dto = leerPublicacionesMapper.toDTO(publicacion);
+        List<FotosPubli> fotos = fotosPubliRepository.findByPublicacion_IdPublicacion(publicacion.getIdPublicacion());
+        if (fotos != null && !fotos.isEmpty()) {
+            dto.setImagenUrl(fotos.get(0).getUrlFoto());
+        }
+        return dto;
     }
 }

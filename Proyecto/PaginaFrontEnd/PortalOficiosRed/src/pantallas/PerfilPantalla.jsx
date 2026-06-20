@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext'; 
 import { getPerfilFrontByUsuarioId } from '../servicios/ApiUsuarios/perfilesUsuarioService'; 
 import { listarReseniasPorUsuario } from '../servicios/ApiPublicaciones/SeccionResenias/reseniasService'; 
-import { getPublicacionesByAutor } from '../servicios/ApiPublicaciones/publicacionesService';
+import { getPublicacionesByAutor, deletePublicacion } from '../servicios/ApiPublicaciones/publicacionesService';
 import PublicacionCard from '../assets/cards/PublicacionesCard'; 
 import { crearChat } from '../servicios/ApiUsuarios/SeccionChats/chatService';
 import { leerTodosLosParticipantesFront } from '../servicios/ApiUsuarios/SeccionChats/participantesChatService';
@@ -27,6 +27,8 @@ const PerfilPantalla = () => {
   
   const [publicacionesDelUsuario, setPublicacionesDelUsuario] = useState([]); 
   const [iniciandoChat, setIniciandoChat] = useState(false);
+  const [eliminandoPublicacionId, setEliminandoPublicacionId] = useState(null);
+  const [cantidadPublicacionesVisibles, setCantidadPublicacionesVisibles] = useState(3);
   
   // --- ESTADO PARA CONTROLAR EL MODAL ---
   const [mostrarModalDenuncia, setMostrarModalDenuncia] = useState(false);
@@ -54,8 +56,13 @@ const PerfilPantalla = () => {
           setPerfil(datosPerfil);
         }
 
+        const publicacionesRaw = Array.isArray(datosPublicaciones)
+          ? datosPublicaciones
+          : (datosPublicaciones?.content || []);
+
         setReseñas(datosReseñas);
-        setPublicacionesDelUsuario(datosPublicaciones || []);
+        setPublicacionesDelUsuario(publicacionesRaw);
+        setCantidadPublicacionesVisibles(3);
 
       } catch (err) {
         setError("Ocurrió un error al intentar cargar los datos del perfil, reseñas o publicaciones.");
@@ -68,7 +75,39 @@ const PerfilPantalla = () => {
     cargarDatos();
   }, [idDelPerfil]); 
 
-  const esMiPerfil = usuarioLogueado && usuarioLogueado.idUsuario === parseInt(idDelPerfil);
+  const idUsuarioLogueado = Number(usuarioLogueado?.idUsuario ?? usuarioLogueado?.id_usuario ?? usuarioLogueado?.userId ?? usuarioLogueado?.id);
+  const esMiPerfil = usuarioLogueado && idUsuarioLogueado === parseInt(idDelPerfil);
+
+  const handleEliminarPublicacion = async (publicacion) => {
+    const idPublicacion = publicacion?.idPublicacion || publicacion?.id;
+    const idAutorPublicacion = Number(publicacion?.idAutor);
+
+    if (!usuarioLogueado || !token) {
+      alert('Debes iniciar sesión para eliminar una publicación.');
+      navigate('/iniciar-sesion');
+      return;
+    }
+
+    if (idAutorPublicacion !== idUsuarioLogueado) {
+      alert('No tienes permisos para eliminar esta publicación.');
+      return;
+    }
+
+    const confirmar = window.confirm('¿Deseas eliminar esta publicación?');
+    if (!confirmar) return;
+
+    try {
+      setEliminandoPublicacionId(idPublicacion);
+      await deletePublicacion(idPublicacion, token);
+      setPublicacionesDelUsuario((prev) => prev.filter((pub) => (pub.idPublicacion || pub.id) !== idPublicacion));
+      alert('Publicación eliminada exitosamente.');
+    } catch (err) {
+      console.error('Error al eliminar la publicación:', err);
+      alert(err.message || 'No se pudo eliminar la publicación.');
+    } finally {
+      setEliminandoPublicacionId(null);
+    }
+  };
 
   const handleMensajeClick = async () => {
     if (!usuarioLogueado) {
@@ -124,6 +163,8 @@ const PerfilPantalla = () => {
 
   const nombreCompleto = `${primerNombre} ${segundoNombre || ''} ${primerApellido} ${segundoApellido || ''}`.trim();
   const ratingMostrar = valoracion ?? calificacion ?? usuario?.valoracion ?? usuario?.calificacion;
+  const publicacionesVisibles = publicacionesDelUsuario.slice(0, cantidadPublicacionesVisibles);
+  const hayMasPublicaciones = publicacionesDelUsuario.length > cantidadPublicacionesVisibles;
 
   return (
     <>
@@ -234,28 +275,51 @@ const PerfilPantalla = () => {
           </div>
         </div>
 
+        <div className="text-center mt-4 mb-5">
+          <button 
+            className="btn text-white rounded-pill px-4 py-2 fw-bold shadow-sm" 
+            onClick={() => navigate(`/valoraciones/${idDelPerfil}`)}
+            style={{ backgroundColor: '#f3961c' }}
+          >
+            Ver más reseñas
+          </button>
+        </div>
+
         <div className="mis-publicaciones-container">
           <h2 className="titulo-seccion">Mis Trabajos Publicados</h2>
-          <div className="publicaciones-grid">
-            {publicacionesDelUsuario && publicacionesDelUsuario.length > 0 ? (
-              publicacionesDelUsuario.map(pub => (
-                <PublicacionCard key={pub.idPublicacion || pub.id} publicacion={pub} />
-              ))
-            ) : (
-              <p className="sin-reseñas-texto">Este profesional aún no ha publicado trabajos.</p>
-            )}
-          </div>
+          {publicacionesDelUsuario && publicacionesDelUsuario.length > 0 ? (
+            <div className="publicaciones-feed" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '25px', maxWidth: '680px', margin: '0 auto' }}>
+              {publicacionesVisibles.map((pub) => {
+                const idAutorPublicacion = Number(pub.idAutor);
+                const idPublicacion = pub.idPublicacion || pub.id;
+                const esAutorDeLaPublicacion = usuarioLogueado && idAutorPublicacion === idUsuarioLogueado;
 
-          {/* Mostramos el botón siempre, independientemente de la cantidad de reseñas */}
-          <div className="text-center mt-4">
-            <button 
-              className="btn text-white rounded-pill px-4 py-2 fw-bold shadow-sm" 
-              onClick={() => navigate(`/valoraciones/${idDelPerfil}`)}
-              style={{ backgroundColor: '#f3961c' }}
-            >
-              Ver más reseñas
-            </button>
-          </div>
+                return (
+                  <div key={idPublicacion} style={{ width: '100%' }}>
+                    <PublicacionCard
+                      publicacion={pub}
+                      mostrarBotonEliminar={esAutorDeLaPublicacion}
+                      eliminando={eliminandoPublicacionId === idPublicacion}
+                      onEliminar={handleEliminarPublicacion}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="sin-reseñas-texto">Este profesional aún no ha publicado trabajos.</p>
+          )}
+
+          {hayMasPublicaciones && (
+            <div className="text-center mt-4">
+              <button
+                className="btn btn-outline-primary rounded-pill px-4 py-2 fw-bold shadow-sm"
+                onClick={() => setCantidadPublicacionesVisibles((prev) => prev + 3)}
+              >
+                Ver más publicaciones
+              </button>
+            </div>
+          )}
         </div>
       </div> 
 

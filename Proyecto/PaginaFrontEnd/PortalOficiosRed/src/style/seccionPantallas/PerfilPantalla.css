@@ -14,3 +14,59 @@
 .estado-mensaje.error {
   color: #d32f2f;
 }
+
+.mis-publicaciones-container {
+  width: 100%;
+}
+
+.titulo-seccion {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1c1e21;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.publicaciones-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  width: 100%;
+}
+
+.perfil-pantalla-contenedor .publicaciones-grid .publicacion-card {
+  width: 100%;
+  max-width: 680px;
+}
+
+.perfil-pantalla-contenedor .publicaciones-grid .publicacion-card-image {
+  width: 100%;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+.perfil-pantalla-contenedor .publicaciones-grid .publicacion-card-image img {
+  width: 100%;
+  height: 300px;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.sin-reseñas-texto {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .titulo-seccion {
+    font-size: 1.5rem;
+  }
+
+  .perfil-pantalla-contenedor .publicaciones-grid .publicacion-card-image img {
+    height: 240px;
+  }
+}
