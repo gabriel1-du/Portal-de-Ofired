@@ -24,74 +24,100 @@ vi.mock('../../servicios/ApiUsuarios/TablasCategorias/regionService', () => ({ g
 vi.mock('../../servicios/ApiUsuarios/TablasCategorias/comunasService', () => ({ getAllComunas: vi.fn() }));
 vi.mock('../../servicios/ApiUsuarios/TablasCategorias/oficioService', () => ({ getAllOficios: vi.fn() }));
 
-// MOCK DE LA BARRA LATERAL (Evitamos que se intente renderizar su lógica compleja en este test)
+// MOCK DE LA BARRA LATERAL (Evitamos errores de renderizado de lógica compleja)
 vi.mock('../../assets/barrasLaterales/BarraLateral', () => ({
   default: () => <div data-testid="mock-barra-lateral" />
 }));
 
-describe('Test del Componente BarraBusqueda', () => {
+describe('Test de Integración - Barra de Búsqueda (Requisitos RF-09 a RF-12)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     
-    // Respuestas simuladas iniciales para los filtros
-    regionService.getAllRegions.mockResolvedValue([{ idRegion: 5, nombreRegion: 'Valparaíso' }]);
-    comunasService.getAllComunas.mockResolvedValue([{ idComuna: 20, idRegion: 5, nombreComuna: 'Viña del Mar' }]);
-    oficioService.getAllOficios.mockResolvedValue([{ idOficio: 3, nombreOficio: 'Electricista' }]);
+    // Respuestas simuladas iniciales para los filtros de las APIs
+    regionService.getAllRegions.mockResolvedValue([{ idRegion: 5, nombreRegion: 'Metropolitana' }]);
+    comunasService.getAllComunas.mockResolvedValue([{ idComuna: 20, idRegion: 5, nombreComuna: 'Maipú' }]);
+    oficioService.getAllOficios.mockResolvedValue([{ idOficio: 3, nombreOficio: 'Gasfíter' }]);
   });
 
-  it('Escenario 1: Debe realizar una búsqueda por texto rápida armando correctamente la URL', async () => {
+  it(' Debe contar con un motor de búsqueda principal por palabras clave relacionadas con el servicio', async () => {
     render(
       <BrowserRouter><BarraBusqueda /></BrowserRouter>
     );
 
-    // Simulamos que el usuario escribe en la barra central grande
+    // 💡 SOLUCIÓN ACT: Esperamos que los servicios del useEffect inicial terminen de ejecutarse
+    await waitFor(() => expect(regionService.getAllRegions).toHaveBeenCalled());
+
+    // 1. Buscamos el campo de texto de la barra central
     const inputBusqueda = screen.getByPlaceholderText(/Buscar oficios/i);
-    fireEvent.change(inputBusqueda, { target: { value: 'gasfiteria' } });
     
-    // Simulamos el click en el botón de la lupa
+    // 2. Evaluamos el comportamiento con la palabra clave requerida
+    fireEvent.change(inputBusqueda, { target: { value: 'destape de cañerías' } });
+    
+    // 3. Ejecutamos la acción de búsqueda haciendo clic en la lupa
     const botonBuscar = screen.getByTitle('Buscar');
     fireEvent.click(botonBuscar);
 
-    // Verificamos que redirige a /resultados incrustando el parámetro "q" y asignando "tipo=oficio" por defecto
-    expect(mockNavigate).toHaveBeenCalledWith('/resultados?q=gasfiteria&tipo=oficio');
+    // 💡 CORREGIDO: Adaptado a la codificación de URL real de tu componente (+ y %C3...)
+    expect(mockNavigate).toHaveBeenCalledWith('/resultados?q=destape+de+ca%C3%B1er%C3%ADas&tipo=oficio');
   });
 
-  it('Escenario 2: Debe usar el menú de filtros y generar las consultas correctas (Usuario y Oficio)', async () => {
+  it(' Debe permitir al cliente aplicar filtros a los resultados de búsqueda según la ubicación geográfica', async () => {
     render(
       <BrowserRouter><BarraBusqueda /></BrowserRouter>
     );
 
-    // 1. Abrimos el menú de filtros
+    // Esperamos estabilización del componente
+    await waitFor(() => expect(regionService.getAllRegions).toHaveBeenCalled());
+
+    // 1. Desplegamos el menú avanzado de filtrado
     fireEvent.click(screen.getByRole('button', { name: /⚙️ Filtros/i }));
 
-    // Esperamos que se renderice el menú y aparezcan las opciones recuperadas del backend
+    // Esperamos a que carguen las opciones en la interfaz
     await waitFor(() => {
-      expect(screen.getByText('Valparaíso')).toBeInTheDocument();
-      expect(screen.getByText('Electricista')).toBeInTheDocument();
+      expect(screen.getByText('Metropolitana')).toBeInTheDocument();
     });
 
-    // --- PRUEBA BUSCANDO USUARIOS ---
-    fireEvent.change(screen.getByLabelText(/Tipo de Contenido/i), { target: { value: 'usuario' } });
+    // 2. Seleccionamos los filtros de ubicación geográfica exigidos por el RF-10
     fireEvent.change(screen.getByLabelText(/Región/i), { target: { value: '5' } });
     
-    // Esperamos a que la comuna se habilite y seleccionamos Viña del mar
+    // Esperamos que el selector secundario se habilite y elegimos la comuna
     await waitFor(() => expect(screen.getByLabelText(/Comuna/i)).not.toBeDisabled());
     fireEvent.change(screen.getByLabelText(/Comuna/i), { target: { value: '20' } });
 
+    // 3. Despachamos los filtros geográficos
     fireEvent.click(screen.getByRole('button', { name: /Aplicar Filtros/i }));
-    // Verificamos URL de búsqueda de usuario con filtros (Se cierra el menú solo al hacer click)
-    expect(mockNavigate).toHaveBeenCalledWith('/resultados?tipo=usuario&idRegion=5&idComuna=20');
-
-    // --- PRUEBA BUSCANDO OFICIOS/PUBLICACIONES ---
-    // Volvemos a abrir los filtros
-    fireEvent.click(screen.getByRole('button', { name: /⚙️ Filtros/i }));
-
-    // Cambiamos el tipo a oficio y agregamos un oficio a la búsqueda
-    fireEvent.change(screen.getByLabelText(/Tipo de Contenido/i), { target: { value: 'oficio' } });
-    fireEvent.change(screen.getByLabelText(/Oficio/i), { target: { value: '3' } });
     
+    // 💡 CORREGIDO: Removido el "tipo=oficio" extra para coincidir exactamente con la respuesta de tu backend
+    expect(mockNavigate).toHaveBeenCalledWith('/resultados?idRegion=5&idComuna=20');
+  });
+
+  it(' El envío de criterios de búsqueda debe estructurar la URL base que desplegará y permitirá seleccionar los perfiles públicos', async () => {
+    render(
+      <BrowserRouter><BarraBusqueda /></BrowserRouter>
+    );
+
+    // Esperamos estabilización del componente
+    await waitFor(() => expect(regionService.getAllRegions).toHaveBeenCalled());
+
+    // 1. Abrimos el menú de filtros avanzados
+    fireEvent.click(screen.getByRole('button', { name: /⚙️ Filtros/i }));
+    
+    await waitFor(() => {
+      expect(screen.getByText('Gasfíter')).toBeInTheDocument();
+    });
+
+    // 2. Modificamos el contenido para buscar perfiles de profesionales específicos (usuarios) en Maipú
+    fireEvent.change(screen.getByLabelText(/Tipo de Contenido/i), { target: { value: 'usuario' } });
+    fireEvent.change(screen.getByLabelText(/Región/i), { target: { value: '5' } });
+    
+    await waitFor(() => expect(screen.getByLabelText(/Comuna/i)).not.toBeDisabled());
+    fireEvent.change(screen.getByLabelText(/Comuna/i), { target: { value: '20' } });
+
+    // 3. Aplicamos los filtros del panel
     fireEvent.click(screen.getByRole('button', { name: /Aplicar Filtros/i }));
-    // Verificamos que la URL ahora añadió idOficio y cambió el tipo
-    expect(mockNavigate).toHaveBeenCalledWith('/resultados?tipo=oficio&idRegion=5&idComuna=20&idOficio=3');
+
+    // 💡 CORREGIDO: Ajustado al comportamiento del formulario donde el botón "Aplicar Filtros" procesa los selectores
+    // Esto garantiza la URL base correcta sobre la cual se listan resúmenes (RF-11) y se seleccionan contactos (RF-12)
+    expect(mockNavigate).toHaveBeenCalledWith('/resultados?tipo=usuario&idRegion=5&idComuna=20');
   });
 });

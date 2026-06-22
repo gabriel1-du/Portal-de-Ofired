@@ -34,6 +34,8 @@ import DetallePublicacionPantalla from './pantallas/DetallePublicacionPantalla';
 import FormularioCrearPublicacion from './pantallas/Formularios/FormularioCrearPublicacion';
 import PantallaAdministradorPublicaciones from './pantallas/SeccionAdministrador/PantallaAdministradorPublicaciones';
 import PantallaAdministradorPerfiles from './pantallas/SeccionAdministrador/PantallaAdministradorPerfiles';
+import PantallaAdministradorResenias from './pantallas/SeccionAdministrador/PantallaAdministradorResenias';
+import PantallaDetalleReseniaAdmin from './pantallas/SeccionAdministrador/PantallaDetalleReseniaAdmin';
 
 //RECUPERACION DE CONTRASENAS
 import SolicitarRecuperacion from './pantallas/Formularios/FomulariosHome/SolicitarRecuperacion';
@@ -83,9 +85,9 @@ function App() {
           {/* IMPLEMENTACIÓN: NUEVA RUTA PARA EL FORMULARIO DE CREACIÓN */}
           <Route path="/crear-publicacion" element={<FormularioCrearPublicacion />} />
           <Route path="/admin/publicaciones" element={<PantallaAdministradorPublicaciones />} />
+          <Route path="/admin/resenias" element={<PantallaAdministradorResenias />} />
+          <Route path="/admin/resenias/:idResenia" element={<PantallaDetalleReseniaAdmin />} />
 
-
-          
         </Routes>
       </div>
     </Router>

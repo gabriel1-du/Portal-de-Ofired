@@ -1,10 +1,24 @@
 const API_URL_RESENIAS = import.meta.env.VITE_RESENIAS_API_URL; // URL de acceso a la API de reseñas
 
+export const listarTodasResenias = async () => {
+  try {
+    const url = `${API_URL_RESENIAS}`;
+    console.log("Llamando a la API de Reseñas (Listar todas):", url);
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Error al obtener todas las reseñas.");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error al intentar obtener todas las reseñas:", error);
+    throw error;
+  }
+};
 
 export const listarTodasReseniasFront = async () => {
   try {
     // Asumo que el endpoint para "listarTodasParaFront" es la raíz del controlador de reseñas.
-    const url = `${API_URL_RESENIAS}`;
+    const url = `${API_URL_RESENIAS}/front`;
     console.log("Llamando a la API de Reseñas (Listar todas para Front):", url);
     const response = await fetch(url);
     if (!response.ok) {
@@ -47,6 +61,41 @@ export const listarReseniasPorUsuario = async (idUsuarioReseniado) => {
 };
 
 
+
+export const obtenerReseniaPorId = async (idResenia) => {
+  try {
+    const url = `${API_URL_RESENIAS}/${idResenia}`;
+    console.log("Llamando a la API de Reseñas (GET by ID):", url);
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Error al obtener la reseña con ID ${idResenia}.`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error al intentar obtener la reseña con ID ${idResenia}:`, error);
+    throw error;
+  }
+};
+
+export const deleteResenia = async (idResenia, token) => {
+  try {
+    const url = `${API_URL_RESENIAS}/${idResenia}`;
+    console.log("Llamando a la API de Reseñas (DELETE):", url);
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Error al eliminar la reseña con ID ${idResenia}.`);
+    }
+    return true;
+  } catch (error) {
+    console.error(`Error al intentar eliminar la reseña con ID ${idResenia}:`, error);
+    throw error;
+  }
+};
 
 export const createResenia = async (reseniaData, token) => {
   try {
