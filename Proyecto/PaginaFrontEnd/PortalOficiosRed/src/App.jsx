@@ -38,6 +38,8 @@ import PantallaAdministradorResenias from './pantallas/SeccionAdministrador/Pant
 import PantallaDetalleReseniaAdmin from './pantallas/SeccionAdministrador/PantallaDetalleReseniaAdmin';
 import PantallaAdministradorRespuestasResenias from './pantallas/SeccionAdministrador/PantallaAdministradorRespuestasResenias';
 import PantallaDetalleRespuestaReseniaAdmin from './pantallas/SeccionAdministrador/PantallaDetalleRespuestaReseniaAdmin';
+import PantallaAdministradorDenuncias from './pantallas/SeccionAdministrador/PantallaAdministradorDenuncias';
+import PantallaDetalleDenunciaAdmin from './pantallas/SeccionAdministrador/PantallaDetalleDenunciaAdmin';
 
 //RECUPERACION DE CONTRASENAS
 import SolicitarRecuperacion from './pantallas/Formularios/FomulariosHome/SolicitarRecuperacion';
@@ -91,6 +93,8 @@ function App() {
           <Route path="/admin/resenias/:idResenia" element={<PantallaDetalleReseniaAdmin />} />
           <Route path="/admin/respuestas-resenias" element={<PantallaAdministradorRespuestasResenias />} />
           <Route path="/admin/respuestas-resenias/:idRespuestaResenia" element={<PantallaDetalleRespuestaReseniaAdmin />} />
+          <Route path="/admin/denuncias" element={<PantallaAdministradorDenuncias />} />
+          <Route path="/admin/denuncias/:idDenuncia" element={<PantallaDetalleDenunciaAdmin />} />
 
         </Routes>
       </div>
