@@ -1,4 +1,4 @@
-package com.example.usuarioApi.DTO.ClasesDenunciaDTO;
+package com.example.usuarioApi.DTO.ClasesdenunciasDTO;
 
 import lombok.Data;
 import lombok.Getter;

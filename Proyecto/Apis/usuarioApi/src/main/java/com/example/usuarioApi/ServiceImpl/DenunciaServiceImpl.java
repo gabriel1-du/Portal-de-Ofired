@@ -1,9 +1,10 @@
 package com.example.usuarioApi.ServiceImpl; // <-- Apunta a tu carpeta actual
 
-// 👇 Estos dos imports eran los que te faltaban
-import com.example.usuarioApi.Service.DenunciaService;
-import com.example.usuarioApi.DTO.ClasesDenunciaDTO.CrearDenunciaDTO;
 
+import com.example.usuarioApi.Service.DenunciaService;
+import com.example.usuarioApi.DTO.ClasesdenunciasDTO.CrearDenunciaDTO;
+import com.example.usuarioApi.DTO.ClasesdenunciasDTO.DenunciaDetalleDTO;
+import com.example.usuarioApi.DTO.ClasesdenunciasDTO.DenunciaMapper;
 import com.example.usuarioApi.Model.Denuncia;
 import com.example.usuarioApi.Model.TipoContenidoDenunciado;
 import com.example.usuarioApi.Model.TipoDenuncia;
@@ -16,23 +17,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DenunciaServiceImpl implements DenunciaService {
 
-    @Autowired
+    @Autowired //Inyecciones
     private DenunciaRepository denunciaRepository;
-
     @Autowired
     private UsuarioRepository usuarioRepository;
-
     @Autowired
     private TipoDenunciaRepository tipoDenunciaRepository;
-
     @Autowired
     private TipoContenidoDenunciadoRepository tipoContenidoDenunciadoRepository;
 
-    @Override
+    @Autowired//Mapper
+    private DenunciaMapper denunciaMapper; 
+
+  
+
+    @Override //Metodo post
     public Denuncia registrarDenuncia(CrearDenunciaDTO dto) {
         Denuncia denuncia = new Denuncia();
         
@@ -54,8 +58,29 @@ public class DenunciaServiceImpl implements DenunciaService {
         return denunciaRepository.save(denuncia);
     }
 
-    @Override
-    public List<Denuncia> listarTodas() {
-        return denunciaRepository.findAll();
+  
+    @Override //Metodo get
+    public DenunciaDetalleDTO obtenerDetallePorId(Integer id) {
+        Denuncia denuncia = denunciaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Denuncia con ID " + id + " no encontrada."));
+        return denunciaMapper.mapToDetalleDTO(denuncia);
     }
+
+    @Override //Metodo get
+    public List<DenunciaDetalleDTO> listarTodasDetalle() {
+        List<Denuncia> denuncias = denunciaRepository.findAll();
+        return denuncias.stream()
+                .map(denunciaMapper::mapToDetalleDTO)
+                .collect(Collectors.toList());
+    }
+
+    
+    @Override//Metodo delete
+    public void eliminarDenuncia(Integer id) {
+        if (!denunciaRepository.existsById(id)) {
+            throw new RuntimeException("La denuncia con ID " + id + " no existe.");
+        }
+        denunciaRepository.deleteById(id);
+    }
+
 }
