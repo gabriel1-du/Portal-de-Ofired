@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -21,6 +24,7 @@ public class Denuncia {
     private Integer idDenuncia;
 
     @Column(name = "id_usuario_denunciante", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Integer idUsuarioDenunciante; // El usuario que hace clic en "Reportar"
 
     @ManyToOne(fetch = FetchType.LAZY)

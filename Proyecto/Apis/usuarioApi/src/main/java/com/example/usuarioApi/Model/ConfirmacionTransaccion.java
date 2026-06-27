@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +34,7 @@ public class ConfirmacionTransaccion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario_oferente", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario usuarioOferente;
 
     @ManyToOne(fetch = FetchType.LAZY)

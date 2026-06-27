@@ -3,6 +3,8 @@ package com.example.usuarioApi.Model;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,6 +49,7 @@ public class MensajeChat {
     // Muchos mensajes pueden ser escritos por un mismo Usuario (Autor)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_autor_mensaje", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario autor;
 
 }

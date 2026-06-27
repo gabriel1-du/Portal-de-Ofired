@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +37,7 @@ public class PerfilUsuario {
     // Vínculo 1 a 1 estricto con Usuario
     @OneToOne
     @JoinColumn(name = "id_usuario", nullable = false, unique = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario usuario;
 
     @Column(name = "nombre_apodo", length = 100)

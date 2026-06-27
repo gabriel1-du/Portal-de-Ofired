@@ -1,5 +1,8 @@
 package com.example.usuarioApi.Model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -36,6 +39,7 @@ public class ParticipanteChat {
     // Muchos registros de participación pueden pertenecer a un mismo Usuario
     @ManyToOne(fetch = FetchType.LAZY) //Lazy es solo para traer el usuario cuando se necesite, no al cargar el participante
     @JoinColumn(name = "id_usuario_participante", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario usuario; // Asegúrate de tener tu clase Usuario importada correctamente
 
 }

@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "USUARIOS_BLOQUEADOS")
@@ -31,10 +32,12 @@ public class UsuariosBloqueados {
     // Relación 1: El usuario que tomó la decisión de bloquear
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario_que_bloquea", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario usuarioQueBloquea;
 
-    // Relación 2: El usuario que recibió el castigo/bloqueo
+    // Relación 2: El ustuario que recibió el castigo/bloqueo
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario_bloqueado", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario usuarioBloqueado;
 }
