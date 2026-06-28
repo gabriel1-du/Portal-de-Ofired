@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { getAdminByIdAdmin, actualizarUsuarioAdmin } from '../../servicios/usuariosService';
 import { getAllOficios } from '../../servicios/ApiUsuarios/TablasCategorias/oficioService';
 import { validarRut } from '../../utils/verificaciones/verificacionRut';
+import BarraBusqueda from '../../assets/barraBusqueda';
 import '../../style/seccionPantallas/configPantalla.css';
 
 const FormularioCambiarCuentaOficio = () => {
@@ -171,12 +172,19 @@ const FormularioCambiarCuentaOficio = () => {
   };
 
   if (cargando) {
-    return <div className="text-center mt-5 text-muted fst-italic">Cargando formulario...</div>;
+    return (
+      <div style={{ backgroundColor: '#f0f2f5', minHeight: '100vh', paddingBottom: '40px' }}>
+        <BarraBusqueda />
+        <div className="text-center mt-5 pt-5 text-muted fst-italic">Cargando formulario...</div>
+      </div>
+    );
   }
 
   return (
-    <div className="container my-5">
-      <div className="card shadow-sm border-0 rounded-4 p-4 p-md-5 mx-auto bg-white tarjeta-config-amplia position-relative">
+    <div style={{ backgroundColor: '#f0f2f5', minHeight: '100vh', paddingBottom: '40px' }}>
+      <BarraBusqueda />
+      <div className="container my-5 pt-4">
+        <div className="card shadow-sm border-0 rounded-4 p-4 p-md-5 mx-auto bg-white tarjeta-config-amplia position-relative">
         <button
           className="btn btn-link text-decoration-none fw-bold p-0 position-absolute btn-volver-texto"
           onClick={() => navigate('/configuracion')}
@@ -299,6 +307,7 @@ const FormularioCambiarCuentaOficio = () => {
             </button>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

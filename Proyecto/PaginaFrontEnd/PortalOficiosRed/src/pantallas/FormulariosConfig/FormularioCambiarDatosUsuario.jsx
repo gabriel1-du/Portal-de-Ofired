@@ -7,6 +7,7 @@ import { getAllComunas } from '../../servicios/ApiUsuarios/TablasCategorias/comu
 import { getAllSexos } from '../../servicios/ApiUsuarios/TablasCategorias/sexoService';
 import { getAllOficios } from '../../servicios/ApiUsuarios/TablasCategorias/oficioService';
 import { validarRut } from '../../utils/verificaciones/verificacionRut';
+import BarraBusqueda from '../../assets/barraBusqueda';
 import '../../style/seccionPantallas/configPantalla.css';
 
 const FormularioCambiarDatosUsuario = () => {
@@ -124,11 +125,18 @@ const FormularioCambiarDatosUsuario = () => {
     }
   };
 
-  if (cargando) return <div className="text-center mt-5 text-muted fst-italic">Cargando datos...</div>;
+  if (cargando) return (
+    <div style={{ backgroundColor: '#f0f2f5', minHeight: '100vh', paddingBottom: '40px' }}>
+      <BarraBusqueda />
+      <div className="text-center mt-5 pt-5 text-muted fst-italic">Cargando datos...</div>
+    </div>
+  );
 
   return (
-    <div className="container my-5">
-      <div className="card shadow-sm border-0 rounded-4 p-4 p-md-5 mx-auto bg-white tarjeta-config-amplia position-relative">
+    <div style={{ backgroundColor: '#f0f2f5', minHeight: '100vh', paddingBottom: '40px' }}>
+      <BarraBusqueda />
+      <div className="container my-5 pt-4">
+        <div className="card shadow-sm border-0 rounded-4 p-4 p-md-5 mx-auto bg-white tarjeta-config-amplia position-relative">
         
         {/* Botón Volver usando Bootstrap */}
         <button
@@ -209,6 +217,7 @@ const FormularioCambiarDatosUsuario = () => {
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

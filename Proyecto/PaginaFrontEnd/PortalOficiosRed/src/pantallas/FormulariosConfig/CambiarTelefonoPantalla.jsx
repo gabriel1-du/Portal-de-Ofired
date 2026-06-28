@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext'; 
 import { updateUsuario } from '../../servicios/usuariosService'; 
+import BarraBusqueda from '../../assets/barraBusqueda';
 import '../../style/seccionPantallas/configPantalla.css'; 
 
 const CambiarTelefonoPantalla = () => {
@@ -54,8 +55,10 @@ const CambiarTelefonoPantalla = () => {
   };
 
   return (
-    <div className="container-fluid bg-light min-vh-100 d-flex align-items-center justify-content-center py-5">
-      <main className="card shadow-sm border-0 rounded-4 p-4 p-md-5 w-100 position-relative bg-white tarjeta-config-media">
+    <div style={{ backgroundColor: '#f0f2f5', minHeight: '100vh', paddingBottom: '40px' }}>
+      <BarraBusqueda />
+      <div className="container-fluid d-flex align-items-center justify-content-center py-5">
+        <main className="card shadow-sm border-0 rounded-4 p-4 p-md-5 w-100 position-relative bg-white tarjeta-config-media">
         
         {/* Botón Volver */}
         <button
@@ -107,7 +110,8 @@ const CambiarTelefonoPantalla = () => {
             {cargando ? 'Cambiando...' : 'Cambiar Teléfono'}
           </button>
         </form>
-      </main>
+        </main>
+      </div>
     </div>
   );
 };

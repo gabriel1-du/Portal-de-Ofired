@@ -46,9 +46,9 @@ const ConfiguracionesPantalla = () => {
   };
 
   return (
-
-
-    <div className="container position-relative my-5">
+    <div style={{ backgroundColor: '#f0f2f5', minHeight: '100vh', paddingBottom: '40px' }}>
+      <BarraBusqueda />
+      <div className="container position-relative my-5 pt-4">
       <button
         className="btn-volver-flotante" 
         onClick={() => navigate('/PaginaPrincipal')} 
@@ -151,6 +151,7 @@ const ConfiguracionesPantalla = () => {
         </div>
 
       </div>
+    </div>
     </div>
   );
 };
