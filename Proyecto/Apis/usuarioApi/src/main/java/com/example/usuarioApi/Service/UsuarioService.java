@@ -5,6 +5,7 @@ import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL1DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL2DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.eliminarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTO;
+import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.actualizarUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTOAdmin;
@@ -21,6 +22,8 @@ public interface UsuarioService {
     leerUsuarioDTO leerUsuario(Integer id); // Método para leer un usuario por su ID (Get)
 
     leerUsuarioDTO actualizarUsuario(Integer id, actualizarUserDTO usuarioDTO, MultipartFile archivoFoto);
+
+    leerUsuarioDTOAdmin leerUsuarioAdmin(Integer id);// Método para usuarios con todos sus atributos
 
     List<leerUsuarioDTO> leertTodosLosUsuariosDto (); // Método para leer todos los usuarios (Get All)
 

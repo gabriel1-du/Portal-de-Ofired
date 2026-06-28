@@ -8,7 +8,7 @@ import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL1DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL2DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTO;
-
+import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTOAdmin;
 import com.example.usuarioApi.Service.UsuarioService;
 
 
@@ -68,6 +68,13 @@ public class UsuarioController {
         leerUsuarioDTO usuario = usuarioService.leerUsuario(id);
         return ResponseEntity.ok(usuario);
     }
+
+    @GetMapping("/admin/{id}") // Endpoint para leer un usuario específico por su ID
+    public ResponseEntity<leerUsuarioDTOAdmin> leerUsuarioAdmin(@PathVariable Integer id) {
+        leerUsuarioDTOAdmin usuario = usuarioService.leerUsuarioAdmin(id);
+        return ResponseEntity.ok(usuario);
+    }
+
 
     @PutMapping(value = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<leerUsuarioDTO> actualizarUsuario(

@@ -9,6 +9,7 @@ import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL1DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.crearUsuarioLVL2DTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.eliminarUserDTO;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTO;
+import com.example.usuarioApi.DTO.clasesUsuarioDTO.leerUsuarioDTOAdmin;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.usuarioMapTo.UsuarioMapActualizar;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.usuarioMapTo.UsuarioMapCreate;
 import com.example.usuarioApi.DTO.clasesUsuarioDTO.usuarioMapTo.UsuarioMapLeer;
@@ -174,6 +175,16 @@ public class UsuarioServiceImpl implements UsuarioService {
         return readMapper.mapUsuarioToLeerUsuarioDTO(usuario);
     }
 
+    @Override //Metodoq ue lee todos los usuarios con todos sus atributos
+    public leerUsuarioDTOAdmin leerUsuarioAdmin(Integer id) {
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id)); 
+
+        return readMapper.mapUsuarioToLeerUsuarioDTOAdmin(usuario);
+        
+    }
+    
     @Override
     public leerUsuarioDTO actualizarUsuario(Integer id, actualizarUserDTO usuarioDTO, MultipartFile archivoFoto) {
     

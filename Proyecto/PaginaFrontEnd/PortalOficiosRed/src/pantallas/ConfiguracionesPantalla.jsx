@@ -1,16 +1,59 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import { AuthContext } from '../context/AuthContext';
+import { getAdminByIdAdmin } from '../servicios/usuariosService';
 import '../style/seccionPantallas/configPantalla.css';
-
+import BarraBusqueda from '../assets/barraBusqueda';
 const ConfiguracionesPantalla = () => {
   const navigate = useNavigate();
-  const { usuario } = useContext(AuthContext);
+  const { token, usuario, cerrarSesion } = useContext(AuthContext);
   // Estado para controlar qué opción del menú lateral está seleccionada
   const [menuActivo, setMenuActivo] = useState('datos');
+  const [tipoUsuarioActual, setTipoUsuarioActual] = useState(null);
+  const esUsuarioCliente = Number(tipoUsuarioActual) === 1;
+
+  useEffect(() => {
+    const cargarTipoUsuario = async () => {
+      if (!token) {
+        setTipoUsuarioActual(null);
+        return;
+      }
+
+      try {
+        const decodedToken = jwtDecode(token);
+        const idUsuario = usuario?.idUsuario || decodedToken?.userId;
+
+        if (!idUsuario) {
+          setTipoUsuarioActual(null);
+          return;
+        }
+
+        const usuarioCompleto = await getAdminByIdAdmin(idUsuario);
+        setTipoUsuarioActual(usuarioCompleto?.idTipoUsu ?? null);
+      } catch (error) {
+        console.error('Error al obtener el tipo de usuario admin para configuración:', error);
+        setTipoUsuarioActual(null);
+      }
+    };
+
+    cargarTipoUsuario();
+  }, [token, usuario?.idUsuario]);
+
+   const handleLogout = () => {
+    cerrarSesion();
+    navigate('/iniciar-sesion');
+  };
 
   return (
+
+
     <div className="container position-relative my-5">
+      <button
+        className="btn-volver-flotante" 
+        onClick={() => navigate('/PaginaPrincipal')} 
+        aria-label="Volver"
+      ></button>
       {/* Botón Volver Flotante */}
       <button 
         className="btn-volver-flotante" 
@@ -47,9 +90,9 @@ const ConfiguracionesPantalla = () => {
           </nav>
 
             <div className="mt-auto pt-4 border-top mt-4">
-            <button className="sidebar-btn btn-cerrar-sesion">
-              Cerrar sesión
-            </button>
+            <button onClick={handleLogout} className="btn-logout">
+                Cerrar Sesión
+              </button>
           </div>
         </aside>
         </div>
@@ -91,6 +134,16 @@ const ConfiguracionesPantalla = () => {
                   </div>
                   <span className="opcion-flecha">&#10095;</span>
                 </button>
+
+                {esUsuarioCliente && (
+                  <button className="opcion-tarjeta" onClick={() => navigate('/crear-cuentOfi')}>
+                    <div className="opcion-info">
+                      <span className="opcion-icono">🛠️</span>
+                      <span className="opcion-texto">Cambiar cuenta a tipo Oficio</span>
+                    </div>
+                    <span className="opcion-flecha">&#10095;</span>
+                  </button>
+                )}
               </div>
             </div>
           )}

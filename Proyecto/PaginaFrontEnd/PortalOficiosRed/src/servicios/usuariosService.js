@@ -19,6 +19,24 @@ export const getUsuarioById = async (id) => {
   }
 };
 
+// Función para obtener un usuario admin por su ID
+export const getAdminByIdAdmin = async (id) => {
+  try {
+    const url = `${API_URL_USUARIOS}/admin/${id}`;
+    console.log("Llamando a la API de Usuarios Admin (GET by ID):", url);
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.error(`Error en la respuesta de la red (GET Admin by ID ${id}):`, response.status, response.statusText);
+      throw new Error(`Error al obtener el usuario admin con ID ${id}.`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error al intentar obtener el usuario admin con ID ${id}:`, error);
+    throw error;
+  }
+};
+
 
 // Función para leer todos los usuarios desde la API Gateway
 export const leerTodosLosUsuarios = async () => {
