@@ -18,7 +18,12 @@ function PaginaHome() {
       try {
         const data = await getAllPublicaciones();
         const publicacionesRaw = Array.isArray(data) ? data : (data.content || []);
-        const listaLimitada = publicacionesRaw.slice(0, limitePublicaciones);
+        
+        
+        const publicacionesInvertidas = [...publicacionesRaw].reverse();
+        
+      
+        const listaLimitada = publicacionesInvertidas.slice(0, limitePublicaciones);
         
         setPublicaciones(listaLimitada);
       } catch (err) {

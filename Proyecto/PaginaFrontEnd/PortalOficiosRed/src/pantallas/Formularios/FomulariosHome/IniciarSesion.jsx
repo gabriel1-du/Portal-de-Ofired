@@ -79,8 +79,12 @@ function IniciarSesion() {
             <label htmlFor="password" className="form-label fw-bold text-dark">Contraseña:</label>
             <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control form-control-lg shadow-sm" placeholder="********" required />
           </div>
+          
           <button type="submit" className="home-btn w-100 mt-2">Ingresar a mi cuenta</button>
-
+          <button type="button" className="home-btn w-100 mt-2" onClick={() => navigate('/')}>
+            Volver al inicio
+          </button>
+          
           {/* Botón para recuperar contraseña */}
           <div className="mt-4 text-center">
             <button type="button" className="btn btn-link text-decoration-none fw-semibold text-primary" onClick={() => navigate('/solicitar-recuperacion')}>
@@ -88,6 +92,7 @@ function IniciarSesion() {
             </button>
           </div>
         </form>
+        
       </div>
     </div>
   );

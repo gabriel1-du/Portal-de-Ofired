@@ -195,6 +195,9 @@ function FormularioCrearUsuarioOficio() {
           </div>
 
           <button type="submit" className="home-btn w-100 mt-2">Siguiente Paso</button>
+          <button type="button" className="home-btn w-100 mt-2" onClick={() => navigate('/')}>
+            Volver al inicio
+          </button>
         </form>
       </div>
     </div>

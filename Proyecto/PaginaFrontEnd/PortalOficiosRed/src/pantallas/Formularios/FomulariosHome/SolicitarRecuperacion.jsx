@@ -48,6 +48,9 @@ function SolicitarRecuperacion() {
             <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control form-control-lg shadow-sm" placeholder="ejemplo@correo.com" required disabled={cargando} />
           </div>
           <button type="submit" className="home-btn w-100 mt-2" disabled={cargando}>{cargando ? 'Enviando correo...' : 'Enviar correo'}</button>
+          <button type="button" className="home-btn w-100 mt-2" onClick={() => navigate('/')} disabled={cargando}>
+            Volver al inicio
+          </button>
         </form>
       </div>
     </div>
