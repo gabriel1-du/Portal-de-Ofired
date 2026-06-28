@@ -14,6 +14,7 @@ import ConfiguracionesPantalla from './pantallas/ConfiguracionesPantalla';
 import CambiarCorreoPantalla from './pantallas/FormulariosConfig/CambiarCorreoPantalla';
 import CambiarTelefonoPantalla from './pantallas/FormulariosConfig/CambiarTelefonoPantalla';
 import FormularioCambiarDatosUsuario from './pantallas/FormulariosConfig/FormularioCambiarDatosUsuario';
+import FormularioCambiarCuentaOficio from './pantallas/FormulariosConfig/FormularioCambiarCuentaOficio';
 import ValoracionesPantalla from './pantallas/ValoracionPantalla'; // Importamos la pantalla de valoraciones
 import FormularioCrearResenia from './pantallas/Formularios/FormularioCrearResenia'; // Importamos el nuevo form
 import ChatPantalla from './pantallas/PantallasMensajes/ChatPantalla'; // Importamos la pantalla de chat
@@ -66,6 +67,7 @@ function App() {
           <Route path="/configuracion/cambiar-correo" element={<CambiarCorreoPantalla />} />
           <Route path="/configuracion/cambiar-telefono" element={<CambiarTelefonoPantalla />} />
           <Route path="/configuracion/modificar-datos" element={<FormularioCambiarDatosUsuario />} />
+          <Route path="/configuracion/cambiar-a-oficio" element={<FormularioCambiarCuentaOficio />} />
           <Route path="/valoraciones/:idUsuario" element={<ValoracionesPantalla />} />
           <Route path="/crear-resenia/:idUsuarioReseniado" element={<FormularioCrearResenia />} />
           <Route path="/chat/:idChat" element={<ChatPantalla />} />

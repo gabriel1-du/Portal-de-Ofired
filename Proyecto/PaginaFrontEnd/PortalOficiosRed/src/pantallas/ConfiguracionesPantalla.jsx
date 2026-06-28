@@ -136,7 +136,7 @@ const ConfiguracionesPantalla = () => {
                 </button>
 
                 {esUsuarioCliente && (
-                  <button className="opcion-tarjeta" onClick={() => navigate('/crear-cuentOfi')}>
+                  <button className="opcion-tarjeta" onClick={() => navigate('/configuracion/cambiar-a-oficio')}>
                     <div className="opcion-info">
                       <span className="opcion-icono">🛠️</span>
                       <span className="opcion-texto">Cambiar cuenta a tipo Oficio</span>
