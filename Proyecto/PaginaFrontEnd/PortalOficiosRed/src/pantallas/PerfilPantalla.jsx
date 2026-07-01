@@ -10,6 +10,7 @@ import { leerTodosLosParticipantesFront } from '../servicios/ApiUsuarios/Seccion
 import '../style/seccionPantallas/PerfilPantalla.css';
 import ValoracionCard from '../assets/cards/ValoracionCard'; 
 import BarraBusqueda from '../assets/barraBusqueda.jsx';
+import { getUsuarioById} from '../servicios/usuariosService.js';
 
 // --- IMPORTAMOS EL COMPONENTE ---
 import FormularioDenuncia from './Formularios/FormularioDenuncia/FormularioDenuncia'; 
@@ -26,10 +27,11 @@ const PerfilPantalla = () => {
   const [reseñas, setReseñas] = useState([]); 
   
   const [publicacionesDelUsuario, setPublicacionesDelUsuario] = useState([]); 
+  const [valoracionUsuario, setValoracionUsuario] = useState(null);
   const [iniciandoChat, setIniciandoChat] = useState(false);
   const [eliminandoPublicacionId, setEliminandoPublicacionId] = useState(null);
   const [cantidadPublicacionesVisibles, setCantidadPublicacionesVisibles] = useState(3);
-  
+ 
   // --- ESTADO PARA CONTROLAR EL MODAL ---
   const [mostrarModalDenuncia, setMostrarModalDenuncia] = useState(false);
 
@@ -44,10 +46,11 @@ const PerfilPantalla = () => {
         setCargando(true);
         setError(null);
 
-        const [datosPerfil, datosReseñas, datosPublicaciones] = await Promise.all([
+        const [datosPerfil, datosReseñas, datosPublicaciones, datosUsuario] = await Promise.all([
           getPerfilFrontByUsuarioId(idDelPerfil),
           listarReseniasPorUsuario(idDelPerfil),
-          getPublicacionesByAutor(idDelPerfil)
+          getPublicacionesByAutor(idDelPerfil),
+          getUsuarioById(idDelPerfil)
         ]);
 
         if (!datosPerfil) {
@@ -62,6 +65,7 @@ const PerfilPantalla = () => {
 
         setReseñas(datosReseñas);
         setPublicacionesDelUsuario(publicacionesRaw);
+        setValoracionUsuario(datosUsuario?.valoracion ?? null);
         setCantidadPublicacionesVisibles(3);
 
       } catch (err) {
@@ -158,11 +162,11 @@ const PerfilPantalla = () => {
     descripcion,
     valoracion,
     calificacion,
-    usuario
+
   } = perfil;
 
   const nombreCompleto = `${primerNombre} ${segundoNombre || ''} ${primerApellido} ${segundoApellido || ''}`.trim();
-  const ratingMostrar = valoracion ?? calificacion ?? usuario?.valoracion ?? usuario?.calificacion;
+  const ratingMostrar = valoracionUsuario ?? valoracion ?? calificacion ?? usuario?.valoracion ?? usuario?.calificacion;
   const publicacionesVisibles = publicacionesDelUsuario.slice(0, cantidadPublicacionesVisibles);
   const hayMasPublicaciones = publicacionesDelUsuario.length > cantidadPublicacionesVisibles;
 
